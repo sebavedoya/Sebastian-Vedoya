@@ -1,1 +1,7 @@
-
+export const press = [
+  { src: 'assets/prensa/topografo.jpg', outlet: 'La Tercera', title: 'Operación Topógrafo — Espionaje del Ejército a denunciantes de irregularidades', url: 'https://www.latercera.com/reportajes/noticia/operacion-topografo-espionaje-del-ejercito-cuatro-denunciantes-irregularidades/777342/' },
+  { src: 'assets/prensa/lagos.jpg', outlet: 'Publimetro', title: 'Ricardo Lagos: “Durante mi gobierno no privaticé nada, al contrario”', url: 'https://www.publimetro.cl/cl/noticias/2016/11/18/ex-presidente-lagos-durante-mi-gobierno-no-privatice-nada-contrario.html' },
+  { src: 'assets/prensa/pinera.jpg', outlet: 'Publimetro', title: 'Sebastián Piñera: “Me siento orgulloso de lo que he logrado en la vida”', url: 'https://www.publimetro.cl/cl/noticias/2017/06/19/sebastian-pinera-me-siento-orgulloso-lo-he-logrado-vida.html' },
+  { src: 'assets/prensa/larrain.jpg', outlet: 'La Tercera', title: 'No indultar a violadores de DD.HH. ni asesinos en serie', url: 'https://www.latercera.com/nacional/noticia/hernan-larrain-ministro-justicia-derechos-humanos-no-somos-partidarios-indultar-violadores-dd-hh-asesinos-serie/111533/' },
+  { src: 'assets/prensa/ramiro.jpg', outlet: 'La Tercera PM', title: '“Estoy seguro de que estaba privado de libertad en detención preventiva”', url: 'https://www.latercera.com/la-tercera-pm/noticia/la-declaracion-ramiro-carroza-estoy-seguro-estaba-privado-libertad-detencion-preventiva/792779/' }
+];
