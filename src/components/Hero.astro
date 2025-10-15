@@ -1,0 +1,90 @@
+<section id="inicio" class="hero section reveal">
+  <div class="container hero-grid">
+    <div class="hero-copy">
+      <h1 class="hero-title">
+        Sebastián Vedoya M.<br />
+        <span class="hero-sub">Comunicación Estratégica</span>
+      </h1>
+      <p class="lead">
+        Estratega en comunicación con más de 10 años de experiencia en medios y gobierno.
+        Me dedico a buscar respuestas complejas para entornos complejos.
+      </p>
+      <div class="cta-row">
+        <a class="btn" href="files/CV.pdf" target="_blank" rel="noopener">Descargar CV</a>
+        <a class="chip" href="mailto:seba.vedoya@gmail.com">seba.vedoya@gmail.com</a>
+        <a class="chip" href="https://www.linkedin.com/in/sebastianvedoyam/" target="_blank" rel="noopener">LinkedIn</a>
+      </div>
+    </div>
+    <div class="hero-photo-wrap">
+      <img class="hero-photo" src="assets/foto-perfil.jpg" alt="Sebastián Vedoya M." />
+    </div>
+  </div>
+  <canvas id="bg-net" aria-hidden="true"></canvas>
+  <script is:inline>
+    const obs = new IntersectionObserver((ents)=> {
+      for (const e of ents) if (e.isIntersecting) e.target.classList.add('revealed');
+    }, { threshold: 0.1 });
+    obs.observe(document.currentScript.closest('.reveal'));
+    const canvas = document.getElementById('bg-net');
+    const ctx = canvas.getContext('2d');
+    const DPR = window.devicePixelRatio || 1;
+    let nodes = [];
+    function resizeCanvas() {
+      const hero = document.getElementById('inicio');
+      const w = hero.clientWidth, h = hero.clientHeight;
+      canvas.width = w * DPR;
+      canvas.height = h * DPR;
+      canvas.style.width = w + 'px';
+      canvas.style.height = h + 'px';
+      initNodes();
+    }
+    function initNodes() {
+      const count = 44;
+      nodes = [];
+      const w = canvas.width, h = canvas.height;
+      for (let i = 0; i < count; i++) {
+        nodes.push({ x: Math.random() * w, y: Math.random() * h, vx: (Math.random() - 0.5) * 0.18 * DPR, vy: (Math.random() - 0.5) * 0.18 * DPR });
+      }
+    }
+    function step() {
+      const w = canvas.width, h = canvas.height;
+      for (const n of nodes) {
+        n.x += n.vx; n.y += n.vy;
+        if (n.x < 0 || n.x > w) n.vx *= -1;
+        if (n.y < 0 || n.y > h) n.vy *= -1;
+      }
+    }
+    function draw() {
+      const w = canvas.width, h = canvas.height;
+      ctx.clearRect(0, 0, w, h);
+      for (let i = 0; i < nodes.length; i++) {
+        for (let j = i + 1; j < nodes.length; j++) {
+          const dx = nodes[i].x - nodes[j].x, dy = nodes[i].y - nodes[j].y;
+          const d = Math.hypot(dx, dy);
+          const MAX = 180 * DPR;
+          if (d < MAX) {
+            const alpha = 1 - (d / MAX);
+            const gx = ctx.createLinearGradient(nodes[i].x, nodes[i].y, nodes[j].x, nodes[j].y);
+            gx.addColorStop(0, `rgba(26,77,110,${alpha * 0.16})`);
+            gx.addColorStop(1, `rgba(184,115,51,${alpha * 0.16})`);
+            ctx.strokeStyle = gx;
+            ctx.lineWidth = 1 * DPR;
+            ctx.beginPath();
+            ctx.moveTo(nodes[i].x, nodes[i].y);
+            ctx.lineTo(nodes[j].x, nodes[j].y);
+            ctx.stroke();
+          }
+        }
+      }
+      for (const n of nodes) {
+        ctx.fillStyle = 'rgba(184,115,51,0.42)';
+        ctx.beginPath();
+        ctx.arc(n.x, n.y, 2.2 * DPR, 0, Math.PI * 2);
+        ctx.fill();
+      }
+      step(); requestAnimationFrame(draw);
+    }
+    window.addEventListener('resize', resizeCanvas);
+    resizeCanvas(); requestAnimationFrame(draw);
+  </script>
+</section>

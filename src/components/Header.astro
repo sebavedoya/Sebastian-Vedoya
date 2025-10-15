@@ -1,0 +1,17 @@
+<header class="site-header">
+  <div class="container header-inner">
+    <a href="#inicio" class="brand">Sebastián Vedoya M.</a>
+    <nav class="main-nav" id="nav">
+      <a href="#sistema">Sistema</a>
+      <a href="#proyectos">Proyectos</a>
+      <a href="#reflexiones">Reflexiones</a>
+      <a href="#prensa">Prensa</a>
+      <a href="#contacto" class="btn btn-copper">Contáctame</a>
+    </nav>
+    <button class="nav-toggle" aria-expanded="false" aria-controls="nav" title="Abrir menú" onclick="
+      const nav = document.getElementById('nav');
+      const open = nav.classList.toggle('open');
+      this.setAttribute('aria-expanded', open ? 'true' : 'false');
+    ">☰</button>
+  </div>
+</header>
