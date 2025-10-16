@@ -1,5 +1,9 @@
 ---
-/** Cards con imagen opcional + link a la nota */
+/** ✅ Press.astro
+  - Muestra cards con título, medio, imagen y enlace.
+  - Corrige rutas de imágenes con Astro.site (para GitHub Pages).
+*/
+
 const notas = [
   {
     medio: "La Tercera",
@@ -31,19 +35,35 @@ const notas = [
     url: "https://www.latercera.com/la-tercera-pm/noticia/la-declaracion-ramiro-carroza-estoy-seguro-estaba-privado-libertad-detencion-preventiva/792779/",
     img: "/assets/prensa/ramiro.jpg",
   },
+  {
+    medio: "La Tercera",
+    titulo: "El Papa en La Araucanía: 'Mari Mari, peñi, lamngen'",
+    url: "https://www.latercera.com/noticia/papa-la-araucania-mari-mari/",
+    img: "/assets/prensa/papa.jpg",
+  },
 ];
+
+// ✅ Función para resolver rutas locales o absolutas
+const resolveSrc = (imgPath) => {
+  if (!imgPath) return undefined;
+  if (imgPath.startsWith("http")) return imgPath;
+  return new URL(imgPath, Astro.site).pathname;
+};
 ---
+
 <section id="prensa" class="section">
   <div class="container">
     <h2>Artículos en Prensa</h2>
     <div class="grid cards">
       {notas.map((n) => {
-        const src = new URL(n.img, Astro.site).pathname; // no rompe si falta (solo no carga imagen)
+        const src = resolveSrc(n.img);
         return (
-          <a class="card press" href={n.url} target="_blank" rel="noopener" style="display:block">
-            <figure class="thumb">
-              <img src={src} alt={n.titulo} loading="lazy" />
-            </figure>
+          <a class="card press" href={n.url} target="_blank" rel="noopener">
+            {src && (
+              <figure class="thumb">
+                <img src={src} alt={n.titulo} loading="lazy" />
+              </figure>
+            )}
             <div class="meta">
               <span class="tag">{n.medio}</span>
               <h3 class="h5">{n.titulo}</h3>
@@ -56,7 +76,26 @@ const notas = [
 </section>
 
 <style>
-  .press .thumb{aspect-ratio:16/9; overflow:hidden; border-radius:.6rem}
-  .press img{width:100%; height:100%; object-fit:cover}
-  .press .tag{font-size:.85rem; color:#5b6b7a}
+  .press .thumb {
+    aspect-ratio: 16/9;
+    overflow: hidden;
+    border-radius: .6rem;
+    margin-bottom: .5rem;
+  }
+  .press img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+  .press .tag {
+    font-size: .85rem;
+    color: #5b6b7a;
+  }
+  .press .meta h3 {
+    font-size: 1rem;
+    color: var(--ink);
+    margin: .25rem 0 0;
+    line-height: 1.4;
+  }
 </style>
