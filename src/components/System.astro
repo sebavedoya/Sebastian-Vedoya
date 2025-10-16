@@ -1,12 +1,20 @@
 ---
-/** Bloque simplificado (como pediste): una sola frase grande. */
+/* No se requiere frontmatter */
 ---
+
 <section id="sistema" class="section">
   <div class="container">
-    <div class="card emphasis">
-      <p class="xxl">
-        <strong>"Ningún actor puede controlar el entorno sin igualarlo en complejidad; y si no puede igualarlo, debe aprender a domesticarlo", Ross Ashby.</strong>
-      </p>
-    </div>
+    <blockquote class="system-quote reveal">
+      “Ningún actor puede controlar el entorno sin igualarlo en complejidad; y si no puede igualarlo, debe aprender a domesticarlo”, <span>Ross Ashby</span>.
+    </blockquote>
   </div>
 </section>
+
+<script is:inline>
+  // Reutilizamos el mismo patrón de aparición que en el hero
+  const el = document.currentScript.previousElementSibling.querySelector('.system-quote');
+  const io = new IntersectionObserver((entries)=>{
+    entries.forEach(e => { if (e.isIntersecting) el.classList.add('revealed'); });
+  }, { threshold: 0.2 });
+  io.observe(el);
+</script>
