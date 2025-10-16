@@ -1,8 +1,13 @@
 ---
-/** ✅ Press.astro
-  - Muestra cards con título, medio, imagen y enlace.
-  - Corrige rutas de imágenes con Astro.site (para GitHub Pages).
+/** ✅ Press.astro robusto para GitHub Pages
+    - Rutas locales prefijadas con BASE_URL
+    - Acepta http(s)
+    - Placeholder si no hay imagen
+    - Modo DEBUG para ver el src final en pantalla
 */
+
+// ⚙️ Activa temporalmente para ver las rutas calculadas bajo cada card:
+const DEBUG = false;
 
 const notas = [
   {
@@ -43,11 +48,14 @@ const notas = [
   },
 ];
 
-// ✅ Función para resolver rutas locales o absolutas
-const resolveSrc = (imgPath) => {
-  if (!imgPath) return undefined;
-  if (imgPath.startsWith("http")) return imgPath;
-  return new URL(imgPath, Astro.site).pathname;
+// Prefijo del sitio: "/" en dev, "/Sebastian-Vedoya" en Pages
+const BASE = (import.meta.env.BASE_URL || "/").replace(/\/+$/, "");
+
+// Resolver src final
+const srcFor = (p?: string) => {
+  if (!p) return undefined;
+  if (/^https?:\/\//i.test(p)) return p;
+  return `${BASE}${p.startsWith("/") ? p : `/${p}`}`;
 };
 ---
 
@@ -56,17 +64,20 @@ const resolveSrc = (imgPath) => {
     <h2>Artículos en Prensa</h2>
     <div class="grid cards">
       {notas.map((n) => {
-        const src = resolveSrc(n.img);
+        const src = srcFor(n.img);
         return (
           <a class="card press" href={n.url} target="_blank" rel="noopener">
-            {src && (
+            {src ? (
               <figure class="thumb">
                 <img src={src} alt={n.titulo} loading="lazy" />
               </figure>
+            ) : (
+              <div class="thumb placeholder" aria-hidden="true"></div>
             )}
             <div class="meta">
               <span class="tag">{n.medio}</span>
               <h3 class="h5">{n.titulo}</h3>
+              {DEBUG && <code class="debug-src">{src}</code>}
             </div>
           </a>
         );
@@ -76,26 +87,10 @@ const resolveSrc = (imgPath) => {
 </section>
 
 <style>
-  .press .thumb {
-    aspect-ratio: 16/9;
-    overflow: hidden;
-    border-radius: .6rem;
-    margin-bottom: .5rem;
-  }
-  .press img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    display: block;
-  }
-  .press .tag {
-    font-size: .85rem;
-    color: #5b6b7a;
-  }
-  .press .meta h3 {
-    font-size: 1rem;
-    color: var(--ink);
-    margin: .25rem 0 0;
-    line-height: 1.4;
-  }
+  .press .thumb{aspect-ratio:16/9;overflow:hidden;border-radius:.6rem;margin-bottom:.5rem;background:#f1f5f9}
+  .press .thumb.placeholder{display:block}
+  .press img{width:100%;height:100%;object-fit:cover;display:block}
+  .press .tag{font-size:.85rem;color:#5b6b7a}
+  .press .meta h3{font-size:1rem;color:var(--ink);margin:.25rem 0 0;line-height:1.4}
+  .debug-src{display:block;margin-top:.35rem;color:#475569;font-size:.8rem;word-break:break-all}
 </style>
