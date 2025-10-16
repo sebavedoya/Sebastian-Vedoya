@@ -16,9 +16,10 @@
       </div>
     </div>
     <div class="hero-photo-wrap">
-      <img class="hero-photo" src="assets/foto-perfil.jpg" alt="Sebastián Vedoya M." />
-    </div>
-  </div>
+---
+import foto from "../../public/assets/foto.jpg"; // cambia el nombre según tu archivo
+---
+<img src={foto} alt="Sebastián Vedoya M." />  </div>
   <canvas id="bg-net" aria-hidden="true"></canvas>
   <script is:inline>
     const obs = new IntersectionObserver((ents)=> {
