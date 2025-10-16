@@ -1,3 +1,13 @@
+---
+export interface Props {
+  foto?: string;
+}
+
+// Recibe la prop `foto` desde index.astro o usa una por defecto
+const { foto } = Astro.props;
+const fotoUrl = foto ?? new URL('/assets/foto.jpg', Astro.site).pathname;
+---
+
 <section id="inicio" class="hero section reveal">
   <div class="container hero-grid">
     <div class="hero-copy">
@@ -15,21 +25,25 @@
         <a class="chip" href="https://www.linkedin.com/in/sebastianvedoyam/" target="_blank" rel="noopener">LinkedIn</a>
       </div>
     </div>
+
     <div class="hero-photo-wrap">
----
-import foto from "../../public/assets/foto.jpg"; // cambia el nombre según tu archivo
----
-<img src={foto} alt="Sebastián Vedoya M." />  </div>
+      <img src={fotoUrl} alt="Sebastián Vedoya M." loading="lazy" />
+    </div>
+  </div>
+
   <canvas id="bg-net" aria-hidden="true"></canvas>
+
   <script is:inline>
     const obs = new IntersectionObserver((ents)=> {
       for (const e of ents) if (e.isIntersecting) e.target.classList.add('revealed');
     }, { threshold: 0.1 });
     obs.observe(document.currentScript.closest('.reveal'));
+
     const canvas = document.getElementById('bg-net');
     const ctx = canvas.getContext('2d');
     const DPR = window.devicePixelRatio || 1;
     let nodes = [];
+
     function resizeCanvas() {
       const hero = document.getElementById('inicio');
       const w = hero.clientWidth, h = hero.clientHeight;
@@ -39,6 +53,7 @@ import foto from "../../public/assets/foto.jpg"; // cambia el nombre según tu a
       canvas.style.height = h + 'px';
       initNodes();
     }
+
     function initNodes() {
       const count = 44;
       nodes = [];
@@ -47,6 +62,7 @@ import foto from "../../public/assets/foto.jpg"; // cambia el nombre según tu a
         nodes.push({ x: Math.random() * w, y: Math.random() * h, vx: (Math.random() - 0.5) * 0.18 * DPR, vy: (Math.random() - 0.5) * 0.18 * DPR });
       }
     }
+
     function step() {
       const w = canvas.width, h = canvas.height;
       for (const n of nodes) {
@@ -55,6 +71,7 @@ import foto from "../../public/assets/foto.jpg"; // cambia el nombre según tu a
         if (n.y < 0 || n.y > h) n.vy *= -1;
       }
     }
+
     function draw() {
       const w = canvas.width, h = canvas.height;
       ctx.clearRect(0, 0, w, h);
@@ -85,6 +102,7 @@ import foto from "../../public/assets/foto.jpg"; // cambia el nombre según tu a
       }
       step(); requestAnimationFrame(draw);
     }
+
     window.addEventListener('resize', resizeCanvas);
     resizeCanvas(); requestAnimationFrame(draw);
   </script>
