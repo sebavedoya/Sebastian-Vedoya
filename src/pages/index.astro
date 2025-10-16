@@ -4,12 +4,17 @@ import Header from "../components/Header.astro";
 import Hero from "../components/Hero.astro";
 import Contact from "../components/Contact.astro";
 
-// ✅ ruta segura para GitHub Pages usando Astro.site + base
-const foto = new URL('/assets/foto-hero.jpg', Astro.site).pathname;
+// ✅ Rutas seguras para GitHub Pages
+const cv   = new URL('/files/CV.pdf', Astro.site).pathname;              // requiere public/files/CV.pdf
+const foto = new URL('/assets/foto-hero.jpeg', Astro.site).pathname;     // ajusta el nombre si usas otro
 ---
-<Base title="Sebastián Vedoya M. — Comunicación Estratégica" description="Estratega en comunicación con más de 10 años...">
+
+<Base title="Sebastián Vedoya M. — Comunicación Estratégica"
+      description="Estratega en comunicación con más de 10 años de experiencia en medios y gobierno. Me dedico a buscar respuestas complejas para entornos complejos.">
   <Header />
-  <!-- Si tu Hero recibe la prop foto, pásala -->
-  <Hero foto={foto} />
-  <Contact />
+  <main>
+    <!-- Pasamos props para que NO dependa de variables no definidas -->
+    <Hero cv={cv} foto={foto} />
+  </main>
+  <Contact cv={cv} />
 </Base>
