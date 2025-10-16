@@ -1,0 +1,123 @@
+---
+/**
+ * Scrollytelling sin imágenes:
+ * - Panel izquierdo "pegado" (sticky) que cambia de estado.
+ * - Pasos a la derecha que, al entrar al viewport, actualizan el panel.
+ * - Sin dependencias externas, rutas neutras para GitHub Pages.
+ */
+
+const pasos = [
+  {
+    id: "diagnostico",
+    titulo: "Diagnóstico del entorno",
+    texto: "Leemos señales débiles y fuertes: medios, audiencias, territorios y plataformas.",
+    detalle: "Mapeamos actores, riesgos, oportunidades y narrativas en competencia para anticipar escenarios."
+  },
+  {
+    id: "arquitectura",
+    titulo: "Arquitectura de mensajes",
+    texto: "Diseñamos mensajes coherentes, consistentes y adaptables a múltiples niveles.",
+    detalle: "Definimos vocerías, argumentos, timing y cadencia, asegurando alineamiento centro–regiones."
+  },
+  {
+    id: "ejecucion",
+    titulo: "Ejecución multicanal",
+    texto: "Operamos con ritmo y coherencia: prensa, redes, comunicación interna y terreno.",
+    detalle: "Priorizamos impacto comunicacional por sobre ‘llenar el feed’. Contenido con propósito."
+  },
+  {
+    id: "aprendizaje",
+    titulo: "Métricas y aprendizaje",
+    texto: "Medimos y aprendemos para el siguiente ciclo de decisión.",
+    detalle: "Indicadores accionables, no métricas vanidosas. Ajuste continuo con foco en objetivos."
+  }
+];
+---
+
+<section id="relato" class="pinblock section">
+  <div class="container pin-layout">
+    <!-- Panel fijo (sticky) -->
+    <aside class="pin-panel">
+      <div class="pin-panel-inner" id="pinPanel">
+        <h3 class="pin-eyebrow">Método</h3>
+        <h2 class="pin-title" data-default>Diagnóstico del entorno</h2>
+        <p class="pin-lead" data-default>
+          Leemos señales débiles y fuertes: medios, audiencias, territorios y plataformas.
+        </p>
+        <p class="pin-detail" data-default>
+          Mapeamos actores, riesgos, oportunidades y narrativas en competencia para anticipar escenarios.
+        </p>
+
+        <!-- Indicadores de progreso -->
+        <div class="pin-steps-dotbar" id="dotbar" aria-hidden="true">
+          {pasos.map((_, i) => <span class="dot" data-index={i} />)}
+        </div>
+      </div>
+    </aside>
+
+    <!-- Pasos que disparan cambios -->
+    <div class="pin-steps">
+      {pasos.map((p, i) => (
+        <article class="pin-step reveal" data-step={i} id={p.id}>
+          <header class="pin-step-head">
+            <span class="step-index">{String(i+1).padStart(2,"0")}</span>
+            <h3>{p.titulo}</h3>
+          </header>
+          <p class="pin-step-text">{p.texto}</p>
+          <p class="pin-step-detail">{p.detalle}</p>
+        </article>
+      ))}
+    </div>
+  </div>
+</section>
+
+<script is:inline>
+  // Texto fuente (desde el DOM) para no duplicar contenido
+  const steps = Array.from(document.querySelectorAll(".pin-step"));
+  const panel = document.getElementById("pinPanel");
+  const dots = Array.from(document.querySelectorAll("#dotbar .dot"));
+
+  const titleEl  = panel.querySelector(".pin-title");
+  const leadEl   = panel.querySelector(".pin-lead");
+  const detailEl = panel.querySelector(".pin-detail");
+
+  function setActive(stepEl){
+    steps.forEach(s => s.classList.toggle("is-active", s === stepEl));
+    const idx = Number(stepEl.dataset.step);
+
+    const head = stepEl.querySelector("h3")?.textContent?.trim() ?? "";
+    const text = stepEl.querySelector(".pin-step-text")?.textContent?.trim() ?? "";
+    const det  = stepEl.querySelector(".pin-step-detail")?.textContent?.trim() ?? "";
+
+    // Pequeña animación de texto (fade + translate)
+    [titleEl, leadEl, detailEl].forEach(el => {
+      el.classList.remove("swap-in");
+      void el.offsetWidth; // reflow para reiniciar animación
+    });
+
+    titleEl.textContent  = head;
+    leadEl.textContent   = text;
+    detailEl.textContent = det;
+
+    [titleEl, leadEl, detailEl].forEach(el => el.classList.add("swap-in"));
+
+    dots.forEach((d, i) => d.classList.toggle("is-on", i <= idx));
+  }
+
+  // IO para activar el step “visible”
+  const active = new Set();
+  const io = new IntersectionObserver((entries)=>{
+    for(const e of entries){
+      if(e.isIntersecting) active.add(e.target); else active.delete(e.target);
+      const current = [...active].sort((a,b)=> a.dataset.step - b.dataset.step).at(-1);
+      if(current) setActive(current);
+    }
+  }, { rootMargin: "-30% 0px -30% 0px", threshold: 0.55 });
+  steps.forEach(s => io.observe(s));
+
+  // Aparición suave (reutiliza tu patrón reveal)
+  const ap = new IntersectionObserver((es)=>{
+    for(const e of es) e.target.classList.toggle("reveal--in", e.isIntersecting);
+  }, { threshold: 0.2 });
+  steps.forEach(el => ap.observe(el));
+</script>
