@@ -284,3 +284,107 @@ details.card > summary::-webkit-details-marker{display:none}
   .pin-panel-inner{ min-height:52vh; }
   .pin-steps{ order:1; gap:10vh; }
 }
+/* ===== Scrollytelling de escenas (System, Projects, Reflections) ===== */
+.scenes-layout{
+  display:grid;
+  grid-template-columns: 220px 1fr;
+  gap:2rem;
+  align-items:start;
+}
+
+.scenes-progress{
+  position:sticky;
+  top:12vh;
+  height:76vh;
+  display:flex;
+  flex-direction:column;
+  align-items:flex-start;
+  gap:1rem;
+}
+
+.progress-track{
+  position:relative;
+  width:8px;
+  height:100%;
+  border-radius:999px;
+  background: #eef2f7;
+  overflow:hidden;
+  border:1px solid var(--line);
+}
+.progress-thumb{
+  position:absolute;
+  inset:auto 0 0 0;
+  transform-origin: bottom center;
+  transform: scaleY(0.05);
+  background: linear-gradient(180deg, var(--accent), var(--copper));
+  border-radius:999px;
+  transition: transform .35s ease;
+}
+
+.progress-labels{
+  list-style:none; margin:0; padding:0;
+  display:flex; flex-direction:column; gap:.4rem;
+}
+.progress-label{
+  color:#64748b; font-size:.9rem;
+  transition: color .25s ease, transform .25s ease;
+  transform: translateX(0);
+}
+.progress-label.is-on{
+  color: var(--accent);
+  font-weight: 700;
+  transform: translateX(2px);
+}
+
+/* Columna de escenas */
+.scenes-col{
+  display:flex;
+  flex-direction:column;
+  gap:8vh;
+  scroll-snap-type: y proximity; /* en móvil se siente más ‘Apple’ */
+}
+
+/* Cada escena envuelve tu componente */
+.scene{
+  background:#fff;
+  border:1px solid var(--line);
+  border-radius:16px;
+  box-shadow:0 8px 28px rgba(2,8,23,.06);
+  padding: 1.25rem;
+  transition: box-shadow .35s ease, transform .35s ease, opacity .35s ease;
+  opacity:.7;
+  transform: translateY(8px);
+}
+.scene.is-active{
+  opacity:1;
+  transform: translateY(0);
+  box-shadow:0 16px 40px rgba(2,8,23,.10);
+}
+.scene:focus-within{ outline: 2px solid rgba(26,77,110,.25); outline-offset: 2px; }
+.scene{ scroll-snap-align: start }
+
+/* Responsive */
+@media (max-width: 980px){
+  .scenes-layout{
+    grid-template-columns: 1fr;
+  }
+  .scenes-progress{
+    order: -1;
+    height:auto;
+    top:10vh;
+    flex-direction:row;
+    align-items:center;
+    gap:1rem;
+  }
+  .progress-track{
+    width:100%; height:8px;
+  }
+  .progress-thumb{
+    inset:0 auto 0 0;
+    transform-origin: left center;
+    transform: scaleX(0.05);
+  }
+  .progress-labels{
+    flex-direction:row; gap:.75rem; flex-wrap:wrap;
+  }
+}
