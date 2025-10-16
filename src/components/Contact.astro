@@ -1,12 +1,7 @@
 ---
-export interface Props {
-  cv?: string;
-}
-
+export interface Props { cv?: string; }
 const { cv } = Astro.props;
-
-// ✅ Fallback robusto compatible con GitHub Pages
-// Genera URL absoluta si no se pasa prop
+// Ruta absoluta robusta para GitHub Pages (proyecto bajo /Sebastian-Vedoya)
 const cvUrl = cv ?? new URL('/Sebastian-Vedoya/files/CV.pdf', Astro.site).href;
 ---
 
@@ -14,9 +9,7 @@ const cvUrl = cv ?? new URL('/Sebastian-Vedoya/files/CV.pdf', Astro.site).href;
   <div class="container">
     <h2>Contacto</h2>
     <p>¿Conversamos? Escríbeme y revisa mi CV.</p>
-
     <div class="cta-row">
-      <!-- ✅ usar cvUrl, con atributo download -->
       <a class="btn" href={cvUrl} download>Descargar CV</a>
       <a class="chip" href="mailto:seba.vedoya@gmail.com">seba.vedoya@gmail.com</a>
       <a class="chip" href="https://www.linkedin.com/in/sebastianvedoyam/" target="_blank" rel="noopener">LinkedIn</a>
