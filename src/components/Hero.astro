@@ -1,13 +1,17 @@
 ---
 export interface Props {
-  foto?: string;
+  cv?: string;     // ✅ nueva prop opcional
+  foto?: string;   // (si ya la usas)
 }
 
-// Recibe la prop `foto` desde index.astro o usa una por defecto
-const { foto } = Astro.props;
-const fotoUrl = foto ?? new URL('/assets/foto.jpg', Astro.site).pathname;
----
+const { cv, foto } = Astro.props;
 
+// Fallbacks seguros para GitHub Pages:
+// - CV en public/files/CV.pdf
+// - Foto en public/assets/foto-hero.jpeg (ajusta el nombre si usas otro)
+const cvUrl   = cv   ?? new URL('/files/CV.pdf', Astro.site).pathname;
+const fotoUrl = foto ?? new URL('/assets/foto-hero.jpeg', Astro.site).pathname;
+---
 <section id="inicio" class="hero section reveal">
   <div class="container hero-grid">
     <div class="hero-copy">
@@ -20,13 +24,15 @@ const fotoUrl = foto ?? new URL('/assets/foto.jpg', Astro.site).pathname;
         Me dedico a buscar respuestas complejas para entornos complejos.
       </p>
       <div class="cta-row">
-        <a class="btn" href="files/CV.pdf" target="_blank" rel="noopener">Descargar CV</a>
+        <!-- ✅ usa cvUrl (definido arriba en el frontmatter) -->
+        <a class="btn" href={cvUrl} target="_blank" rel="noopener">Descargar CV</a>
         <a class="chip" href="mailto:seba.vedoya@gmail.com">seba.vedoya@gmail.com</a>
         <a class="chip" href="https://www.linkedin.com/in/sebastianvedoyam/" target="_blank" rel="noopener">LinkedIn</a>
       </div>
     </div>
 
     <div class="hero-photo-wrap">
+      <!-- ✅ usa fotoUrl (definido arriba en el frontmatter) -->
       <img src={fotoUrl} alt="Sebastián Vedoya M." loading="lazy" />
     </div>
   </div>
