@@ -6,15 +6,18 @@ export interface Props {
 
 const { cv, foto } = Astro.props;
 
-const cvUrl =
-  cv ?? new URL('/files/CV.pdf', Astro.site).pathname;
+// ✅ BASE_URL dinámico ("/" en local, "/Sebastian-Vedoya" en GitHub Pages)
+const BASE = (import.meta.env.BASE_URL || "/").replace(/\/+$/, "");
 
-// 🔧 Resolver la foto de forma robusta:
+// ✅ Resolver CV (si no viene desde prop)
+const cvUrl = cv
+  ? (/^https?:\/\//i.test(cv) ? cv : `${BASE}${cv.startsWith("/") ? cv : `/${cv}`}`)
+  : `${BASE}/files/CV.pdf`;
+
+// ✅ Resolver foto (si no viene desde prop)
 const fotoUrl = foto
-  ? (foto.startsWith('http')
-      ? foto
-      : new URL(foto, Astro.site).pathname)
-  : new URL('/assets/foto-hero.jpeg', Astro.site).pathname;
+  ? (/^https?:\/\//i.test(foto) ? foto : `${BASE}${foto.startsWith("/") ? foto : `/${foto}`}`)
+  : `${BASE}/assets/foto-hero.jpeg`;
 ---
 
 <section id="inicio" class="hero section reveal">
@@ -29,7 +32,7 @@ const fotoUrl = foto
         Me dedico a buscar respuestas complejas para entornos complejos.
       </p>
       <div class="cta-row">
-        <!-- ✅ usa cvUrl absoluto y fuerza descarga -->
+        <!-- ✅ usa cvUrl con base absoluta -->
         <a class="btn" href={cvUrl} download>Descargar CV</a>
         <a class="chip" href="mailto:seba.vedoya@gmail.com">seba.vedoya@gmail.com</a>
         <a class="chip" href="https://www.linkedin.com/in/sebastianvedoyam/" target="_blank" rel="noopener">LinkedIn</a>
@@ -37,7 +40,7 @@ const fotoUrl = foto
     </div>
 
     <div class="hero-photo-wrap">
-      <!-- ✅ usa fotoUrl (definido arriba en el frontmatter) -->
+      <!-- ✅ foto robusta para GitHub Pages -->
       <img src={fotoUrl} alt="Sebastián Vedoya M." loading="lazy" />
     </div>
   </div>
