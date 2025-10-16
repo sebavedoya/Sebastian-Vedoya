@@ -1,18 +1,52 @@
 ---
-// Header simple con ancla a secciones
+// Links del header
 const links = [
-  { href: "#proyectos", label: "Proyectos" },
+  { href: "#proyectos",   label: "Proyectos" },
   { href: "#reflexiones", label: "Reflexiones" },
-  { href: "#prensa", label: "Prensa" },
-  { href: "#contacto", label: "Contacto" },
+  { href: "#prensa",      label: "Prensa" },
+  { href: "#contacto",    label: "Contacto" },
 ];
 ---
 <header class="site-header">
   <div class="container header-inner">
     <a class="brand" href="#inicio">Sebastián Vedoya M.</a>
-    <nav class="main-nav" aria-label="Principal">
+
+    <nav class="main-nav" id="mainNav" aria-label="Principal">
       {links.map(l => <a href={l.href}>{l.label}</a>)}
     </nav>
+
     <a class="btn btn-ghost" href="#contacto">Contáctame</a>
+
+    <!-- Botón hamburguesa (visible en móvil por CSS) -->
+    <button
+      class="nav-toggle"
+      id="navToggle"
+      aria-controls="mainNav"
+      aria-expanded="false"
+      aria-label="Abrir menú"
+    >
+      ☰
+    </button>
   </div>
 </header>
+
+<script is:inline>
+  const btn  = document.getElementById('navToggle');
+  const nav  = document.getElementById('mainNav');
+
+  btn?.addEventListener('click', () => {
+    const open = nav.classList.toggle('open');
+    btn.setAttribute('aria-expanded', String(open));
+    btn.setAttribute('aria-label', open ? 'Cerrar menú' : 'Abrir menú');
+  });
+
+  // Cierra el menú al navegar (en móvil)
+  nav?.querySelectorAll('a').forEach(a => {
+    a.addEventListener('click', () => {
+      if (nav.classList.contains('open')) {
+        nav.classList.remove('open');
+        btn.setAttribute('aria-expanded', 'false');
+      }
+    });
+  });
+</script>
