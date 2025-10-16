@@ -4,8 +4,9 @@ import Header from "../components/Header.astro";
 import Hero from "../components/Hero.astro";
 import Contact from "../components/Contact.astro";
 
-// Solo definimos la foto. NO usamos cv aquí.
-// Los componentes tienen fallback interno para el CV.
+// ✅ Definimos cv (aunque no la usemos) para evitar "cv is not defined".
+const cv   = new URL('/files/CV.pdf', Astro.site).pathname;
+// ✅ Solo definimos foto; puedes cambiar el nombre si tu imagen es distinta.
 const foto = new URL('/assets/foto-hero.jpeg', Astro.site).pathname;
 ---
 
