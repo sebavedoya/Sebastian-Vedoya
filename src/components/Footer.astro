@@ -1,5 +1,21 @@
 <footer class="site-footer">
   <div class="container">
-    <p>© {new Date().getFullYear()} Sebastián Vedoya M. — Comunicación Estratégica</p>
+    <p>© {new Date().getFullYear()} <strong>Sebastián Vedoya M.</strong> — Comunicación Estratégica</p>
   </div>
 </footer>
+
+<style>
+  footer.site-footer {
+    border-top: 1px solid var(--line);
+    padding: 1.25rem 0;
+    background: linear-gradient(180deg, #fff 0%, #f7f9fb 80%, var(--bg-2) 100%);
+    color: var(--muted);
+    text-align: center;
+    font-size: 0.95rem;
+    letter-spacing: 0.2px;
+  }
+  footer.site-footer strong {
+    color: var(--accent);
+    font-weight: 700;
+  }
+</style>
