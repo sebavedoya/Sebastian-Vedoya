@@ -1,0 +1,78 @@
+---
+/**
+ * ScrollScenes: contenedor de escenas con barra de progreso.
+ * Activa transiciones al hacer scroll usando IntersectionObserver.
+ * No cambia el contenido de tus componentes: solo los envuelve.
+ */
+import System from "../components/System.astro";
+import Projects from "../components/Projects.astro";
+import Reflections from "../components/Reflections.astro";
+
+const scenes = [
+  { id: "escena-system",     title: "Sistema",      component: System },
+  { id: "escena-projects",   title: "Proyectos",    component: Projects },
+  { id: "escena-reflections",title: "Reflexiones",  component: Reflections },
+];
+---
+<section id="escenas" class="scenes section">
+  <div class="container scenes-layout">
+    <!-- Barra de progreso (sticky) -->
+    <aside class="scenes-progress" aria-hidden="true">
+      <div class="progress-track">
+        <div class="progress-thumb" id="scenesProgress"></div>
+      </div>
+      <ul class="progress-labels" id="scenesLabels">
+        {scenes.map((s, i) => (
+          <li class="progress-label" data-index={i}>{s.title}</li>
+        ))}
+      </ul>
+    </aside>
+
+    <!-- Columnas de escenas -->
+    <div class="scenes-col" id="scenesCol">
+      {scenes.map((s, i) => {
+        const C = s.component;
+        return (
+          <section class="scene reveal" id={s.id} data-index={i} aria-current="false">
+            <C />
+          </section>
+        )
+      })}
+    </div>
+  </div>
+</section>
+
+<script is:inline>
+  // Elementos
+  const col     = document.getElementById('scenesCol');
+  const scenes  = Array.from(col.querySelectorAll('.scene'));
+  const labels  = Array.from(document.getElementById('scenesLabels').children);
+  const bar     = document.getElementById('scenesProgress');
+
+  // IO para activar escena visible
+  const active = new Set();
+  const io = new IntersectionObserver((entries)=>{
+    for(const e of entries){
+      const el = e.target;
+      if(e.isIntersecting){ active.add(el); } else { active.delete(el); }
+      const current = [...active].sort((a,b)=> a.dataset.index - b.dataset.index).at(-1);
+      if(current){
+        scenes.forEach(sc => sc.classList.toggle('is-active', sc === current));
+        scenes.forEach(sc => sc.setAttribute('aria-current', sc === current ? 'true' : 'false'));
+        labels.forEach((lb, i) => lb.classList.toggle('is-on', i <= Number(current.dataset.index)));
+
+        // Progreso discreto por escena
+        const p = (Number(current.dataset.index)+1) / scenes.length;
+        bar.style.transform = `scaleY(${Math.max(0.05, p)})`;
+      }
+    }
+  }, { root: null, rootMargin: "-30% 0px -30% 0px", threshold: 0.55 });
+
+  scenes.forEach(s => io.observe(s));
+
+  // Aparición suave (reutiliza tu patrón reveal)
+  const ap = new IntersectionObserver((es)=>{
+    for(const e of es) e.target.classList.toggle("reveal--in", e.isIntersecting);
+  }, { threshold: 0.2 });
+  scenes.forEach(el => ap.observe(el));
+</script>
