@@ -1,16 +1,20 @@
 ---
 export interface Props {
-  cv?: string;     // Prop opcional (por si algún día quieres pasarla desde la página)
-  foto?: string;   // Prop opcional para la foto del hero
+  cv?: string;
+  foto?: string; // puede venir relativa "/assets/..." o absoluta "https://..."
 }
 
 const { cv, foto } = Astro.props;
 
-// ✅ Rutas robustas para GitHub Pages (proyecto bajo /Sebastian-Vedoya)
-// CV: usa URL ABSOLUTA (href) para evitar errores 404 en el hero
-const cvUrl   = cv   ?? new URL('/Sebastian-Vedoya/files/CV.pdf', Astro.site).href;
-// Foto: pathname es suficiente (se respeta el base)
-const fotoUrl = foto ?? new URL('/assets/foto-hero.jpeg', Astro.site).pathname;
+const cvUrl =
+  cv ?? new URL('/files/CV.pdf', Astro.site).pathname;
+
+// 🔧 Resolver la foto de forma robusta:
+const fotoUrl = foto
+  ? (foto.startsWith('http')
+      ? foto
+      : new URL(foto, Astro.site).pathname)
+  : new URL('/assets/foto-hero.jpeg', Astro.site).pathname;
 ---
 
 <section id="inicio" class="hero section reveal">
