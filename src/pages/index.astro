@@ -1,15 +1,15 @@
 ---
 import Base from "../layouts/Base.astro";
-
 import Header from "../components/Header.astro";
 import Hero from "../components/Hero.astro";
 import Contact from "../components/Contact.astro";
----
 
-<Base title="Sebastián Vedoya M. — Comunicación Estratégica">
+// ✅ ruta segura para GitHub Pages usando Astro.site + base
+const foto = new URL('/assets/foto-hero.jpg', Astro.site).pathname;
+---
+<Base title="Sebastián Vedoya M. — Comunicación Estratégica" description="Estratega en comunicación con más de 10 años...">
   <Header />
-  <main>
-    <Hero />
-  </main>
+  <!-- Si tu Hero recibe la prop foto, pásala -->
+  <Hero foto={foto} />
   <Contact />
 </Base>
