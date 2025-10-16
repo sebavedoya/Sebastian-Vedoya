@@ -180,3 +180,107 @@ details.card > summary::-webkit-details-marker{display:none}
   .press-grid{grid-template-columns:1fr}
   .hero-photo-wrap img{width:280px;height:360px}
 }
+/* ===== Scrollytelling sin imágenes ===== */
+.pin-layout{
+  display:grid;
+  grid-template-columns:1.1fr .9fr;
+  gap:2rem;
+  align-items:start;
+  min-height:140vh;
+}
+.pin-panel{
+  position:sticky;
+  top:12vh;
+  height:76vh;
+}
+.pin-panel-inner{
+  height:100%;
+  border-radius:16px;
+  padding:1.6rem 1.4rem;
+  background:#fff;
+  border:1px solid var(--line);
+  box-shadow:0 14px 40px rgba(2,8,23,.08);
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+}
+.pin-eyebrow{
+  text-transform:uppercase;
+  letter-spacing:.12em;
+  color:#64748b;
+  font-size:.8rem;
+  margin:0 0 .25rem;
+}
+.pin-title{
+  margin:.1rem 0 .4rem;
+  font-size:clamp(1.6rem,3vw,2.3rem);
+  color:var(--accent);
+  font-weight:800;
+  letter-spacing:-0.015em;
+}
+.pin-lead{
+  color:#334155;
+  font-size:1.05rem;
+  margin:0 0 .6rem;
+}
+.pin-detail{
+  color:#475569;
+  margin:0;
+}
+
+.pin-steps-dotbar{
+  display:flex; gap:.35rem; margin-top:1.1rem;
+}
+.pin-steps-dotbar .dot{
+  width:8px; height:8px; border-radius:999px;
+  background:#e5e7eb; transition:background .25s ease, transform .25s ease;
+}
+.pin-steps-dotbar .dot.is-on{ background:var(--copper); transform:scale(1.08) }
+
+.pin-steps{
+  display:flex; flex-direction:column; gap:14vh;
+  padding:8vh 0;
+}
+.pin-step{
+  background:linear-gradient(180deg,#f8fbff,#fef8f1);
+  border-radius:16px;
+  padding:1.25rem 1.1rem;
+  border:1px solid rgba(2,8,23,.06);
+  opacity:.6;
+  transform:translateY(24px);
+  transition:.45s ease;
+}
+.pin-step.is-active{
+  opacity:1; transform:none;
+  box-shadow:0 10px 28px rgba(2,8,23,.08);
+}
+.pin-step-head{
+  display:flex; align-items:baseline; gap:.6rem; margin-bottom:.25rem;
+}
+.step-index{
+  font-variant-numeric:tabular-nums;
+  color:#94a3b8; font-weight:800; letter-spacing:.06em;
+}
+.pin-step h3{
+  margin:.2rem 0 .25rem;
+  font-size:clamp(1.2rem,2vw,1.6rem);
+  color:var(--accent);
+  font-weight:800;
+}
+.pin-step-text{ margin:0; color:#475569 }
+.pin-step-detail{ margin:.35rem 0 0; color:#64748b }
+
+/* Animación sutil al cambiar texto del panel */
+.swap-in{ animation:swapIn .5s ease both }
+@keyframes swapIn{
+  from{ opacity:0; transform:translateY(6px) }
+  to{ opacity:1; transform:none }
+}
+
+/* Responsive */
+@media (max-width: 980px){
+  .pin-layout{ grid-template-columns:1fr; }
+  .pin-panel{ order:2; height:auto; top:10vh; }
+  .pin-panel-inner{ min-height:52vh; }
+  .pin-steps{ order:1; gap:10vh; }
+}
