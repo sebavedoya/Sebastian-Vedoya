@@ -1,17 +1,18 @@
 ---
 export interface Props {
-  cv?: string;     // ✅ nueva prop opcional
-  foto?: string;   // (si ya la usas)
+  cv?: string;     // Prop opcional (por si algún día quieres pasarla desde la página)
+  foto?: string;   // Prop opcional para la foto del hero
 }
 
 const { cv, foto } = Astro.props;
 
-// Fallbacks seguros para GitHub Pages:
-// - CV en public/files/CV.pdf
-// - Foto en public/assets/foto-hero.jpeg (ajusta el nombre si usas otro)
-const cvUrl   = cv   ?? new URL('/files/CV.pdf', Astro.site).pathname;
+// ✅ Rutas robustas para GitHub Pages (proyecto bajo /Sebastian-Vedoya)
+// CV: usa URL ABSOLUTA (href) para evitar errores 404 en el hero
+const cvUrl   = cv   ?? new URL('/Sebastian-Vedoya/files/CV.pdf', Astro.site).href;
+// Foto: pathname es suficiente (se respeta el base)
 const fotoUrl = foto ?? new URL('/assets/foto-hero.jpeg', Astro.site).pathname;
 ---
+
 <section id="inicio" class="hero section reveal">
   <div class="container hero-grid">
     <div class="hero-copy">
@@ -24,8 +25,8 @@ const fotoUrl = foto ?? new URL('/assets/foto-hero.jpeg', Astro.site).pathname;
         Me dedico a buscar respuestas complejas para entornos complejos.
       </p>
       <div class="cta-row">
-        <!-- ✅ usa cvUrl (definido arriba en el frontmatter) -->
-        <a class="btn" href={cvUrl} target="_blank" rel="noopener">Descargar CV</a>
+        <!-- ✅ usa cvUrl absoluto y fuerza descarga -->
+        <a class="btn" href={cvUrl} download>Descargar CV</a>
         <a class="chip" href="mailto:seba.vedoya@gmail.com">seba.vedoya@gmail.com</a>
         <a class="chip" href="https://www.linkedin.com/in/sebastianvedoyam/" target="_blank" rel="noopener">LinkedIn</a>
       </div>
