@@ -1,30 +1,89 @@
 ---
-/** 3 proyectos con textos íntegros */
+/**
+ * Proyectos (Scrollytelling)
+ * - Reutiliza las clases .scenes-* ya añadidas en global.css
+ * - Barra de progreso sticky + pasos que se activan al hacer scroll
+ * - Sin imágenes; textos íntegros tal como los compartiste
+ */
+
 const items = [
   {
+    id: "proj-topografo",
     title: "Operación Topógrafo – Investigación periodística sobre espionaje militar",
     body: `Reportaje de investigación que reveló el espionaje de la Dirección de Inteligencia del Ejército a periodistas y funcionarios denunciantes. La publicación marcó un antes y un después en la discusión sobre transparencia y control civil de las Fuerzas Armadas, con repercusiones judiciales y mediáticas que se mantienen hasta hoy.`
   },
   {
+    id: "proj-vocerias",
     title: "Asesoría comunicacional – Vocerías y despliegue nacional",
     body: `He recorrido las 16 regiones del país, tanto en territorio continental como insular, acompañando a distintas autoridades de distintos gobiernos. Mi labor ha sido fortalecer las vocerías, orientar ante crisis y consolidar la coherencia comunicacional entre niveles centrales y regionales.`
   },
   {
+    id: "proj-redes",
     title: "Comunicación digital adaptada al estilo de redes sociales",
     body: `He conducido equipos con el propósito de reorientar las comunicaciones digitales institucionales desde un enfoque formal hacia un lenguaje adaptado al estilo propio de las redes sociales, capaz de visibilizar los logros de la administración y simultáneamente conectar con públicos diversos. Este enfoque permitió a la cuenta de INDAP aumentar en 81% el número total de seguidores.`
   }
 ];
 ---
-<section id="proyectos" class="section">
-  <div class="container">
-    <h2>Proyectos</h2>
-    <div class="grid cards">
-      {items.map((p) => (
-        <article class="card" style="padding:1.25rem;">
-          <h3 class="h4">{p.title}</h3>
-          <p>{p.body}</p>
+
+<section id="proyectos" class="section scenes">
+  <div class="container scenes-layout">
+    <h2 class="h2" style="grid-column:1 / -1; margin-bottom:.25rem;">Proyectos</h2>
+
+    <!-- Barra de progreso (sticky) -->
+    <aside class="scenes-progress" aria-hidden="true">
+      <div class="progress-track">
+        <div class="progress-thumb" id="progressProyectos"></div>
+      </div>
+      <ul class="progress-labels" id="labelsProyectos">
+        {items.map((p, i) => <li class="progress-label" data-index={i}>{p.title}</li>)}
+      </ul>
+    </aside>
+
+    <!-- Columna de escenas (pasos) -->
+    <div class="scenes-col" id="colProyectos">
+      {items.map((p, i) => (
+        <article class="scene reveal" id={p.id} data-index={i} aria-current="false">
+          <header class="pin-step-head">
+            <span class="step-index">{String(i+1).padStart(2,"0")}</span>
+            <h3 style="margin: .2rem 0 .35rem; font-weight:800;">{p.title}</h3>
+          </header>
+          <p class="pin-step-text">{p.body}</p>
         </article>
       ))}
     </div>
   </div>
 </section>
+
+<script is:inline>
+  // IDs únicos para esta sección
+  const col    = document.getElementById('colProyectos');
+  const scenes = Array.from(col.querySelectorAll('.scene'));
+  const bar    = document.getElementById('progressProyectos');
+  const labels = Array.from(document.getElementById('labelsProyectos').children);
+
+  const active = new Set();
+
+  const io = new IntersectionObserver((entries)=>{
+    for(const e of entries){
+      const el = e.target;
+      if(e.isIntersecting){ active.add(el); } else { active.delete(el); }
+      const current = [...active].sort((a,b)=> a.dataset.index - b.dataset.index).at(-1);
+      if(current){
+        scenes.forEach(sc => sc.classList.toggle('is-active', sc === current));
+        scenes.forEach(sc => sc.setAttribute('aria-current', sc === current ? 'true' : 'false'));
+        labels.forEach((lb, i) => lb.classList.toggle('is-on', i <= Number(current.dataset.index)));
+
+        const p = (Number(current.dataset.index)+1) / scenes.length;
+        bar.style.transform = `scaleY(${Math.max(0.05, p)})`;
+      }
+    }
+  }, { rootMargin: "-30% 0px -30% 0px", threshold: 0.55 });
+
+  scenes.forEach(s => io.observe(s));
+
+  // Aparición suave (si usas el patrón .reveal/.reveal--in)
+  const ap = new IntersectionObserver((es)=>{
+    for(const e of es) e.target.classList.toggle("reveal--in", e.isIntersecting);
+  }, { threshold: 0.2 });
+  scenes.forEach(el => ap.observe(el));
+</script>
