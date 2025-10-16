@@ -1,19 +1,30 @@
-<section id="proyectos" class="section reveal">
+---
+/** 3 proyectos con textos íntegros */
+const items = [
+  {
+    title: "Operación Topógrafo – Investigación periodística sobre espionaje militar",
+    body: `Reportaje de investigación que reveló el espionaje de la Dirección de Inteligencia del Ejército a periodistas y funcionarios denunciantes. La publicación marcó un antes y un después en la discusión sobre transparencia y control civil de las Fuerzas Armadas, con repercusiones judiciales y mediáticas que se mantienen hasta hoy.`
+  },
+  {
+    title: "Asesoría comunicacional – Vocerías y despliegue nacional",
+    body: `He recorrido las 16 regiones del país, tanto en territorio continental como insular, acompañando a distintas autoridades de distintos gobiernos. Mi labor ha sido fortalecer las vocerías, orientar ante crisis y consolidar la coherencia comunicacional entre niveles centrales y regionales.`
+  },
+  {
+    title: "Comunicación digital adaptada al estilo de redes sociales",
+    body: `He conducido equipos con el propósito de reorientar las comunicaciones digitales institucionales desde un enfoque formal hacia un lenguaje adaptado al estilo propio de las redes sociales, capaz de visibilizar los logros de la administración y simultáneamente conectar con públicos diversos. Este enfoque permitió a la cuenta de INDAP aumentar en 81% el número total de seguidores.`
+  }
+];
+---
+<section id="proyectos" class="section">
   <div class="container">
-    <h2 class="h2">Proyectos</h2>
-    <div class="cards-3">
-      <article class="card">
-        <div class="card-head"><span class="icon">🔍</span><h3 class="h3">Operación Topógrafo — Investigación periodística sobre espionaje militar</h3></div>
-        <p class="card-text">Reportaje de investigación que reveló el espionaje de la Dirección de Inteligencia del Ejército a periodistas y funcionarios denunciantes. La publicación marcó un antes y un después en la discusión sobre transparencia y control civil de las Fuerzas Armadas, con repercusiones judiciales y mediáticas que se mantienen hasta hoy.</p>
-      </article>
-      <article class="card">
-        <div class="card-head"><span class="icon">🎙️</span><h3 class="h3">Asesoría comunicacional — Vocerías y despliegue nacional</h3></div>
-        <p class="card-text">He recorrido las 16 regiones del país, tanto en territorio continental como insular, acompañando a distintas autoridades de distintos gobiernos. Mi labor ha sido fortalecer las vocerías, orientar ante crisis y consolidar la coherencia comunicacional entre niveles centrales y regionales.</p>
-      </article>
-      <article class="card">
-        <div class="card-head"><span class="icon">🌐</span><h3 class="h3">Comunicación digital adaptada al estilo de redes sociales</h3></div>
-        <p class="card-text">He conducido equipos con el propósito de reorientar las comunicaciones digitales institucionales desde un enfoque formal hacia un lenguaje adaptado al estilo propio de las redes sociales, capaz de visibilizar los logros de la administración y simultáneamente conectar con públicos diversos. Este enfoque permitió a la cuenta de INDAP aumentar en <strong>81%</strong> el número total de seguidores.</p>
-      </article>
+    <h2>Proyectos</h2>
+    <div class="grid cards">
+      {items.map((p) => (
+        <article class="card" style="padding:1.25rem;">
+          <h3 class="h4">{p.title}</h3>
+          <p>{p.body}</p>
+        </article>
+      ))}
     </div>
   </div>
 </section>

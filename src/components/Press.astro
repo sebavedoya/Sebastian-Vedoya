@@ -1,0 +1,62 @@
+---
+/** Cards con imagen opcional + link a la nota */
+const notas = [
+  {
+    medio: "La Tercera",
+    titulo: "Operación Topógrafo — Espionaje del Ejército a denunciantes",
+    url: "https://www.latercera.com/reportajes/noticia/operacion-topografo-espionaje-del-ejercito-cuatro-denunciantes-irregularidades/777342/",
+    img: "/assets/prensa/topografo.jpg",
+  },
+  {
+    medio: "Publimetro",
+    titulo: "Ricardo Lagos: “Durante mi gobierno no privaticé nada, al contrario”",
+    url: "https://www.publimetro.cl/cl/noticias/2016/11/18/ex-presidente-lagos-durante-mi-gobierno-no-privatice-nada-contrario.html",
+    img: "/assets/prensa/lagos.jpg",
+  },
+  {
+    medio: "Publimetro",
+    titulo: "Sebastián Piñera: “Me siento orgulloso de lo que he logrado en la vida”",
+    url: "https://www.publimetro.cl/cl/noticias/2017/06/19/sebastian-pinera-me-siento-orgulloso-lo-he-logrado-vida.html",
+    img: "/assets/prensa/pinera.jpg",
+  },
+  {
+    medio: "La Tercera",
+    titulo: "Hernán Larraín: “No somos partidarios de indultar a violadores de DD.HH. ni asesinos en serie”",
+    url: "https://www.latercera.com/nacional/noticia/hernan-larrain-ministro-justicia-derechos-humanos-no-somos-partidarios-indultar-violadores-dd-hh-asesinos-serie/111533/",
+    img: "/assets/prensa/larrain.jpg",
+  },
+  {
+    medio: "La Tercera",
+    titulo: "La declaración de ‘Ramiro’ ante Carroza",
+    url: "https://www.latercera.com/la-tercera-pm/noticia/la-declaracion-ramiro-carroza-estoy-seguro-estaba-privado-libertad-detencion-preventiva/792779/",
+    img: "/assets/prensa/ramiro.jpg",
+  },
+];
+---
+<section id="prensa" class="section">
+  <div class="container">
+    <h2>Artículos en Prensa</h2>
+    <div class="grid cards">
+      {notas.map((n) => {
+        const src = new URL(n.img, Astro.site).pathname; // no rompe si falta (solo no carga imagen)
+        return (
+          <a class="card press" href={n.url} target="_blank" rel="noopener" style="display:block">
+            <figure class="thumb">
+              <img src={src} alt={n.titulo} loading="lazy" />
+            </figure>
+            <div class="meta">
+              <span class="tag">{n.medio}</span>
+              <h3 class="h5">{n.titulo}</h3>
+            </div>
+          </a>
+        );
+      })}
+    </div>
+  </div>
+</section>
+
+<style>
+  .press .thumb{aspect-ratio:16/9; overflow:hidden; border-radius:.6rem}
+  .press img{width:100%; height:100%; object-fit:cover}
+  .press .tag{font-size:.85rem; color:#5b6b7a}
+</style>
