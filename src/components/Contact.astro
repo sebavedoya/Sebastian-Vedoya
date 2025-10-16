@@ -1,15 +1,20 @@
 ---
 export interface Props { cv?: string; }
 const { cv } = Astro.props;
-// Ruta absoluta robusta para GitHub Pages (proyecto bajo /Sebastian-Vedoya)
-const cvUrl = cv ?? new URL('/Sebastian-Vedoya/files/CV.pdf', Astro.site).href;
----
 
-<section id="contacto" class="contact">
-  <div class="container">
+// Prefijo del sitio: "/" en dev, "/Sebastian-Vedoya" en GitHub Pages
+const BASE = (import.meta.env.BASE_URL || "/").replace(/\/+$/, "");
+
+// Ruta robusta del CV (si no se pasa prop)
+const cvUrl = cv
+  ? (/^https?:\/\//i.test(cv) ? cv : `${BASE}${cv.startsWith("/") ? cv : `/${cv}`}`)
+  : `${BASE}/files/CV.pdf`;
+---
+<section id="contacto" class="contact-section section">
+  <div class="container contact-inner">
     <h2>Contacto</h2>
     <p>¿Conversamos? Escríbeme y revisa mi CV.</p>
-    <div class="cta-row">
+    <div class="cta-row center">
       <a class="btn" href={cvUrl} download>Descargar CV</a>
       <a class="chip" href="mailto:seba.vedoya@gmail.com">seba.vedoya@gmail.com</a>
       <a class="chip" href="https://www.linkedin.com/in/sebastianvedoyam/" target="_blank" rel="noopener">LinkedIn</a>
