@@ -1,5 +1,5 @@
 ---
-/** Prensa: cards + carrusel opcional con entrada por scroll temprana */
+/** Prensa: cards con aparición temprana */
 const notas = [
   {
     medio: "La Tercera",
@@ -27,7 +27,6 @@ const notas = [
   }
 ];
 
-// Prefijo robusto (GitHub Pages)
 const BASE = (import.meta.env.BASE_URL || "/").replace(/\/+$/, "");
 const srcFor = (p?: string) => p ? (/^https?:\/\//i.test(p) ? p : `${BASE}${p.startsWith("/") ? p : `/${p}`}`) : undefined;
 ---
@@ -61,16 +60,14 @@ const srcFor = (p?: string) => p ? (/^https?:\/\//i.test(p) ? p : `${BASE}${p.st
   <script is:inline>
     (function(){
       const section = document.getElementById('prensa');
-      const items   = section.querySelectorAll('.stage-item');
-      const base = Math.min(window.innerHeight * 0.10, 100);
-      const thresholds = Array.from(items).map((_,i)=> (i*70) + Math.max(20, base*0.6));
+      const items = section.querySelectorAll('.stage-item');
+      const thresholds = Array.from(items).map((_, i) => 20 + i * 40);
 
       function onScroll(){
         const top = section.getBoundingClientRect().top + window.scrollY;
         const y   = window.scrollY || 0;
-        items.forEach((el, i)=>{
-          if (y > top - 20 + thresholds[i]) el.classList.add('is-on');
-          else el.classList.remove('is-on');
+        items.forEach((el, i) => {
+          if (y >= top + thresholds[i]) el.classList.add('is-on');
         });
       }
       onScroll();

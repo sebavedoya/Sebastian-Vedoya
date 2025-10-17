@@ -1,5 +1,5 @@
 ---
-/** Reflexiones: bloques largos, staged reveal muy temprano */
+/** Reflexiones: bloques largos con aparición inmediata */
 const reflections = [
   {
     id: "ref-ashby",
@@ -36,16 +36,14 @@ const reflections = [
   <script is:inline>
     (function(){
       const section = document.getElementById('reflexiones');
-      const items   = section.querySelectorAll('.stage-item');
-      const base = Math.min(window.innerHeight * 0.10, 100);
-      const thresholds = Array.from(items).map((_,i)=> (i*100) + Math.max(20, base*0.6));
+      const items = section.querySelectorAll('.stage-item');
+      const thresholds = Array.from(items).map((_, i) => 20 + i * 40);
 
       function onScroll(){
         const top = section.getBoundingClientRect().top + window.scrollY;
         const y   = window.scrollY || 0;
-        items.forEach((el, i)=>{
-          if (y > top - 20 + thresholds[i]) el.classList.add('is-on');
-          else el.classList.remove('is-on');
+        items.forEach((el, i) => {
+          if (y >= top + thresholds[i]) el.classList.add('is-on');
         });
       }
       onScroll();

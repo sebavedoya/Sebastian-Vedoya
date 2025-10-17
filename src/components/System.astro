@@ -1,5 +1,5 @@
 ---
-/** System: frase destacada con aparición temprana por scroll (muy breve) */
+/** System: frase destacada con aparición ultra temprana */
 const frase =
   "Ningún actor puede controlar el entorno sin igualarlo en complejidad; y si no puede igualarlo, debe aprender a domesticarlo.";
 const autor = "Ross Ashby";
@@ -13,19 +13,18 @@ const autor = "Ross Ashby";
   </div>
 
   <script is:inline>
-    // Aparición muy temprana
     (function(){
       const section = document.getElementById('sistema');
-      const items   = section.querySelectorAll('.stage-item');
-      const base = Math.min(window.innerHeight * 0.10, 100); // ~10vh máx 100px
-      const thresholds = Array.from(items).map((_,i)=> (i*40) + Math.max(20, base*0.6)); // escalonado corto
+      const items = section.querySelectorAll('.stage-item');
+
+      // Umbrales: 20px para el primero (ultra pronto)
+      const thresholds = Array.from(items).map((_, i) => 20 + i * 40);
 
       function onScroll(){
         const top = section.getBoundingClientRect().top + window.scrollY;
         const y   = window.scrollY || 0;
-        items.forEach((el, i)=>{
-          if (y > top - 20 + thresholds[i]) el.classList.add('is-on');
-          else el.classList.remove('is-on');
+        items.forEach((el, i) => {
+          if (y >= top + thresholds[i]) el.classList.add('is-on');
         });
       }
       onScroll();
