@@ -21,6 +21,7 @@ const fotoUrl = foto
         Sebastián Vedoya M.
         <span class="hero-sub">Comunicación Estratégica</span>
       </h1>
+
       <p class="lead">
         Estratega en comunicación con más de 10 años de experiencia en medios y gobierno.
         Me dedico a buscar respuestas complejas para entornos complejos.
@@ -43,17 +44,13 @@ const fotoUrl = foto
   <canvas id="bg-net" aria-hidden="true"></canvas>
 
   <script is:inline>
-    // Despliegue rápido: fade-in muy temprano
-    const THRESH_PHOTO = 30;   // antes 60
-    const THRESH_CONTACT = 80; // antes 140
     const elPhoto = document.getElementById('heroPhoto');
     const elContact = document.getElementById('heroContact');
 
     function applyStages(y){
-      if (y >= THRESH_PHOTO) elPhoto.classList.add('is-on');
+      if (y >= 20) elPhoto.classList.add('is-on');
       else elPhoto.classList.remove('is-on');
-
-      if (y >= THRESH_CONTACT) elContact.classList.add('is-on');
+      if (y >= 50) elContact.classList.add('is-on');
       else elContact.classList.remove('is-on');
     }
 
@@ -64,52 +61,61 @@ const fotoUrl = foto
 
 <style>
 .hero-stage {
-  min-height: 88vh; /* antes 110vh → recortado */
+  min-height: 78vh; /* 🔽 antes 88vh: aún más compacto */
 }
 .stage-panel {
   position: sticky;
-  top: 10vh;
+  top: 9vh;
   display: flex;
   flex-direction: column;
   align-items: center;
   text-align: center;
-  padding: 8vh 0 3vh; /* menos padding inferior */
+  padding: 6vh 0 1.5vh; /* 🔽 reduce espacio inferior al mínimo */
 }
+
+.hero-title {
+  margin: 0 0 .6rem;
+}
+.hero-title .hero-sub {
+  display: block;
+  margin-top: .15rem;
+  color: var(--copper);
+}
+
 .photo-float {
-  margin-top: 1.2rem;
+  margin-top: 1rem;
   opacity: 0;
-  transform: translateY(10px);
-  transition: opacity .25s ease, transform .25s ease;
-  filter: drop-shadow(0 16px 32px rgba(0,0,0,.45));
+  transform: translateY(6px);
+  transition: opacity .22s ease, transform .22s ease;
+  filter: drop-shadow(0 10px 24px rgba(0,0,0,.4));
 }
 .photo-float.is-on { opacity: 1; transform: none; }
 
 .photo-float img {
-  width: 340px;
-  height: 420px;
+  width: 320px;
+  height: 400px;
   object-fit: cover;
-  object-position: center top;
-  border-radius: 16px;
-  border: 4px solid #0f1720;
-  box-shadow: 0 10px 32px rgba(0,0,0,.55);
+  border-radius: 14px;
+  border: 3px solid #0f1720;
+  box-shadow: 0 8px 28px rgba(0,0,0,.55);
 }
 
 .cta-row {
   display: flex;
   gap: .75rem;
   flex-wrap: wrap;
-  margin-top: 1rem;
+  margin-top: .9rem;
   justify-content: center;
   opacity: 0;
-  transform: translateY(6px);
-  transition: opacity .25s ease, transform .25s ease;
+  transform: translateY(5px);
+  transition: opacity .2s ease, transform .2s ease;
 }
 .cta-row.is-on { opacity: 1; transform: none; }
 
-@media (max-width: 1040px) {
-  .photo-float img { width: 300px; height: 380px; }
+@media (max-width:1040px){
+  .photo-float img{ width:280px; height:360px; }
 }
-@media (max-width: 640px) {
-  .photo-float img { width: 260px; height: 320px; }
+@media (max-width:640px){
+  .photo-float img{ width:240px; height:310px; }
 }
 </style>
