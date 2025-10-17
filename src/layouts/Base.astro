@@ -13,23 +13,18 @@ const {
   <meta name="description" content={description} />
   <title>{title}</title>
 
-  <!-- Favicon con base del sitio (funciona en GitHub Pages) -->
   <link rel="icon" href={new URL('/favicon.svg', Astro.site).pathname} type="image/svg+xml" />
 
-  <!-- Tema oscuro para UI del navegador -->
   <meta name="color-scheme" content="dark light">
   <meta name="theme-color" content="#0a0a0a" media="(prefers-color-scheme: dark)">
 
-  <!-- Tipografía IBM Plex Sans -->
+  <!-- IBM Plex Sans -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link
     href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&display=swap"
     rel="stylesheet"
   />
-
-  <!-- Marca HTML como “con JS” lo antes posible -->
-  <script is:inline>document.documentElement.classList.add('js');</script>
 
   <!-- Google Analytics -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-03ZMGB2V69"></script>
@@ -43,25 +38,24 @@ const {
 <body>
   <slot />
 
-  <!-- Activador global de fades (reveal / data-fade) -->
+  <!-- 👇 Fade-in global para .reveal y [data-fade] (incluye Hero) -->
   <script is:inline>
-    const io = new IntersectionObserver((entries) => {
-      for (const e of entries) {
-        if (e.isIntersecting) {
-          e.target.classList.add('fade-in--visible','revealed','reveal--in');
-          io.unobserve(e.target);
+    // Marca el documento como "JS activo" para que se apliquen los estilos html.js
+    document.documentElement.classList.add('js');
+
+    // Observa todos los elementos con fade
+    const els = document.querySelectorAll('.reveal,[data-fade]');
+    if (els.length) {
+      const io = new IntersectionObserver((entries) => {
+        for (const e of entries) {
+          if (e.isIntersecting) {
+            e.target.classList.add('revealed','reveal--in','fade-in--visible');
+            io.unobserve(e.target);
+          }
         }
-      }
-    }, { threshold: 0.12, rootMargin: "-10% 0px -10% 0px" });
-
-    document.querySelectorAll('[data-fade], .reveal').forEach(el => io.observe(el));
+      }, { threshold: 0.1, rootMargin: '0px 0px -10% 0px' });
+      els.forEach(el => io.observe(el));
+    }
   </script>
-
-  <!-- Fallback si JS no carga: todo visible -->
-  <noscript>
-    <style>
-      .reveal,[data-fade]{opacity:1!important;transform:none!important}
-    </style>
-  </noscript>
 </body>
 </html>
