@@ -16,11 +16,11 @@ const {
   <!-- Favicon con base del sitio (funciona en GitHub Pages) -->
   <link rel="icon" href={new URL('/favicon.svg', Astro.site).pathname} type="image/svg+xml" />
 
-  <!-- Tema oscuro para UI del navegador -->
+  <!-- Tema del navegador -->
   <meta name="color-scheme" content="dark light">
   <meta name="theme-color" content="#0a0a0a" media="(prefers-color-scheme: dark)">
 
-  <!-- ✅ Tipografía IBM Plex Sans -->
+  <!-- IBM Plex Sans -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link
@@ -39,5 +39,19 @@ const {
 </head>
 <body>
   <slot />
+
+  <!-- Fade-in global por scroll -->
+  <script is:inline>
+    const els = document.querySelectorAll('[data-fade]');
+    const io = new IntersectionObserver((entries)=>{
+      for (const e of entries) {
+        if (e.isIntersecting) {
+          e.target.classList.add('fade-in--visible');
+          io.unobserve(e.target);
+        }
+      }
+    }, { threshold: 0.15, rootMargin: '0px 0px -5% 0px' });
+    els.forEach(el => io.observe(el));
+  </script>
 </body>
 </html>

@@ -1,10 +1,4 @@
 ---
-/**
- * Reflexiones (Scrollytelling)
- * - Sustituye el formato <details> por scroll progresivo
- * - Reutiliza las clases .scenes-* del global.css
- */
-
 const reflections = [
   {
     id: "ref-ashby",
@@ -38,25 +32,20 @@ La comunicación es el principal vehículo entre la comunidad y sus autoridades.
   }
 ];
 ---
-
-<section id="reflexiones" class="section scenes">
+<section id="reflexiones" class="section scenes" data-fade>
   <div class="container scenes-layout">
-    <h2 class="h2" style="grid-column:1 / -1; margin-bottom:.25rem;">Reflexiones</h2>
+    <h2 class="h2" style="grid-column:1 / -1; margin-bottom:.25rem;" data-fade>Reflexiones</h2>
 
-    <!-- Barra de progreso -->
     <aside class="scenes-progress" aria-hidden="true">
-      <div class="progress-track">
-        <div class="progress-thumb" id="progressReflexiones"></div>
-      </div>
+      <div class="progress-track"><div class="progress-thumb" id="progressReflexiones"></div></div>
       <ul class="progress-labels" id="labelsReflexiones">
         {reflections.map((r, i) => <li class="progress-label" data-index={i}>{r.title}</li>)}
       </ul>
     </aside>
 
-    <!-- Secciones -->
     <div class="scenes-col" id="colReflexiones">
       {reflections.map((r, i) => (
-        <article class="scene reveal" id={r.id} data-index={i} aria-current="false">
+        <article class="scene" id={r.id} data-index={i} aria-current="false">
           <header class="pin-step-head">
             <span class="step-index">{String(i+1).padStart(2,"0")}</span>
             <h3 style="margin: .2rem 0 .5rem; font-weight:800;">{r.title}</h3>
@@ -75,7 +64,6 @@ La comunicación es el principal vehículo entre la comunidad y sus autoridades.
   const labels = Array.from(document.getElementById('labelsReflexiones').children);
 
   const active = new Set();
-
   const io = new IntersectionObserver((entries)=>{
     for(const e of entries){
       const el = e.target;
@@ -84,17 +72,10 @@ La comunicación es el principal vehículo entre la comunidad y sus autoridades.
       if(current){
         scenes.forEach(sc => sc.classList.toggle('is-active', sc === current));
         labels.forEach((lb, i) => lb.classList.toggle('is-on', i <= Number(current.dataset.index)));
-
         const p = (Number(current.dataset.index)+1) / scenes.length;
         bar.style.transform = `scaleY(${Math.max(0.05, p)})`;
       }
     }
   }, { rootMargin: "-30% 0px -30% 0px", threshold: 0.55 });
-
   scenes.forEach(s => io.observe(s));
-
-  const ap = new IntersectionObserver((es)=>{
-    for(const e of es) e.target.classList.toggle("reveal--in", e.isIntersecting);
-  }, { threshold: 0.2 });
-  scenes.forEach(el => ap.observe(el));
 </script>
