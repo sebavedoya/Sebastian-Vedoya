@@ -61,26 +61,43 @@ const fotoUrl = foto
   <!-- Tu fondo de nodos actual -->
   <canvas id="bg-net" aria-hidden="true"></canvas>
 
-  <script is:inline>
-  // Elementos del hero
-  const section  = document.getElementById('inicio');
-  const elPhoto  = document.getElementById('heroPhoto');
-  const elCtas   = document.getElementById('heroContact');
-  const trgPhoto = document.getElementById('trgPhoto');
-  const trgCtas  = document.getElementById('trgContact');
+ <script is:inline>
+  // Dirección de scroll (comparte la misma lógica)
+  let lastY = window.scrollY;
+  let dir = 'down';
+  window.addEventListener('scroll', () => {
+    const y = window.scrollY;
+    dir = y > lastY ? 'down' : 'up';
+    lastY = y;
+  }, { passive: true });
 
-  // Observadores con umbral bajísimo para reaccionar de inmediato
-  const opts = { root: null, rootMargin: '-95% 0% -5% 0%', threshold: 0 };
+  const elPhoto   = document.getElementById('heroPhoto');
+  const elContact = document.getElementById('heroContact');
+  const trgPhoto  = document.getElementById('trgPhoto');
+  const trgCtas   = document.getElementById('trgContact');
 
-  // Foto: entra/sale al cruzar el trigger
+  // Aparición inmediata cuando empiezas a bajar…
+  const enterOpts = { root: null, rootMargin: '-98% 0% -2% 0%', threshold: 0 };
+  // …y salida tardía sólo al subir
+  const leaveLate = (el) => {
+    const rect = el.getBoundingClientRect();
+    const vh = window.innerHeight || document.documentElement.clientHeight;
+    if (dir === 'up' && rect.top > vh * 0.98) el.classList.remove('is-on');
+  };
+
   new IntersectionObserver((entries)=>{
-    for (const e of entries) elPhoto.classList.toggle('is-on', e.isIntersecting);
-  }, opts).observe(trgPhoto);
+    for (const e of entries) {
+      if (e.isIntersecting) elPhoto.classList.add('is-on');
+      else leaveLate(elPhoto);
+    }
+  }, enterOpts).observe(trgPhoto);
 
-  // Contacto: entra/sale al cruzar el trigger
   new IntersectionObserver((entries)=>{
-    for (const e of entries) elCtas.classList.toggle('is-on', e.isIntersecting);
-  }, opts).observe(trgCtas);
+    for (const e of entries) {
+      if (e.isIntersecting) elContact.classList.add('is-on');
+      else leaveLate(elContact);
+    }
+  }, enterOpts).observe(trgCtas);
 </script>
 
 <style>

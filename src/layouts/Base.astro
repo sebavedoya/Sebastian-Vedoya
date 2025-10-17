@@ -42,26 +42,50 @@ const {
 
   <!-- Fade-in global (.reveal y [data-fade]) -->
  <script is:inline>
-  // Marca que hay JS para que se apliquen los estilos html.js
+  // Marca que hay JS para que se activen estilos html.js
   document.documentElement.classList.add('js');
 
-  // Observa elementos que deben hacer fade bidireccional
+  // Detecta dirección de scroll
+  let lastY = window.scrollY;
+  let dir = 'down';
+  window.addEventListener('scroll', () => {
+    const y = window.scrollY;
+    dir = y > lastY ? 'down' : 'up';
+    lastY = y;
+  }, { passive: true });
+
+  // Elementos con fade
   const targets = document.querySelectorAll('.reveal,[data-fade],.stage-item');
+
   if (targets.length) {
     const io = new IntersectionObserver((entries) => {
       for (const e of entries) {
+        const el = e.target;
+
         if (e.isIntersecting) {
-          e.target.classList.add('revealed','reveal--in','fade-in--visible','is-on');
+          // ✅ Fade-in temprano al bajar (y también si entras desde abajo)
+          el.classList.add('revealed','reveal--in','fade-in--visible','is-on');
+          el.dataset.seen = '1';
         } else {
-          // 🔁 Fade OUT al salir del viewport (scroll inverso)
-          e.target.classList.remove('revealed','reveal--in','fade-in--visible','is-on');
+          // 🔁 Fade-out solo al subir, y con umbral tardío (cuando ya pasó bien abajo)
+          if (dir === 'up') {
+            const rect = el.getBoundingClientRect();
+            const vh = window.innerHeight || document.documentElement.clientHeight;
+            // Quita clases sólo cuando el elemento está casi fuera, muy abajo del viewport
+            if (rect.top > vh * 0.98) {
+              el.classList.remove('revealed','reveal--in','fade-in--visible','is-on');
+              el.dataset.seen = '0';
+            }
+          }
+          // Si vas bajando, NO quitamos clases: mantiene el progreso
         }
       }
     }, {
-      // Disparo súper temprano para que no “tarde”
-      rootMargin: '10% 0% -85% 0%',
+      // Disparo temprano para que no tarde en entrar
+      rootMargin: '0% 0% -75% 0%',
       threshold: 0
     });
+
     targets.forEach(t => io.observe(t));
   }
 </script>

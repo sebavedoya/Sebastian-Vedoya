@@ -210,11 +210,13 @@ html.js [data-fade]{opacity:0;transform:translateY(14px);transition:opacity .7s 
   .progress-thumb{ inset:0 auto 0 0; transform-origin:left center; transform:scaleX(0.05); }
   .progress-labels{ flex-direction:row; gap:.75rem; flex-wrap:wrap; }
 }
-/* Aparición por scroll — rápida */
-.stage-item{opacity:0;transform:translateY(6px);transition:opacity .25s ease,transform .25s ease}
+/* Aparición/ocultación para bloques por etapas (hero) */
+.stage-item{opacity:0;transform:translateY(6px);transition:opacity .35s ease,transform .35s ease}
 .stage-item.is-on{opacity:1;transform:none}
-html.js .reveal{opacity:0;transform:translateY(20px);transition:opacity .8s ease,transform .8s ease}
+
+/* Fade genérico */
+html.js .reveal{opacity:0;transform:translateY(16px);transition:opacity .45s ease,transform .45s ease}
 .revealed,.reveal--in{opacity:1;transform:none}
-html.js [data-fade]{opacity:0;transform:translateY(14px);transition:opacity .7s ease,transform .7s ease}
+html.js [data-fade]{opacity:0;transform:translateY(10px);transition:opacity .4s ease,transform .4s ease}
 .fade-in--visible{opacity:1!important;transform:none!important}
 }
