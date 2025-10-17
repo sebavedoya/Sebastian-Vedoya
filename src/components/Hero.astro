@@ -62,114 +62,26 @@ const fotoUrl = foto
   <canvas id="bg-net" aria-hidden="true"></canvas>
 
   <script is:inline>
-    // === Aparición temprana por scroll muy corto (sin animaciones del hero) ===
-    const photo   = document.getElementById('heroPhoto');
-    const contact = document.getElementById('heroContact');
+  // Elementos del hero
+  const section  = document.getElementById('inicio');
+  const elPhoto  = document.getElementById('heroPhoto');
+  const elCtas   = document.getElementById('heroContact');
+  const trgPhoto = document.getElementById('trgPhoto');
+  const trgCtas  = document.getElementById('trgContact');
 
-    // Umbrales hiper bajos para aparecer muy pronto
-    const base = Math.min(window.innerHeight * 0.10, 100); // ~10vh máx 100px
-    const THRESH_PHOTO   = Math.max(20, base * 0.6);  // ~6vh o 20px
-    const THRESH_CONTACT = THRESH_PHOTO + Math.max(40, base * 0.8); // ~14vh total
+  // Observadores con umbral bajísimo para reaccionar de inmediato
+  const opts = { root: null, rootMargin: '-95% 0% -5% 0%', threshold: 0 };
 
-    let ticking = false;
-    function onScroll() {
-      if (ticking) return;
-      ticking = true;
-      requestAnimationFrame(() => {
-        const y = window.scrollY || document.documentElement.scrollTop || 0;
+  // Foto: entra/sale al cruzar el trigger
+  new IntersectionObserver((entries)=>{
+    for (const e of entries) elPhoto.classList.toggle('is-on', e.isIntersecting);
+  }, opts).observe(trgPhoto);
 
-        if (y > THRESH_PHOTO)   photo.classList.add('is-on');
-        else                    photo.classList.remove('is-on');
-
-        if (y > THRESH_CONTACT) contact.classList.add('is-on');
-        else                    contact.classList.remove('is-on');
-
-        ticking = false;
-      });
-    }
-
-    // Dispara una vez al cargar (por si entra a mitad de página)
-    onScroll();
-    window.addEventListener('scroll', onScroll, { passive: true });
-    window.addEventListener('resize', () => {
-      // Recalcular puede ser excesivo; forzamos check rápido
-      onScroll();
-    });
-
-    // === Fondo de nodos (tu script existente, tal cual) ===
-    const canvas = document.getElementById('bg-net');
-    const ctx = canvas.getContext('2d');
-    const DPR = window.devicePixelRatio || 1;
-    let nodes = [];
-
-    function resizeCanvas() {
-      const hero = document.getElementById('inicio');
-      const w = hero.clientWidth, h = hero.clientHeight;
-      canvas.width = w * DPR;
-      canvas.height = h * DPR;
-      canvas.style.width = w + 'px';
-      canvas.style.height = h + 'px';
-      initNodes();
-    }
-
-    function initNodes() {
-      const count = 44;
-      nodes = [];
-      const w = canvas.width, h = canvas.height;
-      for (let i = 0; i < count; i++) {
-        nodes.push({
-          x: Math.random() * w,
-          y: Math.random() * h,
-          vx: (Math.random() - 0.5) * 0.18 * DPR,
-          vy: (Math.random() - 0.5) * 0.18 * DPR
-        });
-      }
-    }
-
-    function step() {
-      const w = canvas.width, h = canvas.height;
-      for (const n of nodes) {
-        n.x += n.vx; n.y += n.vy;
-        if (n.x < 0 || n.x > w) n.vx *= -1;
-        if (n.y < 0 || n.y > h) n.vy *= -1;
-      }
-    }
-
-    function draw() {
-      const w = canvas.width, h = canvas.height;
-      ctx.clearRect(0, 0, w, h);
-      for (let i = 0; i < nodes.length; i++) {
-        for (let j = i + 1; j < nodes.length; j++) {
-          const dx = nodes[i].x - nodes[j].x, dy = nodes[i].y - nodes[j].y;
-          const d = Math.hypot(dx, dy);
-          const MAX = 180 * DPR;
-          if (d < MAX) {
-            const alpha = 1 - (d / MAX);
-            const gx = ctx.createLinearGradient(nodes[i].x, nodes[i].y, nodes[j].x, nodes[j].y);
-            gx.addColorStop(0, `rgba(26,77,110,${alpha * 0.16})`);
-            gx.addColorStop(1, `rgba(184,115,51,${alpha * 0.16})`);
-            ctx.strokeStyle = gx;
-            ctx.lineWidth = 1 * DPR;
-            ctx.beginPath();
-            ctx.moveTo(nodes[i].x, nodes[i].y);
-            ctx.lineTo(nodes[j].x, nodes[j].y);
-            ctx.stroke();
-          }
-        }
-      }
-      for (const n of nodes) {
-        ctx.fillStyle = 'rgba(184,115,51,0.42)';
-        ctx.beginPath();
-        ctx.arc(n.x, n.y, 2.2 * DPR, 0, Math.PI * 2);
-        ctx.fill();
-      }
-      step(); requestAnimationFrame(draw);
-    }
-
-    window.addEventListener('resize', resizeCanvas);
-    resizeCanvas(); requestAnimationFrame(draw);
-  </script>
-</section>
+  // Contacto: entra/sale al cruzar el trigger
+  new IntersectionObserver((entries)=>{
+    for (const e of entries) elCtas.classList.toggle('is-on', e.isIntersecting);
+  }, opts).observe(trgCtas);
+</script>
 
 <style>
   /* Hero centrado, sin animación de entrada */

@@ -41,23 +41,29 @@ const {
   <slot />
 
   <!-- Fade-in global (.reveal y [data-fade]) -->
-  <script is:inline>
-    // Marca el documento como "JS activo" para que se apliquen los estilos html.js
-    document.documentElement.classList.add('js');
+ <script is:inline>
+  // Marca que hay JS para que se apliquen los estilos html.js
+  document.documentElement.classList.add('js');
 
-    // Observa y revela elementos al entrar al viewport
-    const els = document.querySelectorAll('.reveal,[data-fade]');
-    if (els.length) {
-      const io = new IntersectionObserver((entries) => {
-        for (const e of entries) {
-          if (e.isIntersecting) {
-            e.target.classList.add('revealed','reveal--in','fade-in--visible');
-            io.unobserve(e.target);
-          }
+  // Observa elementos que deben hacer fade bidireccional
+  const targets = document.querySelectorAll('.reveal,[data-fade],.stage-item');
+  if (targets.length) {
+    const io = new IntersectionObserver((entries) => {
+      for (const e of entries) {
+        if (e.isIntersecting) {
+          e.target.classList.add('revealed','reveal--in','fade-in--visible','is-on');
+        } else {
+          // 🔁 Fade OUT al salir del viewport (scroll inverso)
+          e.target.classList.remove('revealed','reveal--in','fade-in--visible','is-on');
         }
-      }, { threshold: 0.1, rootMargin: '0px 0px -10% 0px' });
-      els.forEach(el => io.observe(el));
-    }
-  </script>
+      }
+    }, {
+      // Disparo súper temprano para que no “tarde”
+      rootMargin: '10% 0% -85% 0%',
+      threshold: 0
+    });
+    targets.forEach(t => io.observe(t));
+  }
+</script>
 </body>
 </html>
