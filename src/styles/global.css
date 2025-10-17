@@ -160,7 +160,8 @@ details.card > summary::-webkit-details-marker{display:none}
 
 /* Animaciones de aparición / Fade-in global */
 .reveal{opacity:0;transform:translateY(20px);transition:opacity .8s ease,transform .8s ease}
-.revealed{opacity:1;transform:none}
+.revealed,
+.reveal--in{opacity:1;transform:none} /* ✅ compatibilidad con los scripts actuales */
 [data-fade]{opacity:0; transform:translateY(14px); transition:opacity .7s ease, transform .7s ease;}
 .fade-in--visible{opacity:1 !important; transform:none !important}
 
@@ -214,11 +215,17 @@ details.card > summary::-webkit-details-marker{display:none}
 }
 .carousel-track::-webkit-scrollbar{ display:none; }
 .carousel-item{ flex:0 0 min(86%, 360px); scroll-snap-align:center; }
+
+/* ✅ sin subrayado en cards de Prensa (grid y carrusel) */
+.card.press{ text-decoration:none; }
+.card.press h3{ text-decoration:none; }
+
 .carousel .card.press{
   background:#181818; border:1px solid #222; box-shadow:0 8px 28px rgba(0,0,0,.5);
   text-decoration:none;
 }
 .carousel .card.press h3{ color:#fff; text-decoration:none; }
+
 .carousel-btn{
   position:absolute; top:50%; transform:translateY(-50%);
   border:1px solid #222; background:rgba(15,23,42,.7); color:#e2e8f0;
