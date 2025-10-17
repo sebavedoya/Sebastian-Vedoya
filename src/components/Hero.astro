@@ -1,5 +1,5 @@
 ---
-// Hero con aparición por scroll mínima y sin IO
+/** Hero con aparición por scroll mínimo (sin IntersectionObserver) */
 export interface Props {
   cv?: string;
   foto?: string;
@@ -15,14 +15,15 @@ const fotoUrl = foto
   : `${BASE}/assets/foto-hero.jpeg`;
 ---
 
-<section id="inicio" class="hero hero-stage" aria-label="Presentación">
+<section id="inicio" class="hero hero-stage section section--flush-bottom" aria-label="Presentación">
   <div class="container hero-stage-grid">
     <div class="stage-panel">
       <h1 class="hero-title">
         Sebastián Vedoya M.
         <span class="hero-sub">Comunicación Estratégica</span>
       </h1>
-      <p class="lead">
+
+      <p class="lead intro">
         Estratega en comunicación con más de 10 años de experiencia en medios y gobierno.
         Me dedico a buscar respuestas complejas para entornos complejos.
       </p>
@@ -32,36 +33,28 @@ const fotoUrl = foto
         <img src={fotoUrl} alt="Sebastián Vedoya M." loading="lazy" />
       </div>
 
-      <!-- Contacto: aparece tras ~140px -->
+      <!-- Contacto: aparece tras ~120px -->
       <div class="cta-row js-stage" id="heroContact" aria-hidden="true">
         <a class="btn btn-outline" href={cvUrl} download>Descargar CV</a>
         <a class="chip" href="mailto:seba.vedoya@gmail.com">seba.vedoya@gmail.com</a>
         <a class="chip" href="https://www.linkedin.com/in/sebastianvedoyam/" target="_blank" rel="noopener">LinkedIn</a>
       </div>
     </div>
-
-    <!-- Pista invisible (altura para permitir el mini-scroll) -->
-    <div class="stage-spacer" aria-hidden="true"></div>
   </div>
 
-  <!-- Mantengo tu canvas de fondo, sin animaciones extra en el contenido -->
+  <!-- Fondo de nodos (ligero) -->
   <canvas id="bg-net" aria-hidden="true"></canvas>
 
   <script is:inline>
-    // Umbrales MUY cortos
+    // Umbrales cortos
     const THRESH_PHOTO   = 60;   // px desde top
-    const THRESH_CONTACT = 140;  // px desde top
-    const HYSTERESIS     = 24;   // px para fade-out al subir (evita parpadeo)
+    const THRESH_CONTACT = 120;  // px desde top
+    const HYSTERESIS     = 24;   // px para fade-out al subir
 
     const elPhoto   = document.getElementById('heroPhoto');
     const elContact = document.getElementById('heroContact');
 
-    // Estado
-    let lastY = window.scrollY;
-    let ticking = false;
-
     function applyStages(y){
-      // Foto ON si scroll >= 60px; OFF si subes por debajo de (60px - HYSTERESIS)
       if (y >= THRESH_PHOTO) {
         elPhoto.classList.add('is-on');
         elPhoto.removeAttribute('aria-hidden');
@@ -70,7 +63,6 @@ const fotoUrl = foto
         elPhoto.setAttribute('aria-hidden', 'true');
       }
 
-      // Contacto ON si scroll >= 140px; OFF si subes por debajo de (140px - HYSTERESIS)
       if (y >= THRESH_CONTACT) {
         elContact.classList.add('is-on');
         elContact.removeAttribute('aria-hidden');
@@ -80,12 +72,13 @@ const fotoUrl = foto
       }
     }
 
+    let ticking = false;
     function onScroll(){
-      lastY = window.scrollY || window.pageYOffset || 0;
+      const y = window.scrollY || window.pageYOffset || 0;
       if(!ticking){
         ticking = true;
         requestAnimationFrame(()=>{
-          applyStages(lastY);
+          applyStages(y);
           ticking = false;
         });
       }
@@ -95,19 +88,19 @@ const fotoUrl = foto
     applyStages(window.scrollY || 0);
     window.addEventListener('scroll', onScroll, { passive: true });
 
-    // ===== (Opcional) tu red de nodos de fondo: ligera =====
+    // ===== Red de nodos ligera =====
     const canvas = document.getElementById('bg-net');
     const ctx = canvas.getContext('2d');
     const DPR = window.devicePixelRatio || 1;
     let nodes = [];
+
     function size(){
       const hero = document.getElementById('inicio');
       const w = hero.clientWidth, h = hero.clientHeight;
       canvas.width = w * DPR; canvas.height = h * DPR;
       canvas.style.width = w + 'px'; canvas.style.height = h + 'px';
-      // reinit
       nodes = [];
-      const count = 36;
+      const count = 32;
       for(let i=0;i<count;i++){
         nodes.push({ x: Math.random()*canvas.width, y: Math.random()*canvas.height, vx:(Math.random()-.5)*.16*DPR, vy:(Math.random()-.5)*.16*DPR });
       }
@@ -137,7 +130,7 @@ const fotoUrl = foto
       }
       for(const n of nodes){
         ctx.fillStyle = 'rgba(184,115,51,0.42)';
-        ctx.beginPath(); ctx.arc(n.x,n.y,2.2*DPR,0,Math.PI*2); ctx.fill();
+        ctx.beginPath(); ctx.arc(n.x,n.y,2.1*DPR,0,Math.PI*2); ctx.fill();
       }
       step(); requestAnimationFrame(draw);
     }
@@ -147,29 +140,36 @@ const fotoUrl = foto
 </section>
 
 <style>
-  /* Estructura sticky centrada */
-  .hero-stage{ min-height: 140vh; }
-  .hero-stage-grid{ position:relative; display:grid; grid-template-columns:1fr; }
+  /* Estructura sticky centrada, sin spacer extra */
+  .hero-stage{ min-height: 110vh; position:relative; }
+  .hero-stage-grid{ display:grid; grid-template-columns:1fr; position:relative; }
   .stage-panel{
     position: sticky; top: 12vh;
     display:flex; flex-direction:column; align-items:center; text-align:center;
-    padding: 10vh 0 8vh;
+    padding: 10vh 0 6vh;
   }
-  .stage-spacer{ height: 120vh; } /* espacio para permitir el mini-scroll */
 
+  .intro{ max-width:64ch; margin:0 auto; }
   .hero-title{ margin:0 0 .6rem; }
   .hero-title .hero-sub{ display:block; margin-top:.15rem; color: var(--copper); }
 
-  /* Estados por JS */
-  .js-stage{ opacity:0; transform:translateY(14px); transition: opacity .35s ease, transform .35s ease; }
+  /* Estados por JS (rápidos) */
+  .js-stage{ opacity:0; transform:translateY(10px); transition: opacity .28s ease, transform .28s ease; }
   .js-stage.is-on{ opacity:1; transform:none; }
 
+  .photo-float{ margin-top: 1.2rem; filter: drop-shadow(0 16px 32px rgba(0,0,0,.45)); }
   .photo-float img{
     width:360px;height:460px;object-fit:cover;object-position:center top;
     border-radius:16px; border:4px solid #0f1720;
-    box-shadow:0 14px 40px rgba(0,0,0,.6);
+    box-shadow:0 10px 32px rgba(0,0,0,.55);
   }
 
-  @media (max-width:1040px){ .photo-float img{ width:320px; height:420px } }
-  @media (max-width:640px){ .photo-float img{ width:280px; height:360px } }
+  .cta-row{ justify-content:center; margin-top: 1rem; }
+
+  @media (max-width:1040px){
+    .photo-float img{ width:320px; height:420px }
+  }
+  @media (max-width:640px){
+    .photo-float img{ width:280px; height:360px }
+  }
 </style>

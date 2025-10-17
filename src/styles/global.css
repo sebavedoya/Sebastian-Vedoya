@@ -22,9 +22,11 @@ body{
 
 img{max-width:100%;display:block}
 
-/* ===== Layout básicos ===== */
+/* ===== Layout ===== */
 .container{max-width:1120px;margin:0 auto;padding:0 1.25rem}
 .section{padding:4.5rem 0}
+.section--flush-bottom{ padding-bottom: 1.75rem; }
+.section--tight-top{ padding-top: 2.25rem; }
 .section-alt{background:linear-gradient(180deg,var(--bg-0) 0%,var(--bg-1) 100%)}
 
 /* ===== Tipografía utilitaria ===== */
@@ -62,7 +64,7 @@ img{max-width:100%;display:block}
 .chip{border:1px solid #2a3542;background:transparent;color:#e5e7eb;
   padding:.7rem 1rem;border-radius:999px;text-decoration:none}
 
-/* ===== Hero (base de color) ===== */
+/* ===== Hero base ===== */
 .hero{
   position:relative;overflow:hidden;
   background:linear-gradient(180deg,#0a0a0a 0%,#111111 60%,#161616 100%);
@@ -72,19 +74,19 @@ img{max-width:100%;display:block}
 .hero-stage{ min-height:110vh; position:relative; }
 .hero-stage-grid{ display:grid; grid-template-columns:1fr; }
 .stage-panel{
-  position:sticky; top:14vh;
+  position:sticky; top:12vh;
   display:flex; flex-direction:column; align-items:center; text-align:center;
-  padding:10vh 0 8vh;
+  padding:10vh 0 6vh;
 }
 .intro{ max-width:64ch; margin:0 auto; }
 .hero-title{ margin:0 0 .6rem; font-size:clamp(2.2rem,5vw,3.6rem); line-height:1.12; color:#e9eef5; }
 .hero-title .hero-sub{ display:block; margin-top:.15rem; color:var(--copper) }
-.hero-lead{ margin:.5rem auto 0 }
+.cta-row{display:flex;gap:.75rem;flex-wrap:wrap;margin-top:1rem;align-items:center;justify-content:center}
 
-/* Foto (aparece muy pronto con scroll) */
+/* Foto (fade rápido) */
 .photo-float{
   margin-top:1.2rem;
-  opacity:0; transform:translateY(8px);
+  opacity:0; transform:translateY(10px);
   transition:opacity .28s ease, transform .28s ease;
   filter:drop-shadow(0 16px 32px rgba(0,0,0,.45));
 }
@@ -93,15 +95,6 @@ img{max-width:100%;display:block}
   width:360px; height:460px; object-fit:cover; object-position:center top;
   border-radius:16px; border:4px solid #0f1720; box-shadow:0 10px 32px rgba(0,0,0,.55);
 }
-
-/* Contactos (aparecen poco después, rápido) */
-.cta-row{display:flex;gap:.75rem;flex-wrap:wrap;margin-top:1.1rem;align-items:center;justify-content:center}
-.cta-hidden{opacity:0; transform:translateY(6px); transition:opacity .25s ease, transform .25s ease}
-.cta-hidden.is-on{opacity:1; transform:none}
-
-/* Triggers muy cortos para disparo temprano */
-.stage-triggers{ height:34vh }
-.stage-triggers .trigger{ height:17vh }
 
 /* ===== Sistema ===== */
 .system-grid{display:grid;grid-template-columns:1.1fr .9fr;gap:1.5rem;align-items:center}
@@ -121,13 +114,9 @@ img{max-width:100%;display:block}
   line-height: 1.35;
   box-shadow: 0 10px 40px rgba(0,0,0,.5);
   max-width: 1000px;
-  margin: 0 auto 4rem auto;
-  transition: transform .8s ease, opacity .8s ease;
+  margin: 0 auto 2.25rem auto; /* más cerca del hero */
   border:1px solid #222;
 }
-.system-quote span{color:var(--copper);font-weight:800;}
-.system-quote.reveal{opacity:0;transform:translateY(30px)}
-.system-quote.revealed{opacity:1;transform:translateY(0)}
 
 /* ===== Cards ===== */
 .grid{display:grid;gap:1rem}
@@ -138,10 +127,6 @@ img{max-width:100%;display:block}
 }
 .card:hover{transform:translateY(-3px);box-shadow:0 10px 28px rgba(0,0,0,.55)}
 .card-text{color:#c9d3df;font-size:.98rem}
-
-/* ===== Reflections ===== */
-.stack > * + *{margin-top:1rem}
-.prose{line-height:1.7;color:#d8e0ea}
 
 /* ===== Scrollytelling (escenas con progreso) ===== */
 .scenes-layout{ display:grid; grid-template-columns:220px 1fr; gap:2rem; align-items:start; }
@@ -163,7 +148,7 @@ img{max-width:100%;display:block}
 .pin-step-text{ margin:0; color:#cfd8e2 }
 .pin-step-detail{ margin:.35rem 0 0; color:#9fb0c4 }
 
-/* ===== Carrusel Press ===== */
+/* ===== Press (carrusel) ===== */
 .carousel-track{display:flex;gap:1rem;overflow-x:auto;scroll-snap-type:x mandatory;padding-bottom:.5rem;scrollbar-width:none}
 .carousel-track::-webkit-scrollbar{display:none}
 .card.press{text-decoration:none}
@@ -180,10 +165,10 @@ img{max-width:100%;display:block}
   border-top:1px solid var(--line);
 }
 
-/* ===== Utilidades de fade global (no usadas en el hero) ===== */
-html.js .reveal{opacity:0;transform:translateY(20px);transition:opacity .8s ease,transform .8s ease}
-.revealed, .reveal--in{opacity:1;transform:none}
-html.js [data-fade]{opacity:0;transform:translateY(14px);transition:opacity .7s ease,transform .7s ease}
+/* ===== Utilidades de fade global (para otras secciones) ===== */
+html.js .reveal{opacity:0;transform:translateY(16px);transition:opacity .45s ease,transform .45s ease}
+.revealed,.reveal--in{opacity:1;transform:none}
+html.js [data-fade]{opacity:0;transform:translateY(10px);transition:opacity .4s ease,transform .4s ease}
 .fade-in--visible{opacity:1!important;transform:none!important}
 
 /* ===== Responsive ===== */
@@ -209,37 +194,4 @@ html.js [data-fade]{opacity:0;transform:translateY(14px);transition:opacity .7s 
   .progress-track{ width:100%; height:8px; }
   .progress-thumb{ inset:0 auto 0 0; transform-origin:left center; transform:scaleX(0.05); }
   .progress-labels{ flex-direction:row; gap:.75rem; flex-wrap:wrap; }
-}
-/* Aparición/ocultación para bloques por etapas (hero) */
-.stage-item{opacity:0;transform:translateY(6px);transition:opacity .35s ease,transform .35s ease}
-.stage-item.is-on{opacity:1;transform:none}
-
-/* Fade genérico */
-html.js .reveal{opacity:0;transform:translateY(16px);transition:opacity .45s ease,transform .45s ease}
-.revealed,.reveal--in{opacity:1;transform:none}
-html.js [data-fade]{opacity:0;transform:translateY(10px);transition:opacity .4s ease,transform .4s ease}
-.fade-in--visible{opacity:1!important;transform:none!important}
-}
-/* ==== Fade base ==== */
-.reveal,
-[data-fade],
-.stage-item {
-  opacity: 0;
-  transform: translateY(18px);
-  transition: opacity .5s ease, transform .5s ease;
-}
-
-.revealed,
-.reveal--in,
-.fade-in--visible,
-.stage-item.is-on {
-  opacity: 1;
-  transform: none;
-}
-
-/* Opcional: salida más lenta (cuando se remueve clase) */
-.reveal,
-[data-fade],
-.stage-item {
-  transition: opacity .6s ease, transform .6s ease;
 }
