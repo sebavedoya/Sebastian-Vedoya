@@ -220,3 +220,26 @@ html.js .reveal{opacity:0;transform:translateY(16px);transition:opacity .45s eas
 html.js [data-fade]{opacity:0;transform:translateY(10px);transition:opacity .4s ease,transform .4s ease}
 .fade-in--visible{opacity:1!important;transform:none!important}
 }
+/* ==== Fade base ==== */
+.reveal,
+[data-fade],
+.stage-item {
+  opacity: 0;
+  transform: translateY(18px);
+  transition: opacity .5s ease, transform .5s ease;
+}
+
+.revealed,
+.reveal--in,
+.fade-in--visible,
+.stage-item.is-on {
+  opacity: 1;
+  transform: none;
+}
+
+/* Opcional: salida más lenta (cuando se remueve clase) */
+.reveal,
+[data-fade],
+.stage-item {
+  transition: opacity .6s ease, transform .6s ease;
+}
