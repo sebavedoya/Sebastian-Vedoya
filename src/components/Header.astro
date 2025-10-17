@@ -1,52 +1,161 @@
 ---
-// Links del header
-const links = [
-  { href: "#proyectos",   label: "Proyectos" },
-  { href: "#reflexiones", label: "Reflexiones" },
-  { href: "#prensa",      label: "Prensa" },
-  { href: "#contacto",    label: "Contacto" },
-];
+export interface Props {
+  cv?: string;
+  foto?: string;
+}
+const { cv, foto } = Astro.props;
+
+const BASE = (import.meta.env.BASE_URL || "/").replace(/\/+$/, "");
+const cvUrl = cv ? (/^https?:\/\//i.test(cv) ? cv : `${BASE}${cv.startsWith("/") ? cv : `/${cv}`}`) : `${BASE}/files/CV.pdf`;
+const fotoUrl = foto ? (/^https?:\/\//i.test(foto) ? foto : `${BASE}${foto.startsWith("/") ? foto : `/${foto}`}`) : `${BASE}/assets/foto-hero.jpeg`;
 ---
-<header class="site-header">
-  <div class="container header-inner">
-    <a class="brand" href="#inicio">Sebastián Vedoya M.</a>
 
-    <nav class="main-nav" id="mainNav" aria-label="Principal">
-      {links.map(l => <a href={l.href}>{l.label}</a>)}
-    </nav>
+<section id="inicio" class="hero hero-stage" aria-label="Presentación">
+  <div class="container hero-stage-grid">
+    <!-- Panel sticky que mantiene el titular centrado -->
+    <div class="stage-panel">
+      <h1 class="hero-title">
+        Sebastián Vedoya M.
+        <span class="hero-sub">Comunicación Estratégica</span>
+      </h1>
+      <p class="lead">
+        Estratega en comunicación con más de 10 años de experiencia en medios y gobierno.
+        Me dedico a buscar respuestas complejas para entornos complejos.
+      </p>
 
-    <a class="btn btn-ghost" href="#contacto">Contáctame</a>
+      <!-- Foto y contactos: aparecen por etapas con el scroll -->
+      <div class="photo-float" id="heroPhoto">
+        <img src={fotoUrl} alt="Sebastián Vedoya M." loading="lazy" />
+      </div>
 
-    <!-- Botón hamburguesa (visible en móvil por CSS) -->
-    <button
-      class="nav-toggle"
-      id="navToggle"
-      aria-controls="mainNav"
-      aria-expanded="false"
-      aria-label="Abrir menú"
-    >
-      ☰
-    </button>
+      <div class="cta-row cta-hidden" id="heroContact">
+        <a class="btn btn-outline" href={cvUrl} download>Descargar CV</a>
+        <a class="chip" href="mailto:seba.vedoya@gmail.com">seba.vedoya@gmail.com</a>
+        <a class="chip" href="https://www.linkedin.com/in/sebastianvedoyam/" target="_blank" rel="noopener">LinkedIn</a>
+      </div>
+    </div>
+
+    <!-- Pistas invisibles que disparan las fases -->
+    <div class="stage-triggers" aria-hidden="true">
+      <div class="trigger" id="trgPhoto"></div>
+      <div class="trigger" id="trgContact"></div>
+    </div>
   </div>
-</header>
 
-<script is:inline>
-  const btn  = document.getElementById('navToggle');
-  const nav  = document.getElementById('mainNav');
+  <canvas id="bg-net" aria-hidden="true"></canvas>
 
-  btn?.addEventListener('click', () => {
-    const open = nav.classList.toggle('open');
-    btn.setAttribute('aria-expanded', String(open));
-    btn.setAttribute('aria-label', open ? 'Cerrar menú' : 'Abrir menú');
-  });
+  <script is:inline>
+    // Fade-in global del hero (entrada inicial)
+    const root = document.currentScript.closest('.hero-stage');
+    const io1 = new IntersectionObserver((es)=> {
+      for (const e of es) if (e.isIntersecting) root.classList.add('revealed');
+    }, { threshold: .2 });
+    io1.observe(root);
 
-  // Cierra el menú al navegar (en móvil)
-  nav?.querySelectorAll('a').forEach(a => {
-    a.addEventListener('click', () => {
-      if (nav.classList.contains('open')) {
-        nav.classList.remove('open');
-        btn.setAttribute('aria-expanded', 'false');
+    // Staged reveals
+    const elPhoto   = document.getElementById('heroPhoto');
+    const elContact = document.getElementById('heroContact');
+
+    new IntersectionObserver((es)=>{
+      for (const e of es) elPhoto.classList.toggle('is-on', e.isIntersecting);
+    }, { rootMargin: '-40% 0% -40% 0%', threshold: .3 }).observe(document.getElementById('trgPhoto'));
+
+    new IntersectionObserver((es)=>{
+      for (const e of es) elContact.classList.toggle('is-on', e.isIntersecting);
+    }, { rootMargin: '-40% 0% -40% 0%', threshold: .3 }).observe(document.getElementById('trgContact'));
+
+    // Fondo de nodos (tu efecto actual) — reusa tu script existente
+    const canvas = document.getElementById('bg-net');
+    const ctx = canvas.getContext('2d');
+    const DPR = window.devicePixelRatio || 1;
+    let nodes = [];
+    function resizeCanvas() {
+      const hero = document.getElementById('inicio');
+      const w = hero.clientWidth, h = hero.clientHeight;
+      canvas.width = w * DPR; canvas.height = h * DPR;
+      canvas.style.width = w + 'px'; canvas.style.height = h + 'px';
+      initNodes();
+    }
+    function initNodes() {
+      const count = 44; nodes = [];
+      const w = canvas.width, h = canvas.height;
+      for (let i = 0; i < count; i++) {
+        nodes.push({ x: Math.random() * w, y: Math.random() * h, vx: (Math.random()-0.5)*0.18*DPR, vy: (Math.random()-0.5)*0.18*DPR });
       }
-    });
-  });
-</script>
+    }
+    function step() {
+      const w = canvas.width, h = canvas.height;
+      for (const n of nodes) { n.x+=n.vx; n.y+=n.vy; if(n.x<0||n.x>w) n.vx*=-1; if(n.y<0||n.y>h) n.vy*=-1; }
+    }
+    function draw() {
+      const w = canvas.width, h = canvas.height;
+      ctx.clearRect(0,0,w,h);
+      for (let i=0;i<nodes.length;i++){
+        for (let j=i+1;j<nodes.length;j++){
+          const dx = nodes[i].x-nodes[j].x, dy = nodes[i].y-nodes[j].y;
+          const d = Math.hypot(dx,dy), MAX = 180*DPR;
+          if (d < MAX){
+            const a = 1 - d/MAX;
+            const g = ctx.createLinearGradient(nodes[i].x,nodes[i].y,nodes[j].x,nodes[j].y);
+            g.addColorStop(0, `rgba(26,77,110,${a*0.16})`);
+            g.addColorStop(1, `rgba(184,115,51,${a*0.16})`);
+            ctx.strokeStyle = g; ctx.lineWidth = 1*DPR;
+            ctx.beginPath(); ctx.moveTo(nodes[i].x,nodes[i].y); ctx.lineTo(nodes[j].x,nodes[j].y); ctx.stroke();
+          }
+        }
+      }
+      for (const n of nodes){ ctx.fillStyle='rgba(184,115,51,0.42)'; ctx.beginPath(); ctx.arc(n.x,n.y,2.2*DPR,0,Math.PI*2); ctx.fill(); }
+      step(); requestAnimationFrame(draw);
+    }
+    window.addEventListener('resize', resizeCanvas);
+    resizeCanvas(); requestAnimationFrame(draw);
+  </script>
+</section>
+
+<style>
+  /* Layout de etapas */
+  .hero-stage{ min-height:160vh; }
+  .hero-stage-grid{
+    display:grid; grid-template-columns: 1fr; gap:0; align-items:start;
+    position:relative;
+  }
+  .stage-panel{
+    position:sticky; top:12vh;
+    display:flex; flex-direction:column; align-items:center; text-align:center;
+    padding: 12vh 0 10vh;
+  }
+
+  .hero-title{ margin:0 0 .6rem; }
+  .hero-title .hero-sub{
+    display:block; margin-top:.15rem; color:var(--copper);
+  }
+
+  /* Foto flotante: aparece en la fase 2 */
+  .photo-float{
+    margin-top: 2.2rem;
+    opacity:0; transform: translateY(18px) scale(.985);
+    transition: opacity .6s ease, transform .6s ease, box-shadow .3s ease;
+    filter: drop-shadow(0 20px 40px rgba(0,0,0,.45));
+  }
+  .photo-float.is-on{ opacity:1; transform:none }
+  .photo-float img{
+    width:360px; height:460px; object-fit:cover; object-position:center top;
+    border-radius:16px; border:4px solid #0f1720;
+    box-shadow:0 14px 40px rgba(0,0,0,.6);
+  }
+
+  /* Contactos: aparecen en la fase 3 */
+  .cta-hidden{ opacity:0; transform: translateY(12px); transition: opacity .5s ease, transform .5s ease }
+  .cta-hidden.is-on{ opacity:1; transform:none }
+
+  /* Pistas para IO (no visibles) */
+  .stage-triggers{ height:120vh }
+  .stage-triggers .trigger{ height:40vh }
+
+  @media (max-width:1040px){
+    .photo-float img{ width:320px; height:420px }
+  }
+  @media (max-width:640px){
+    .photo-float img{ width:280px; height:360px }
+  }
+</style>

@@ -13,14 +13,16 @@ const {
   <meta name="description" content={description} />
   <title>{title}</title>
 
+  <!-- Favicon con base del sitio -->
   <link rel="icon" href={new URL('/favicon.svg', Astro.site).pathname} type="image/svg+xml" />
 
-  <meta name="color-scheme" content="dark light">
-  <meta name="theme-color" content="#0a0a0a" media="(prefers-color-scheme: dark)">
+  <!-- Preferencia de color -->
+  <meta name="color-scheme" content="dark light" />
+  <meta name="theme-color" content="#0a0a0a" media="(prefers-color-scheme: dark)" />
 
   <!-- IBM Plex Sans -->
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link
     href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&display=swap"
     rel="stylesheet"
@@ -38,12 +40,12 @@ const {
 <body>
   <slot />
 
-  <!-- 👇 Fade-in global para .reveal y [data-fade] (incluye Hero) -->
+  <!-- Fade-in global (.reveal y [data-fade]) -->
   <script is:inline>
     // Marca el documento como "JS activo" para que se apliquen los estilos html.js
     document.documentElement.classList.add('js');
 
-    // Observa todos los elementos con fade
+    // Observa y revela elementos al entrar al viewport
     const els = document.querySelectorAll('.reveal,[data-fade]');
     if (els.length) {
       const io = new IntersectionObserver((entries) => {
