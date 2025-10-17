@@ -44,13 +44,14 @@ const fotoUrl = foto
   <canvas id="bg-net" aria-hidden="true"></canvas>
 
   <script is:inline>
+    // Fade-in rápido con scroll mínimo
     const elPhoto = document.getElementById('heroPhoto');
     const elContact = document.getElementById('heroContact');
 
     function applyStages(y){
-      if (y >= 20) elPhoto.classList.add('is-on');
+      if (y >= 10) elPhoto.classList.add('is-on');
       else elPhoto.classList.remove('is-on');
-      if (y >= 50) elContact.classList.add('is-on');
+      if (y >= 25) elContact.classList.add('is-on');
       else elContact.classList.remove('is-on');
     }
 
@@ -61,16 +62,16 @@ const fotoUrl = foto
 
 <style>
 .hero-stage {
-  min-height: 78vh; /* 🔽 antes 88vh: aún más compacto */
+  min-height: 60vh; /* 🔽 compactado totalmente */
 }
 .stage-panel {
   position: sticky;
-  top: 9vh;
+  top: 8vh;
   display: flex;
   flex-direction: column;
   align-items: center;
   text-align: center;
-  padding: 6vh 0 1.5vh; /* 🔽 reduce espacio inferior al mínimo */
+  padding: 5vh 0 1vh;
 }
 
 .hero-title {
@@ -83,18 +84,19 @@ const fotoUrl = foto
 }
 
 .photo-float {
-  margin-top: 1rem;
+  margin-top: .8rem;
   opacity: 0;
   transform: translateY(6px);
-  transition: opacity .22s ease, transform .22s ease;
+  transition: opacity .18s ease, transform .18s ease;
   filter: drop-shadow(0 10px 24px rgba(0,0,0,.4));
 }
 .photo-float.is-on { opacity: 1; transform: none; }
 
 .photo-float img {
-  width: 320px;
-  height: 400px;
+  width: 300px;
+  height: 360px;
   object-fit: cover;
+  object-position: center top;
   border-radius: 14px;
   border: 3px solid #0f1720;
   box-shadow: 0 8px 28px rgba(0,0,0,.55);
@@ -104,18 +106,18 @@ const fotoUrl = foto
   display: flex;
   gap: .75rem;
   flex-wrap: wrap;
-  margin-top: .9rem;
+  margin-top: .8rem;
   justify-content: center;
   opacity: 0;
   transform: translateY(5px);
-  transition: opacity .2s ease, transform .2s ease;
+  transition: opacity .18s ease, transform .18s ease;
 }
 .cta-row.is-on { opacity: 1; transform: none; }
 
 @media (max-width:1040px){
-  .photo-float img{ width:280px; height:360px; }
+  .photo-float img{ width:260px; height:320px; }
 }
 @media (max-width:640px){
-  .photo-float img{ width:240px; height:310px; }
+  .photo-float img{ width:220px; height:280px; }
 }
 </style>
