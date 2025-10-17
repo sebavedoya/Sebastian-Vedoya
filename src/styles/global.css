@@ -213,8 +213,8 @@ html.js [data-fade]{opacity:0;transform:translateY(14px);transition:opacity .7s 
 /* Aparición por scroll — rápida */
 .stage-item{
   opacity:0;
-  transform: translateY(8px);
-  transition: opacity .28s ease, transform .28s ease;
+  transform:translateY(6px);
+  transition:opacity .25s ease, transform .25s ease;
 }
 .stage-item.is-on{
   opacity:1;

@@ -33,22 +33,21 @@ const reflections = [
     </div>
   </div>
 
-  <script is:inline>
-    (function(){
-      const section = document.getElementById('reflexiones');
-      const items = section.querySelectorAll('.stage-item');
-      const thresholds = Array.from(items).map((_, i) => 20 + i * 40);
-
-      function onScroll(){
-        const top = section.getBoundingClientRect().top + window.scrollY;
-        const y   = window.scrollY || 0;
-        items.forEach((el, i) => {
-          if (y >= top + thresholds[i]) el.classList.add('is-on');
-        });
+ <script is:inline>
+  (function(){
+    const section = document.currentScript.closest('section');
+    const items = section.querySelectorAll('.stage-item');
+    const TRIGGER_OFFSET = 10; // ⚡️ dispara casi inmediato (10 px)
+    function onScroll(){
+      const y = window.scrollY || document.documentElement.scrollTop || 0;
+      const top = section.offsetTop;
+      if (y + window.innerHeight > top + TRIGGER_OFFSET) {
+        items.forEach(el => el.classList.add('is-on'));
+        window.removeEventListener('scroll', onScroll);
       }
-      onScroll();
-      window.addEventListener('scroll', onScroll, { passive:true });
-      window.addEventListener('resize', onScroll);
-    })();
-  </script>
+    }
+    onScroll();
+    window.addEventListener('scroll', onScroll, { passive:true });
+  })();
+</script>
 </section>
