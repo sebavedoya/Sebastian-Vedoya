@@ -19,7 +19,7 @@ const reflections = [
 ];
 ---
 
-<section id="reflexiones" class="section">
+<section id="reflexiones" class="section reveal">
   <div class="container">
     <h2 class="h2">Reflexiones</h2>
 
@@ -33,21 +33,21 @@ const reflections = [
     </div>
   </div>
 
- <script is:inline>
-  (function(){
-    const section = document.currentScript.closest('section');
-    const items = section.querySelectorAll('.stage-item');
-    const TRIGGER_OFFSET = 10; // ⚡️ dispara casi inmediato (10 px)
-    function onScroll(){
-      const y = window.scrollY || document.documentElement.scrollTop || 0;
-      const top = section.offsetTop;
-      if (y + window.innerHeight > top + TRIGGER_OFFSET) {
-        items.forEach(el => el.classList.add('is-on'));
-        window.removeEventListener('scroll', onScroll);
+  <script is:inline>
+    (function(){
+      const section = document.currentScript.closest('section');
+      const items = section.querySelectorAll('.stage-item');
+      const TRIGGER_OFFSET = 10; // dispara casi inmediato
+      function onScroll(){
+        const y = window.scrollY || document.documentElement.scrollTop || 0;
+        const top = section.offsetTop;
+        if (y + window.innerHeight > top + TRIGGER_OFFSET) {
+          items.forEach(el => el.classList.add('is-on'));
+          window.removeEventListener('scroll', onScroll);
+        }
       }
-    }
-    onScroll();
-    window.addEventListener('scroll', onScroll, { passive:true });
-  })();
-</script>
+      onScroll();
+      window.addEventListener('scroll', onScroll, { passive:true });
+    })();
+  </script>
 </section>

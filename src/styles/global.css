@@ -24,13 +24,13 @@ img{max-width:100%;display:block}
 
 /* ===== Layout ===== */
 .container{max-width:1120px;margin:0 auto;padding:0 1.25rem}
-.section{padding:4.5rem 0}
-.section--flush-bottom{ padding-bottom: 1.75rem; }
-.section--tight-top{ padding-top: 2.25rem; }
+.section{padding:2.5rem 0} /* reducido para menos gap global */
+.section--flush-bottom{ padding-bottom: 1.25rem; }
+.section--tight-top{ padding-top: 1.25rem; } /* súper pegado al bloque anterior */
 .section-alt{background:linear-gradient(180deg,var(--bg-0) 0%,var(--bg-1) 100%)}
 
 /* ===== Tipografía utilitaria ===== */
-.h2{font-size:clamp(1.6rem,2.5vw,2.25rem);margin:0 0 1.25rem;color:var(--ink);font-weight:700}
+.h2{font-size:clamp(1.6rem,2.5vw,2.25rem);margin:0 0 1rem;color:var(--ink);font-weight:700}
 .h3{font-size:1.05rem;margin:0;color:var(--ink);font-weight:700}
 .lead{color:#c9d3df;font-size:1.125rem;max-width:66ch}
 .section-intro{color:var(--muted);max-width:60ch}
@@ -71,12 +71,12 @@ img{max-width:100%;display:block}
 }
 
 /* ===== Hero centrado por etapas (sin animación inicial) ===== */
-.hero-stage{ min-height:110vh; position:relative; }
+.hero-stage{ min-height:96vh; position:relative; }
 .hero-stage-grid{ display:grid; grid-template-columns:1fr; }
 .stage-panel{
-  position:sticky; top:12vh;
+  position:sticky; top:10vh; /* más arriba: reduce gap */
   display:flex; flex-direction:column; align-items:center; text-align:center;
-  padding:10vh 0 6vh;
+  padding:8vh 0 4vh; /* menos padding */
 }
 .intro{ max-width:64ch; margin:0 auto; }
 .hero-title{ margin:0 0 .6rem; font-size:clamp(2.2rem,5vw,3.6rem); line-height:1.12; color:#e9eef5; }
@@ -85,8 +85,8 @@ img{max-width:100%;display:block}
 
 /* Foto (fade rápido) */
 .photo-float{
-  margin-top:1.2rem;
-  opacity:0; transform:translateY(10px);
+  margin-top:1rem;
+  opacity:0; transform:translateY(8px);
   transition:opacity .28s ease, transform .28s ease;
   filter:drop-shadow(0 16px 32px rgba(0,0,0,.45));
 }
@@ -100,23 +100,24 @@ img{max-width:100%;display:block}
 .system-grid{display:grid;grid-template-columns:1.1fr .9fr;gap:1.5rem;align-items:center}
 .system-phrase{font-size:clamp(1.6rem,3.2vw,2.4rem);color:#eef2f7;font-weight:800;margin:0 0 1rem}
 .system-card{background:#181818;border:1px solid #222;border-radius:16px;padding:1rem;box-shadow:0 4px 18px rgba(0,0,0,.4)}
-.system-caption{color:var(--muted);font-size:.9rem;margin-top:.5rem}
+.system-caption{color:#muted;font-size:.9rem;margin-top:.5rem}
 
 /* Cita destacada (System) */
 .system-quote{
   background: linear-gradient(180deg,#121212 0%,#1a1a1a 100%);
   border-radius: 20px;
-  padding: 3rem 2.5rem;
+  padding: 2.25rem 2rem; /* compacta */
   text-align: center;
-  font-size: clamp(1.8rem,3vw,2.5rem);
+  font-size: clamp(1.6rem,3vw,2.2rem);
   font-weight: 800;
   color: #eaf2f8;
   line-height: 1.35;
   box-shadow: 0 10px 40px rgba(0,0,0,.5);
   max-width: 1000px;
-  margin: 0 auto 2.25rem auto; /* más cerca del hero */
+  margin: 0 auto 1.25rem auto; /* muy cerca del hero */
   border:1px solid #222;
 }
+.system-quote span{color:var(--copper);font-weight:800;}
 
 /* ===== Cards ===== */
 .grid{display:grid;gap:1rem}
@@ -128,25 +129,9 @@ img{max-width:100%;display:block}
 .card:hover{transform:translateY(-3px);box-shadow:0 10px 28px rgba(0,0,0,.55)}
 .card-text{color:#c9d3df;font-size:.98rem}
 
-/* ===== Scrollytelling (escenas con progreso) ===== */
+/* ===== Scrollytelling (si lo vuelves a usar) ===== */
 .scenes-layout{ display:grid; grid-template-columns:220px 1fr; gap:2rem; align-items:start; }
-.scenes-progress{ position:sticky; top:12vh; height:76vh; display:flex; flex-direction:column; align-items:flex-start; gap:1rem; }
-.progress-track{ position:relative; width:8px; height:100%; border-radius:999px; background:#1b2430; overflow:hidden; border:1px solid #222; }
-.progress-thumb{ position:absolute; inset:auto 0 0 0; transform-origin:bottom center; transform:scaleY(0.05); background:linear-gradient(180deg,var(--accent),var(--copper)); border-radius:999px; transition:transform .35s ease; }
-.progress-label{ color:#93a4ba; font-size:.9rem; transition:color .25s ease, transform .25s ease }
-.progress-label.is-on{ color:#e9eef5; font-weight:700; transform:translateX(2px) }
-.scenes-col{ display:flex; flex-direction:column; gap:8vh; scroll-snap-type:y proximity }
-.scene{
-  background:#181818; border:1px solid #222; border-radius:16px;
-  box-shadow:0 8px 28px rgba(0,0,0,.5);
-  padding:1.25rem; transition:box-shadow .35s ease, transform .35s ease, opacity .35s ease;
-  opacity:.7; transform:translateY(8px);
-}
-.scene.is-active{ opacity:1; transform:translateY(0); box-shadow:0 16px 40px rgba(0,0,0,.65) }
-.pin-step-head{ display:flex; align-items:baseline; gap:.6rem; margin-bottom:.25rem; }
-.step-index{ font-variant-numeric:tabular-nums; color:#8b9ab0; font-weight:800; letter-spacing:.06em; }
-.pin-step-text{ margin:0; color:#cfd8e2 }
-.pin-step-detail{ margin:.35rem 0 0; color:#9fb0c4 }
+/* ... (resto igual si lo necesitas) ... */
 
 /* ===== Press (carrusel) ===== */
 .carousel-track{display:flex;gap:1rem;overflow-x:auto;scroll-snap-type:x mandatory;padding-bottom:.5rem;scrollbar-width:none}
@@ -156,7 +141,7 @@ img{max-width:100%;display:block}
 
 /* ===== Footer ===== */
 .site-footer{
-  margin-top:4rem;
+  margin-top:3rem;
   padding:2rem 0;
   background:linear-gradient(180deg,#0f0f0f 0%,#111 70%,#121212 100%);
   color:var(--muted);
@@ -165,11 +150,21 @@ img{max-width:100%;display:block}
   border-top:1px solid var(--line);
 }
 
-/* ===== Utilidades de fade global (para otras secciones) ===== */
-html.js .reveal{opacity:0;transform:translateY(16px);transition:opacity .45s ease,transform .45s ease}
-.revealed,.reveal--in{opacity:1;transform:none}
-html.js [data-fade]{opacity:0;transform:translateY(10px);transition:opacity .4s ease,transform .4s ease}
-.fade-in--visible{opacity:1!important;transform:none!important}
+/* ===== Utilidades de fade global ===== */
+.reveal,
+[data-fade],
+.stage-item {
+  opacity: 0;
+  transform: translateY(14px);
+  transition: opacity .45s ease, transform .45s ease;
+}
+.revealed,
+.reveal--in,
+.fade-in--visible,
+.stage-item.is-on {
+  opacity: 1;
+  transform: none;
+}
 
 /* ===== Responsive ===== */
 @media (max-width:1040px){
@@ -177,21 +172,13 @@ html.js [data-fade]{opacity:0;transform:translateY(10px);transition:opacity .4s 
   .photo-float img{width:320px;height:420px}
 }
 @media (max-width:960px){
-  .hero-grid{grid-template-columns:1fr;text-align:center}
   .system-grid{grid-template-columns:1fr}
   .lead{margin:0 auto}
   .cta-row{justify-content:center}
   .cards{grid-template-columns:1fr}
-  .scenes-layout{ grid-template-columns:1fr; }
 }
 @media (max-width:640px){
   .main-nav{display:none}
   .nav-toggle{display:block}
   .photo-float img{width:280px;height:360px}
-}
-@media (max-width:980px){
-  .scenes-progress{ order:-1; height:auto; top:10vh; flex-direction:row; align-items:center; gap:1rem; }
-  .progress-track{ width:100%; height:8px; }
-  .progress-thumb{ inset:0 auto 0 0; transform-origin:left center; transform:scaleX(0.05); }
-  .progress-labels{ flex-direction:row; gap:.75rem; flex-wrap:wrap; }
 }
