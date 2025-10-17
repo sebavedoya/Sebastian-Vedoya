@@ -1,32 +1,12 @@
 ---
-/** System: frase destacada con aparición ultra temprana */
 const frase =
   "Ningún actor puede controlar el entorno sin igualarlo en complejidad; y si no puede igualarlo, debe aprender a domesticarlo.";
 const autor = "Ross Ashby";
 ---
-
-<section id="sistema" class="section section--tight-top reveal" data-fade>
+<section id="sistema" class="section section--tight-top" data-fade>
   <div class="container">
-    <div class="system-quote stage-item" data-stage="1">
+    <div class="system-quote stage-item">
       {frase} <span>— {autor}</span>
     </div>
   </div>
-
-  <script is:inline>
-    (function(){
-      const section = document.currentScript.closest('section');
-      const items = section.querySelectorAll('.stage-item');
-      const TRIGGER_OFFSET = 10; // dispara casi inmediato (10 px)
-      function onScroll(){
-        const y = window.scrollY || document.documentElement.scrollTop || 0;
-        const top = section.offsetTop;
-        if (y + window.innerHeight > top + TRIGGER_OFFSET) {
-          items.forEach(el => el.classList.add('is-on'));
-          window.removeEventListener('scroll', onScroll);
-        }
-      }
-      onScroll();
-      window.addEventListener('scroll', onScroll, { passive:true });
-    })();
-  </script>
 </section>

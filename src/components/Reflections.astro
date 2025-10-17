@@ -1,5 +1,4 @@
 ---
-/** Reflexiones: bloques largos con aparición inmediata */
 const reflections = [
   {
     id: "ref-ashby",
@@ -18,36 +17,16 @@ const reflections = [
   }
 ];
 ---
-
-<section id="reflexiones" class="section reveal">
+<section id="reflexiones" class="section">
   <div class="container">
     <h2 class="h2">Reflexiones</h2>
-
     <div class="stack">
-      {reflections.map((r, i) => (
-        <article class="card stage-item" data-stage={i+1} id={r.id}>
+      {reflections.map((r) => (
+        <article class="card stage-item" id={r.id}>
           <h3 class="h3" style="margin:0 0 .35rem">{r.title}</h3>
           <p class="prose" style="white-space:pre-wrap">{r.body}</p>
         </article>
       ))}
     </div>
   </div>
-
-  <script is:inline>
-    (function(){
-      const section = document.currentScript.closest('section');
-      const items = section.querySelectorAll('.stage-item');
-      const TRIGGER_OFFSET = 10; // dispara casi inmediato
-      function onScroll(){
-        const y = window.scrollY || document.documentElement.scrollTop || 0;
-        const top = section.offsetTop;
-        if (y + window.innerHeight > top + TRIGGER_OFFSET) {
-          items.forEach(el => el.classList.add('is-on'));
-          window.removeEventListener('scroll', onScroll);
-        }
-      }
-      onScroll();
-      window.addEventListener('scroll', onScroll, { passive:true });
-    })();
-  </script>
 </section>

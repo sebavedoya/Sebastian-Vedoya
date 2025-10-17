@@ -1,10 +1,9 @@
 ---
-/** Proyectos: entrada casi inmediata y escalonada muy corta */
 const items = [
   {
     id: "proj-topografo",
     title: "Operación Topógrafo – Investigación periodística sobre espionaje militar",
-    body: `Reportaje de investigación que reveló el espionaje de la Dirección de Inteligencia del Ejército a periodistas y funcionarios denunciantes...`
+    body: `Reportaje de investigación que reveló el espionaje de la Dirección de Inteligencia del Ejército...`
   },
   {
     id: "proj-vocerias",
@@ -18,14 +17,12 @@ const items = [
   }
 ];
 ---
-
-<section id="proyectos" class="section reveal">
+<section id="proyectos" class="section">
   <div class="container">
     <h2 class="h2">Proyectos</h2>
-
     <div class="grid cards">
-      {items.map((p, i) => (
-        <article class="card stage-item" data-stage={i+1} id={p.id}>
+      {items.map((p) => (
+        <article class="card stage-item" id={p.id}>
           <header class="card-head">
             <h3 class="h3" style="margin:0">{p.title}</h3>
           </header>
@@ -34,22 +31,4 @@ const items = [
       ))}
     </div>
   </div>
-
-  <script is:inline>
-    (function(){
-      const section = document.currentScript.closest('section');
-      const items = section.querySelectorAll('.stage-item');
-      const TRIGGER_OFFSET = 10; // dispara casi inmediato
-      function onScroll(){
-        const y = window.scrollY || document.documentElement.scrollTop || 0;
-        const top = section.offsetTop;
-        if (y + window.innerHeight > top + TRIGGER_OFFSET) {
-          items.forEach(el => el.classList.add('is-on'));
-          window.removeEventListener('scroll', onScroll);
-        }
-      }
-      onScroll();
-      window.addEventListener('scroll', onScroll, { passive:true });
-    })();
-  </script>
 </section>

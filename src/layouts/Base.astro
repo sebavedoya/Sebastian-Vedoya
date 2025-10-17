@@ -13,10 +13,7 @@ const {
   <meta name="description" content={description} />
   <title>{title}</title>
 
-  <!-- Favicon con base del sitio -->
   <link rel="icon" href={new URL('/favicon.svg', Astro.site).pathname} type="image/svg+xml" />
-
-  <!-- Preferencia de color -->
   <meta name="color-scheme" content="dark light" />
   <meta name="theme-color" content="#0a0a0a" media="(prefers-color-scheme: dark)" />
 
@@ -40,40 +37,27 @@ const {
 <body>
   <slot />
 
-  <!-- Fade-in global (.reveal, [data-fade] y .stage-item) muy temprano -->
+  <!-- Early reveal global para .stage-item / .reveal / [data-fade] -->
   <script is:inline>
     document.documentElement.classList.add('js');
 
-    // Dirección de scroll (para posibles ajustes de salida suave, si quieres)
-    let lastY = window.scrollY;
-    let dir = 'down';
-    window.addEventListener('scroll', () => {
-      const y = window.scrollY;
-      dir = y > lastY ? 'down' : 'up';
-      lastY = y;
-    }, { passive: true });
-
-    const targets = document.querySelectorAll('.reveal,[data-fade],.stage-item');
-    if (targets.length) {
-      const io = new IntersectionObserver((entries) => {
-        for (const e of entries) {
-          const el = e.target;
-          if (e.isIntersecting) {
-            // Fade-in inmediato cuando apenas asoma
-            el.classList.add('revealed','reveal--in','fade-in--visible','is-on');
-            el.dataset.seen = '1';
-            io.unobserve(el); // solo una vez (evita parpadeos)
-          } else {
-            // Si quisieras fade-out al subir, podrías re-observar aquí.
-            // Dejamos sólo fade-in para mantener estabilidad visual.
-          }
+    // Observador "temprano": dispara cuando el elemento está aún lejos (entra antes).
+    // 70% del viewport por encima y sólo 10% de salida inferior => entrada MUY pronto.
+    const ioEarly = new IntersectionObserver((entries) => {
+      for (const e of entries) {
+        const el = e.target;
+        if (e.isIntersecting) {
+          el.classList.add('is-on','revealed','reveal--in','fade-in--visible');
+        } else {
+          // Mantén la clase al bajar; si quieres fade-out al subir, podrías quitar aquí.
+          // Lo dejamos persistente para que no "parpadee".
         }
-      }, {
-        threshold: 0,
-        rootMargin: '0% 0% -85% 0%' // dispara cuando el elemento asoma muy poco
-      });
-      targets.forEach(t => io.observe(t));
-    }
+      }
+    }, { rootMargin: '70% 0% -10% 0%', threshold: 0 });
+
+    // Registra todos los elementos candidatos
+    const all = document.querySelectorAll('.stage-item, .reveal, [data-fade]');
+    all.forEach(el => ioEarly.observe(el));
   </script>
 </body>
 </html>
