@@ -10,14 +10,23 @@ const cvUrl = cv
   ? (/^https?:\/\//i.test(cv) ? cv : `${BASE}${cv.startsWith("/") ? cv : `/${cv}`}`)
   : `${BASE}/files/CV.pdf`;
 ---
-<section id="contacto" class="contact-section section">
-  <div class="container contact-inner">
-    <h2>Contacto</h2>
-    <p>¿Conversamos? Escríbeme y revisa mi CV.</p>
-    <div class="cta-row center">
-      <a class="btn" href={cvUrl} download>Descargar CV</a>
-      <a class="chip" href="mailto:seba.vedoya@gmail.com">seba.vedoya@gmail.com</a>
-      <a class="chip" href="https://www.linkedin.com/in/sebastianvedoyam/" target="_blank" rel="noopener">LinkedIn</a>
+
+<section id="contacto" class="section" data-fade>
+  <!-- ✅ Barra gris superior de contacto -->
+  <div class="contact-bar">
+    <div class="container contact-bar__inner">
+      <h2 class="contact-title">Contacto</h2>
+      <div class="contact-actions">
+        <a class="chip" href="mailto:seba.vedoya@gmail.com">seba.vedoya@gmail.com</a>
+        <a class="chip" href={cvUrl} download>Descargar CV</a>
+        <a class="chip" href="https://www.linkedin.com/in/sebastianvedoyam/" target="_blank" rel="noopener">LinkedIn</a>
+      </div>
     </div>
+  </div>
+
+  <div class="container contact-inner">
+    <p class="section-intro" style="margin-top:1rem">
+      ¿Conversamos? Escríbeme y revisa mi CV.
+    </p>
   </div>
 </section>

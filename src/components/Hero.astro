@@ -20,17 +20,32 @@ const fotoUrl = foto
   : `${BASE}/assets/foto-hero.jpeg`;
 ---
 
-<section id="inicio" class="hero section reveal">
-  <div class="container hero-grid">
-    <div class="hero-copy">
+<!--
+  Nuevo HERO:
+  - Bloque central (nombre + descripción).
+  - “Fase tardía” (foto + chips) que aparece TEMPRANO (≈10% scroll dentro del hero).
+-->
+<section id="inicio" class="hero section reveal hero--center">
+  <div class="container hero-shell">
+    <!-- Bloque central -->
+    <div class="hero-core">
       <h1 class="hero-title">
-        Sebastián Vedoya M.<br />
+        Sebastián Vedoya M.
         <span class="hero-sub">Comunicación Estratégica</span>
       </h1>
-      <p class="lead">
+      <p class="lead hero-lead">
         Estratega en comunicación con más de 10 años de experiencia en medios y gobierno.
         Me dedico a buscar respuestas complejas para entornos complejos.
       </p>
+    </div>
+
+    <!-- Fase tardía: aparece temprano al empezar el scroll -->
+    <div class="hero-late">
+      <div class="hero-photo-wrap">
+        <!-- ✅ foto robusta para GitHub Pages -->
+        <img src={fotoUrl} alt="Sebastián Vedoya M." loading="lazy" />
+      </div>
+
       <div class="cta-row">
         <!-- ✅ usa cvUrl con base absoluta -->
         <a class="btn" href={cvUrl} download>Descargar CV</a>
@@ -38,21 +53,48 @@ const fotoUrl = foto
         <a class="chip" href="https://www.linkedin.com/in/sebastianvedoyam/" target="_blank" rel="noopener">LinkedIn</a>
       </div>
     </div>
-
-    <div class="hero-photo-wrap">
-      <!-- ✅ foto robusta para GitHub Pages -->
-      <img src={fotoUrl} alt="Sebastián Vedoya M." loading="lazy" />
-    </div>
   </div>
 
+  <!-- Canvas decorativo (opcional, lo dejamos) -->
   <canvas id="bg-net" aria-hidden="true"></canvas>
 
-  <script is:inline>
-    const obs = new IntersectionObserver((ents)=> {
-      for (const e of ents) if (e.isIntersecting) e.target.classList.add('revealed');
-    }, { threshold: 0.1 });
-    obs.observe(document.currentScript.closest('.reveal'));
+  <!-- Sentinela para disparar la fase tardía ANTES de llegar a la siguiente sección -->
+  <div id="hero-sentinel" aria-hidden="true"></div>
 
+  <script is:inline>
+    // Fade-in base del hero
+    const root = document.currentScript.closest('.reveal');
+    const io0 = new IntersectionObserver((ents)=> {
+      for (const e of ents) if (e.isIntersecting) root.classList.add('revealed');
+    }, { threshold: 0.1 });
+    io0.observe(root);
+
+    // Aparición TEMPRANA de la foto + chips
+    const sentinel = document.getElementById('hero-sentinel');
+    const late = root.querySelector('.hero-late');
+    function placeSentinel() {
+      const heroRect = root.getBoundingClientRect();
+      sentinel.style.position = 'absolute';
+      sentinel.style.top = Math.max(0, heroRect.height * 0.10) + 'px'; // 10% dentro del hero
+      sentinel.style.left = '0';
+      sentinel.style.right = '0';
+      sentinel.style.height = '1px';
+      sentinel.style.pointerEvents = 'none';
+    }
+    placeSentinel();
+    window.addEventListener('resize', placeSentinel);
+
+    const io1 = new IntersectionObserver((ents) => {
+      for (const e of ents) {
+        if (e.isIntersecting) {
+          late.classList.add('is-on'); // activa ANTES de llegar a la siguiente sección
+          io1.disconnect();
+        }
+      }
+    }, { root: null, threshold: 0, rootMargin: '-10% 0px -80% 0px' });
+    io1.observe(sentinel);
+
+    // Canvas de fondo (igual que tu versión anterior)
     const canvas = document.getElementById('bg-net');
     const ctx = canvas.getContext('2d');
     const DPR = window.devicePixelRatio || 1;
