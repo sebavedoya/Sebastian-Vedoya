@@ -49,9 +49,9 @@ const fotoUrl = foto
     const elContact = document.getElementById('heroContact');
 
     function applyStages(y){
-      if (y >= 10) elPhoto.classList.add('is-on');
+      if (y >= 20) elPhoto.classList.add('is-on');
       else elPhoto.classList.remove('is-on');
-      if (y >= 25) elContact.classList.add('is-on');
+      if (y >= 50) elContact.classList.add('is-on');
       else elContact.classList.remove('is-on');
     }
 
@@ -62,16 +62,16 @@ const fotoUrl = foto
 
 <style>
 .hero-stage {
-  min-height: 60vh; /* 🔽 compactado totalmente */
+  min-height: 90vh; /* 🔹 equilibrio entre impacto visual y compacidad */
 }
 .stage-panel {
   position: sticky;
-  top: 8vh;
+  top: 10vh;
   display: flex;
   flex-direction: column;
   align-items: center;
   text-align: center;
-  padding: 5vh 0 1vh;
+  padding: 8vh 0 2vh;
 }
 
 .hero-title {
@@ -84,40 +84,40 @@ const fotoUrl = foto
 }
 
 .photo-float {
-  margin-top: .8rem;
+  margin-top: 1rem;
   opacity: 0;
-  transform: translateY(6px);
-  transition: opacity .18s ease, transform .18s ease;
-  filter: drop-shadow(0 10px 24px rgba(0,0,0,.4));
+  transform: translateY(8px);
+  transition: opacity .22s ease, transform .22s ease;
+  filter: drop-shadow(0 12px 28px rgba(0,0,0,.45));
 }
 .photo-float.is-on { opacity: 1; transform: none; }
 
 .photo-float img {
-  width: 300px;
-  height: 360px;
+  width: 320px;
+  height: 400px;
   object-fit: cover;
   object-position: center top;
   border-radius: 14px;
   border: 3px solid #0f1720;
-  box-shadow: 0 8px 28px rgba(0,0,0,.55);
+  box-shadow: 0 10px 32px rgba(0,0,0,.55);
 }
 
 .cta-row {
   display: flex;
   gap: .75rem;
   flex-wrap: wrap;
-  margin-top: .8rem;
+  margin-top: 1rem;
   justify-content: center;
   opacity: 0;
   transform: translateY(5px);
-  transition: opacity .18s ease, transform .18s ease;
+  transition: opacity .2s ease, transform .2s ease;
 }
 .cta-row.is-on { opacity: 1; transform: none; }
 
 @media (max-width:1040px){
-  .photo-float img{ width:260px; height:320px; }
+  .photo-float img{ width:280px; height:360px; }
 }
 @media (max-width:640px){
-  .photo-float img{ width:220px; height:280px; }
+  .photo-float img{ width:240px; height:300px; }
 }
 </style>
