@@ -210,3 +210,13 @@ html.js [data-fade]{opacity:0;transform:translateY(14px);transition:opacity .7s 
   .progress-thumb{ inset:0 auto 0 0; transform-origin:left center; transform:scaleX(0.05); }
   .progress-labels{ flex-direction:row; gap:.75rem; flex-wrap:wrap; }
 }
+/* === Aparición temprana por scroll (común a System/Projects/Reflections/Press) === */
+.stage-item{
+  opacity:0;
+  transform: translateY(10px);
+  transition: opacity .32s ease, transform .32s ease;
+}
+.stage-item.is-on{
+  opacity:1;
+  transform: none;
+}

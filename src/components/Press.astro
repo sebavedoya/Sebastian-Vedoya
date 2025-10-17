@@ -1,63 +1,81 @@
 ---
-/** Carrusel de prensa: robusto para GitHub Pages y sin subrayados */
-const DEBUG = false;
-
+/** Prensa: cards + carrusel opcional con entrada por scroll temprana */
 const notas = [
-  { medio: "La Tercera", titulo: "Operación Topógrafo — Espionaje del Ejército a denunciantes", url: "https://www.latercera.com/reportajes/noticia/operacion-topografo-espionaje-del-ejercito-cuatro-denunciantes-irregularidades/777342/", img: "/assets/prensa/topografo.jpg" },
-  { medio: "Publimetro", titulo: "Ricardo Lagos: “Durante mi gobierno no privaticé nada, al contrario”", url: "https://www.publimetro.cl/cl/noticias/2016/11/18/ex-presidente-lagos-durante-mi-gobierno-no-privatice-nada-contrario.html", img: "/assets/prensa/lagos.jpg" },
-  { medio: "Publimetro", titulo: "Sebastián Piñera: “Me siento orgulloso de lo que he logrado en la vida”", url: "https://www.publimetro.cl/cl/noticias/2017/06/19/sebastian-pinera-me-siento-orgulloso-lo-he-logrado-vida.html", img: "/assets/prensa/pinera.jpg" },
-  { medio: "La Tercera", titulo: "Hernán Larraín: “No somos partidarios de indultar a violadores de DD.HH. ni asesinos en serie”", url: "https://www.latercera.com/nacional/noticia/hernan-larrain-ministro-justicia-derechos-humanos-no-somos-partidarios-indultar-violadores-dd-hh-asesinos-serie/111533/", img: "/assets/prensa/larrain.jpg" },
-  { medio: "La Tercera", titulo: "La declaración de ‘Ramiro’ ante Carroza", url: "https://www.latercera.com/la-tercera-pm/noticia/la-declaracion-ramiro-carroza-estoy-seguro-estaba-privado-libertad-detencion-preventiva/792779/", img: "/assets/prensa/ramiro.jpg" },
-  { medio: "La Tercera", titulo: "El Papa en La Araucanía: 'Mari Mari, peñi, lamngen'", url: "https://www.latercera.com/noticia/papa-la-araucania-mari-mari/", img: "/assets/prensa/papa.jpg" },
+  {
+    medio: "La Tercera",
+    titulo: "Operación Topógrafo — Espionaje del Ejército a denunciantes",
+    url: "https://www.latercera.com/reportajes/noticia/operacion-topografo-espionaje-del-ejercito-cuatro-denunciantes-irregularidades/777342/",
+    img: "/assets/prensa/topografo.jpg",
+  },
+  {
+    medio: "Publimetro",
+    titulo: "Ricardo Lagos: “Durante mi gobierno no privaticé nada, al contrario”",
+    url: "https://www.publimetro.cl/cl/noticias/2016/11/18/ex-presidente-lagos-durante-mi-gobierno-no-privatice-nada-contrario.html",
+    img: "/assets/prensa/lagos.jpg",
+  },
+  {
+    medio: "Publimetro",
+    titulo: "Sebastián Piñera: “Me siento orgulloso de lo que he logrado en la vida”",
+    url: "https://www.publimetro.cl/cl/noticias/2017/06/19/sebastian-pinera-me-siento-orgulloso-lo-he-logrado-vida.html",
+    img: "/assets/prensa/pinera.jpg",
+  },
+  {
+    medio: "La Tercera",
+    titulo: "Hernán Larraín: “No somos partidarios de indultar a violadores de DD.HH. ni asesinos en serie”",
+    url: "https://www.latercera.com/nacional/noticia/hernan-larrain-ministro-justicia-derechos-humanos-no-somos-partidarios-indultar-violadores-dd-hh-asesinos-serie/111533/",
+    img: "/assets/prensa/larrain.jpg",
+  }
 ];
 
+// Prefijo robusto (GitHub Pages)
 const BASE = (import.meta.env.BASE_URL || "/").replace(/\/+$/, "");
-const srcFor = (p?: string) => (/^https?:\/\//i.test(p || "")) ? p : `${BASE}${(p || "").startsWith("/") ? p : `/${p}`}`;
+const srcFor = (p?: string) => p ? (/^https?:\/\//i.test(p) ? p : `${BASE}${p.startsWith("/") ? p : `/${p}`}`) : undefined;
 ---
-<section id="prensa" class="section" data-fade>
-  <div class="container">
-    <h2 class="h2" data-fade>Los más destacados</h2>
 
-    <div class="carousel">
-      <button class="carousel-btn prev" aria-label="Anterior" id="pressPrev">‹</button>
-      <div class="carousel-track" id="pressTrack">
-        {notas.map((n) => {
-          const src = srcFor(n.img);
-          return (
-            <a class="card press carousel-item" href={n.url} target="_blank" rel="noopener" style="text-decoration:none">
-              {src ? (
-                <figure class="thumb" style="aspect-ratio:16/9;overflow:hidden;border-radius:.6rem;margin-bottom:.5rem;background:#0b1220">
-                  <img src={src} alt={n.titulo} loading="lazy" style="width:100%;height:100%;object-fit:cover" />
-                </figure>
-              ) : (
-                <div class="thumb placeholder" style="aspect-ratio:16/9;border-radius:.6rem;margin-bottom:.5rem;background:#0b1220"></div>
-              )}
-              <div class="meta" style="text-decoration:none">
-                <span class="tag" style="font-size:.85rem;color:#9aa7b5">{n.medio}</span>
-                <h3 style="font-size:1rem;color:#fff;margin:.25rem 0 0;line-height:1.35;text-decoration:none">{n.titulo}</h3>
-                {DEBUG && <code class="debug-src" style="display:block;margin-top:.35rem;color:#94a3b8;font-size:.8rem;word-break:break-all">{src}</code>}
-              </div>
-            </a>
-          );
-        })}
-      </div>
-      <button class="carousel-btn next" aria-label="Siguiente" id="pressNext">›</button>
+<section id="prensa" class="section">
+  <div class="container">
+    <h2 class="h2">Prensa</h2>
+
+    <div class="grid cards">
+      {notas.map((n, i) => {
+        const src = srcFor(n.img);
+        return (
+          <a class="card press stage-item" data-stage={i+1} href={n.url} target="_blank" rel="noopener">
+            {src ? (
+              <figure class="thumb" style="aspect-ratio:16/9;overflow:hidden;border-radius:.6rem;margin-bottom:.5rem;background:#0f141a">
+                <img src={src} alt={n.titulo} loading="lazy" style="width:100%;height:100%;object-fit:cover;display:block" />
+              </figure>
+            ) : (
+              <div class="thumb placeholder" aria-hidden="true" />
+            )}
+            <div class="meta">
+              <span class="tag" style="font-size:.85rem;color:#9aa8b8">{n.medio}</span>
+              <h3 class="h3" style="margin:.25rem 0 0;line-height:1.4">{n.titulo}</h3>
+            </div>
+          </a>
+        );
+      })}
     </div>
   </div>
+
+  <script is:inline>
+    (function(){
+      const section = document.getElementById('prensa');
+      const items   = section.querySelectorAll('.stage-item');
+      const base = Math.min(window.innerHeight * 0.10, 100);
+      const thresholds = Array.from(items).map((_,i)=> (i*70) + Math.max(20, base*0.6));
+
+      function onScroll(){
+        const top = section.getBoundingClientRect().top + window.scrollY;
+        const y   = window.scrollY || 0;
+        items.forEach((el, i)=>{
+          if (y > top - 20 + thresholds[i]) el.classList.add('is-on');
+          else el.classList.remove('is-on');
+        });
+      }
+      onScroll();
+      window.addEventListener('scroll', onScroll, { passive:true });
+      window.addEventListener('resize', onScroll);
+    })();
+  </script>
 </section>
-
-<script is:inline>
-  const track = document.getElementById('pressTrack');
-  const prev  = document.getElementById('pressPrev');
-  const next  = document.getElementById('pressNext');
-
-  function step() {
-    const item = track.querySelector('.carousel-item');
-    if(!item) return 320;
-    const gap = parseFloat(getComputedStyle(track).gap) || 16;
-    return item.getBoundingClientRect().width + gap;
-    }
-
-  prev.addEventListener('click', ()=> track.scrollBy({ left: -step(), behavior: 'smooth' }));
-  next.addEventListener('click', ()=> track.scrollBy({ left:  step(), behavior: 'smooth' }));
-</script>

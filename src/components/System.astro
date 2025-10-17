@@ -1,10 +1,36 @@
 ---
-const frase = "Ningún actor puede controlar el entorno sin igualarlo en complejidad; y si no puede igualarlo, debe aprender a domesticarlo.";
+/** System: frase destacada con aparición temprana por scroll (muy breve) */
+const frase =
+  "Ningún actor puede controlar el entorno sin igualarlo en complejidad; y si no puede igualarlo, debe aprender a domesticarlo.";
+const autor = "Ross Ashby";
 ---
-<section id="sistema" class="section" data-fade>
+
+<section id="sistema" class="section">
   <div class="container">
-    <div class="system-quote">
-      {frase}
+    <div class="system-quote stage-item" data-stage="1">
+      {frase} <span>— {autor}</span>
     </div>
   </div>
+
+  <script is:inline>
+    // Aparición muy temprana
+    (function(){
+      const section = document.getElementById('sistema');
+      const items   = section.querySelectorAll('.stage-item');
+      const base = Math.min(window.innerHeight * 0.10, 100); // ~10vh máx 100px
+      const thresholds = Array.from(items).map((_,i)=> (i*40) + Math.max(20, base*0.6)); // escalonado corto
+
+      function onScroll(){
+        const top = section.getBoundingClientRect().top + window.scrollY;
+        const y   = window.scrollY || 0;
+        items.forEach((el, i)=>{
+          if (y > top - 20 + thresholds[i]) el.classList.add('is-on');
+          else el.classList.remove('is-on');
+        });
+      }
+      onScroll();
+      window.addEventListener('scroll', onScroll, { passive:true });
+      window.addEventListener('resize', onScroll);
+    })();
+  </script>
 </section>
