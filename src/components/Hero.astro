@@ -1,52 +1,35 @@
 ---
-// src/components/Hero.astro
 export interface Props {
   cv?: string;
   foto?: string;
 }
-
 const { cv, foto } = Astro.props;
 
+// Rutas robustas para GitHub Pages
 const BASE = (import.meta.env.BASE_URL || "/").replace(/\/+$/, "");
-
-// CV robusto
-const cvUrl = cv
-  ? (/^https?:\/\//i.test(cv) ? cv : `${BASE}${cv.startsWith("/") ? cv : `/${cv}`}`)
-  : `${BASE}/files/CV.pdf`;
-
-// Foto robusta
-const fotoUrl = foto
-  ? (/^https?:\/\//i.test(foto) ? foto : `${BASE}${foto.startsWith("/") ? foto : `/${foto}`}`)
-  : `${BASE}/assets/foto-hero.jpeg`;
+const cvUrl   = cv   ? (/^https?:\/\//i.test(cv) ? cv   : `${BASE}${cv.startsWith("/") ? cv : `/${cv}`}`) : `${BASE}/files/CV.pdf`;
+const fotoUrl = foto ? (/^https?:\/\//i.test(foto) ? foto : `${BASE}${foto.startsWith("/") ? foto : `/${foto}`}`) : `${BASE}/assets/foto-hero.jpeg`;
 ---
 
-<section id="inicio" class="hero hero-stage" aria-label="Presentación">
+<section id="inicio" class="hero hero-stage reveal" aria-label="Presentación">
   <div class="container hero-stage-grid">
-    <!-- Panel sticky: todo queda fijo aquí -->
+    <!-- Panel sticky centrado -->
     <div class="stage-panel">
       <h1 class="hero-title">
         Sebastián Vedoya M.
         <span class="hero-sub">Comunicación Estratégica</span>
       </h1>
-
       <p class="lead hero-lead">
         Estratega en comunicación con más de 10 años de experiencia en medios y gobierno.
         Me dedico a buscar respuestas complejas para entornos complejos.
       </p>
 
-      <!-- Fase 1: foto (aparece con muy poco scroll y luego queda fija) -->
+      <!-- Foto: aparece MUY pronto y queda fija -->
       <div class="photo-float" id="heroPhoto">
-        <img
-          src={fotoUrl}
-          alt="Sebastián Vedoya M."
-          width="360"
-          height="460"
-          loading="eager"
-          fetchpriority="high"
-        />
+        <img src={fotoUrl} alt="Sebastián Vedoya M." loading="lazy" />
       </div>
 
-      <!-- Fase 2: contacto (aparece poco después y queda fijo) -->
+      <!-- Contacto: aparece un poco después de la foto -->
       <div class="cta-row cta-hidden" id="heroContact">
         <a class="btn btn-outline" href={cvUrl} download>Descargar CV</a>
         <a class="chip" href="mailto:seba.vedoya@gmail.com">seba.vedoya@gmail.com</a>
@@ -54,111 +37,99 @@ const fotoUrl = foto
       </div>
     </div>
 
-    <!-- Pista de scroll mínima para que existan ‘unos’ píxeles de desplazamiento -->
-    <div class="tiny-spacer" aria-hidden="true"></div>
+    <!-- Disparadores invisibles (muy arriba para activar temprano) -->
+    <div class="stage-triggers" aria-hidden="true">
+      <div class="trigger" id="trgPhoto"></div>
+      <div class="trigger" id="trgContact"></div>
+    </div>
   </div>
 
-  <!-- Tu fondo de nodos actual -->
-  <canvas id="bg-net" aria-hidden="true"></canvas>
+  <!-- Sin animación de fondo (como pediste) -->
+</section>
 
- <script is:inline>
-  // Dirección de scroll (comparte la misma lógica)
-  let lastY = window.scrollY;
-  let dir = 'down';
+<style>
+  /* Layout general del hero centrado */
+  .hero-stage { min-height: 120vh; }
+  .hero-stage-grid { display:grid; grid-template-columns:1fr; }
+  .stage-panel{
+    position: sticky; top: 14vh;
+    display:flex; flex-direction:column; align-items:center; text-align:center;
+    padding: 10vh 0 12vh;
+  }
+
+  .hero-title{ margin:0 0 .6rem; }
+  .hero-title .hero-sub{ display:block; margin-top:.15rem; color:var(--copper); }
+  .hero-lead{ max-width:60ch; margin: 0 auto 0.75rem; }
+
+  /* Foto: estado inicial y transición */
+  .photo-float{
+    margin-top: 1.2rem;
+    opacity:0; transform: translateY(14px) scale(.985);
+    transition: opacity .35s ease, transform .35s ease;
+    filter: drop-shadow(0 18px 38px rgba(0,0,0,.45));
+  }
+  .photo-float.is-on{ opacity:1; transform:none }
+  .photo-float img{
+    width:360px; height:460px; object-fit:cover; object-position:center top;
+    border-radius:16px; border:4px solid #0f1720;
+    box-shadow:0 14px 40px rgba(0,0,0,.6);
+  }
+
+  /* Contacto: un pelín después */
+  .cta-hidden{ opacity:0; transform: translateY(10px); transition: opacity .3s ease, transform .3s ease }
+  .cta-hidden.is-on{ opacity:1; transform:none }
+
+  /* Triggers: muy pequeños y muy arriba para disparar temprano */
+  .stage-triggers{ height: 20vh; }
+  .stage-triggers .trigger{ height: 1px; }
+
+  @media (max-width:1040px){
+    .photo-float img{ width:320px; height:420px }
+  }
+  @media (max-width:640px){
+    .photo-float img{ width:280px; height:360px }
+  }
+</style>
+
+<script is:inline>
+  // Script mínimo y AUTÓNOMO del Hero:
+  // - Aparece la sección (reveal)
+  // - Foto aparece con un scroll brevísimo
+  // - Contacto aparece poco después
+  // - Fade OUT solo al SUBIR (no al bajar)
+
+  const root      = document.currentScript.closest('.hero-stage');
+  const elPhoto   = root.querySelector('#heroPhoto');
+  const elContact = root.querySelector('#heroContact');
+  const trgPhoto  = root.querySelector('#trgPhoto');
+  const trgCtas   = root.querySelector('#trgContact');
+
+  // Marca el hero como revelado (texto) inmediatamente
+  requestAnimationFrame(() => root.classList.add('revealed'));
+
+  // Dirección de scroll local al Hero
+  let lastY = window.scrollY, dir = 'down';
   window.addEventListener('scroll', () => {
     const y = window.scrollY;
     dir = y > lastY ? 'down' : 'up';
     lastY = y;
   }, { passive: true });
 
-  const elPhoto   = document.getElementById('heroPhoto');
-  const elContact = document.getElementById('heroContact');
-  const trgPhoto  = document.getElementById('trgPhoto');
-  const trgCtas   = document.getElementById('trgContact');
-
-  // Aparición inmediata cuando empiezas a bajar…
+  // ENTRADA muy temprana: apenas empieza el scroll (rootMargin con -98% arriba)
   const enterOpts = { root: null, rootMargin: '-98% 0% -2% 0%', threshold: 0 };
-  // …y salida tardía sólo al subir
-  const leaveLate = (el) => {
-    const rect = el.getBoundingClientRect();
-    const vh = window.innerHeight || document.documentElement.clientHeight;
-    if (dir === 'up' && rect.top > vh * 0.98) el.classList.remove('is-on');
-  };
 
   new IntersectionObserver((entries)=>{
     for (const e of entries) {
       if (e.isIntersecting) elPhoto.classList.add('is-on');
-      else leaveLate(elPhoto);
+      else if (dir === 'up') elPhoto.classList.remove('is-on'); // sale solo si subes
     }
   }, enterOpts).observe(trgPhoto);
 
+  // Contacto: similar, un poquito después
   new IntersectionObserver((entries)=>{
     for (const e of entries) {
       if (e.isIntersecting) elContact.classList.add('is-on');
-      else leaveLate(elContact);
+      else if (dir === 'up') elContact.classList.remove('is-on'); // sale solo al subir
     }
   }, enterOpts).observe(trgCtas);
 </script>
-
-<style>
-  /* Hero centrado, sin animación de entrada */
-  .hero-stage{
-    min-height: 140vh;
-    position: relative;
-  }
-  .hero-stage-grid{
-    display: grid;
-    grid-template-columns: 1fr;
-  }
-
-  .stage-panel{
-    position: sticky;
-    top: 12vh;              /* queda fijo alto */
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    text-align: center;
-    padding: 10vh 0 8vh;
-    gap: 0.8rem;
-  }
-
-  .hero-title{ margin: 0; }
-  .hero-title .hero-sub{
-    display:block; margin-top:.15rem; color: var(--copper);
-  }
-
-  .hero-lead{
-    max-width: 60ch;
-    margin: .25rem 0 0;
-  }
-
-  /* Foto: arranca oculta y aparece con fade corto; queda fija en el sticky */
-  .photo-float{
-    margin-top: 1.1rem;
-    opacity: 0; transform: translateY(10px);
-    transition: opacity .35s ease, transform .35s ease;
-    filter: drop-shadow(0 20px 40px rgba(0,0,0,.45));
-  }
-  .photo-float.is-on{ opacity: 1; transform: none; }
-  .photo-float img{
-    width: 360px; height: 460px; object-fit: cover; object-position: center top;
-    border-radius: 16px; border: 4px solid #0f1720; box-shadow: 0 14px 40px rgba(0,0,0,.6);
-  }
-
-  /* Contacto: aparece poquito después; sigue fijo en el sticky */
-  .cta-hidden{
-    opacity: 0; transform: translateY(8px);
-    transition: opacity .3s ease, transform .3s ease;
-  }
-  .cta-hidden.is-on{ opacity: 1; transform: none; }
-
-  .tiny-spacer{ height: 40vh; } /* un poco de pista de scroll */
-  #bg-net{ position:absolute; inset:0; pointer-events:none; z-index:-1; }
-
-  @media (max-width:1040px){
-    .photo-float img{ width:320px; height:420px; }
-  }
-  @media (max-width:640px){
-    .photo-float img{ width:280px; height:360px; }
-  }
-</style>
