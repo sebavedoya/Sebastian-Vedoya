@@ -16,25 +16,25 @@ const fotoUrl = foto
 
 <section id="inicio" class="hero hero-stage" aria-label="Presentación">
   <div class="container hero-stage-grid">
-    <!-- Panel sticky, centrado y con fade (usa .reveal para el script global) -->
-    <div class="stage-panel reveal">
+    <!-- Panel sticky, centrado. SIN animaciones de entrada -->
+    <div class="stage-panel">
       <div class="intro">
         <h1 class="hero-title">
           Sebastián Vedoya M.
           <span class="hero-sub">Comunicación Estratégica</span>
         </h1>
-        <p class="lead">
+        <p class="lead hero-lead">
           Estratega en comunicación con más de 10 años de experiencia en medios y gobierno.
           Me dedico a buscar respuestas complejas para entornos complejos.
         </p>
       </div>
 
-      <!-- Foto: aparece en la fase 2 -->
+      <!-- Foto: aparece pronto con el scroll -->
       <div class="photo-float" id="heroPhoto">
         <img src={fotoUrl} alt="Sebastián Vedoya M." loading="lazy" />
       </div>
 
-      <!-- Contactos: aparecen en la fase 3 -->
+      <!-- Contactos: aparecen poco después -->
       <div class="cta-row cta-hidden" id="heroContact">
         <a class="btn btn-outline" href={cvUrl} download>Descargar CV</a>
         <a class="chip" href="mailto:seba.vedoya@gmail.com">seba.vedoya@gmail.com</a>
@@ -42,136 +42,79 @@ const fotoUrl = foto
       </div>
     </div>
 
-    <!-- Triggers cortos para que aparezcan antes -->
+    <!-- Triggers más cortos para disparar temprano -->
     <div class="stage-triggers" aria-hidden="true">
       <div class="trigger" id="trgPhoto"></div>
       <div class="trigger" id="trgContact"></div>
     </div>
   </div>
 
-  <canvas id="bg-net" aria-hidden="true"></canvas>
+  <!-- (Eliminado canvas/animación del fondo) -->
 
   <script is:inline>
-    // Las clases .reveal/.revealed se manejan por el script global en Base.astro
-
-    // Etapas del hero (aparecen pronto)
+    // Foto: aparecer muy pronto
     const elPhoto   = document.getElementById('heroPhoto');
     const elContact = document.getElementById('heroContact');
 
     new IntersectionObserver((es)=>{
       for (const e of es) elPhoto.classList.toggle('is-on', e.isIntersecting);
-    }, { rootMargin: '-20% 0% -60% 0%', threshold: .2 })
+    }, { rootMargin: '-5% 0% -90% 0%', threshold: 0.01 })
       .observe(document.getElementById('trgPhoto'));
 
+    // Contacto: aparece poco después, también temprano
     new IntersectionObserver((es)=>{
       for (const e of es) elContact.classList.toggle('is-on', e.isIntersecting);
-    }, { rootMargin: '-20% 0% -60% 0%', threshold: .2 })
+    }, { rootMargin: '-5% 0% -88% 0%', threshold: 0.01 })
       .observe(document.getElementById('trgContact'));
 
-    // Fondo de nodos (igual que antes)
-    const canvas = document.getElementById('bg-net');
-    const ctx = canvas.getContext('2d');
-    const DPR = window.devicePixelRatio || 1;
-    let nodes = [];
-
-    function resizeCanvas() {
-      const hero = document.getElementById('inicio');
-      const w = hero.clientWidth, h = hero.clientHeight;
-      canvas.width = w * DPR; canvas.height = h * DPR;
-      canvas.style.width = w + 'px'; canvas.style.height = h + 'px';
-      initNodes();
+    // En pantallas muy bajas, muéstralos sin esperar tanto scroll
+    if (window.innerHeight < 720) {
+      elPhoto.classList.add('is-on');
+      // dale un pequeño respiro a la foto
+      setTimeout(()=> elContact.classList.add('is-on'), 120);
     }
-
-    function initNodes() {
-      const count = 44;
-      nodes = [];
-      const w = canvas.width, h = canvas.height;
-      for (let i = 0; i < count; i++) {
-        nodes.push({
-          x: Math.random() * w,
-          y: Math.random() * h,
-          vx: (Math.random()-0.5)*0.18*DPR,
-          vy: (Math.random()-0.5)*0.18*DPR
-        });
-      }
-    }
-
-    function step() {
-      const w = canvas.width, h = canvas.height;
-      for (const n of nodes) {
-        n.x+=n.vx; n.y+=n.vy;
-        if (n.x<0||n.x>w) n.vx*=-1;
-        if (n.y<0||n.y>h) n.vy*=-1;
-      }
-    }
-
-    function draw() {
-      const w = canvas.width, h = canvas.height;
-      ctx.clearRect(0,0,w,h);
-      for (let i=0;i<nodes.length;i++){
-        for (let j=i+1;j<nodes.length;j++){
-          const dx = nodes[i].x-nodes[j].x, dy = nodes[i].y-nodes[j].y;
-          const d = Math.hypot(dx,dy), MAX = 180*DPR;
-          if (d < MAX){
-            const a = 1 - d/MAX;
-            const g = ctx.createLinearGradient(nodes[i].x,nodes[i].y,nodes[j].x,nodes[j].y);
-            g.addColorStop(0, `rgba(26,77,110,${a*0.16})`);
-            g.addColorStop(1, `rgba(184,115,51,${a*0.16})`);
-            ctx.strokeStyle = g; ctx.lineWidth = 1*DPR;
-            ctx.beginPath(); ctx.moveTo(nodes[i].x,nodes[i].y); ctx.lineTo(nodes[j].x,nodes[j].y); ctx.stroke();
-          }
-        }
-      }
-      for (const n of nodes){
-        ctx.fillStyle='rgba(184,115,51,0.42)';
-        ctx.beginPath(); ctx.arc(n.x,n.y,2.2*DPR,0,Math.PI*2); ctx.fill();
-      }
-      step(); requestAnimationFrame(draw);
-    }
-
-    window.addEventListener('resize', resizeCanvas);
-    resizeCanvas(); requestAnimationFrame(draw);
   </script>
 </section>
 
 <style>
-  /* Hero centrado + fade ordenado */
-  .hero-stage{ min-height:120vh; position:relative; }
+  /* Hero centrado y ordenado */
+  .hero-stage{ min-height:110vh; position:relative; }
   .hero-stage-grid{ display:grid; grid-template-columns:1fr; }
+
   .stage-panel{
     position:sticky; top:14vh;
     display:flex; flex-direction:column; align-items:center; text-align:center;
-    padding: 12vh 0 10vh;
+    padding: 10vh 0 8vh;
   }
-  /* Fade inicial del panel (se completa con .revealed del script global) */
-  .stage-panel.reveal{ opacity:0; transform:translateY(14px); transition:opacity .6s ease, transform .6s ease }
-  .stage-panel.revealed{ opacity:1; transform:none }
-
+  .intro{ max-width: 64ch; margin: 0 auto; }
   .hero-title{ margin:0 0 .6rem; }
   .hero-title .hero-sub{ display:block; margin-top:.15rem; color:var(--copper); }
+  .hero-lead{ margin: .5rem auto 0; }
 
-  /* Foto aparece con scroll */
+  /* Foto: sin animación inicial, solo transición sutil */
   .photo-float{
-    margin-top: 1.5rem;
-    opacity:0; transform: translateY(14px) scale(.985);
-    transition: opacity .6s ease, transform .6s ease, box-shadow .3s ease;
-    filter: drop-shadow(0 20px 40px rgba(0,0,0,.45));
+    margin-top: 1.2rem;
+    opacity:0; transform: translateY(8px);
+    transition: opacity .28s ease, transform .28s ease;
+    filter: drop-shadow(0 16px 32px rgba(0,0,0,.45));
   }
   .photo-float.is-on{ opacity:1; transform:none }
   .photo-float img{
     width:360px; height:460px; object-fit:cover; object-position:center top;
-    border-radius:16px; border:4px solid #0f1720; box-shadow:0 14px 40px rgba(0,0,0,.6);
+    border-radius:16px; border:4px solid #0f1720; box-shadow:0 10px 32px rgba(0,0,0,.55);
   }
 
-  /* Contactos aparecen después */
-  .cta-hidden{ opacity:0; transform: translateY(8px); transition: opacity .5s ease, transform .5s ease; margin-top:.9rem }
+  /* Contactos: igual de rápido */
+  .cta-hidden{
+    opacity:0; transform: translateY(6px);
+    transition: opacity .25s ease, transform .25s ease;
+    margin-top:.9rem;
+  }
   .cta-hidden.is-on{ opacity:1; transform:none }
 
-  /* Triggers más cortos -> revelan antes */
-  .stage-triggers{ height:70vh }
-  .stage-triggers .trigger{ height:35vh }
-
-  #bg-net{ position:absolute; inset:0; pointer-events:none; }
+  /* Triggers MUY cortos para disparo temprano */
+  .stage-triggers{ height:34vh }
+  .stage-triggers .trigger{ height:17vh }
 
   @media (max-width:1040px){
     .photo-float img{ width:320px; height:420px }
