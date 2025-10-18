@@ -1,0 +1,96 @@
+---
+/** Carrusel de experiencia profesional */
+const instituciones = [
+  {
+    nombre: "La Tercera",
+    logo: "/assets/experiencia/latercera.png",
+    url: "https://www.latercera.com/",
+  },
+  {
+    nombre: "Televisión Nacional de Chile",
+    logo: "/assets/experiencia/tvn.png",
+    url: "https://www.tvn.cl/",
+  },
+  {
+    nombre: "Ministerio de Educación",
+    logo: "/assets/experiencia/mineduc.png",
+    url: "https://www.mineduc.cl/",
+  },
+  {
+    nombre: "Instituto de Desarrollo Agropecuario (INDAP)",
+    logo: "/assets/experiencia/indap.png",
+    url: "https://www.indap.gob.cl/",
+  },
+  {
+    nombre: "Subsecretaría de Telecomunicaciones",
+    logo: "/assets/experiencia/subtel.png",
+    url: "https://www.subtel.gob.cl/",
+  },
+  {
+    nombre: "Municipalidad de Cerro Navia",
+    logo: "/assets/experiencia/cerro-navia.png",
+    url: "https://www.cerronavia.cl/",
+  },
+];
+
+const BASE = (import.meta.env.BASE_URL || "/").replace(/\/+$/, "");
+const srcFor = (p) => (/^https?:\/\//i.test(p) ? p : `${BASE}${p.startsWith("/") ? p : `/${p}`}`);
+---
+
+<section id="experiencia" class="section section--tight-top">
+  <div class="container">
+    <h2 class="h2">Experiencia</h2>
+
+    <div class="carousel-track experiencia-track stage-item">
+      {instituciones.map((inst) => (
+        <a href={inst.url} target="_blank" rel="noopener" class="exp-card">
+          <img src={srcFor(inst.logo)} alt={inst.nombre} loading="lazy" />
+          <span class="exp-name">{inst.nombre}</span>
+        </a>
+      ))}
+    </div>
+  </div>
+</section>
+
+<style>
+  /* ===== Carrusel de experiencia ===== */
+  .experiencia-track {
+    display: flex;
+    gap: 2rem;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    padding: 1rem 0 1.5rem;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+  .experiencia-track::-webkit-scrollbar { display: none; }
+
+  .exp-card {
+    flex: 0 0 auto;
+    width: 180px;
+    text-align: center;
+    scroll-snap-align: start;
+    text-decoration: none;
+    color: var(--ink);
+    opacity: 0.9;
+    transition: transform .25s ease, opacity .25s ease;
+  }
+  .exp-card:hover {
+    transform: translateY(-4px);
+    opacity: 1;
+  }
+
+  .exp-card img {
+    width: 100%;
+    height: 100px;
+    object-fit: contain;
+    filter: drop-shadow(0 4px 12px rgba(0,0,0,.5));
+    margin-bottom: .5rem;
+  }
+
+  .exp-name {
+    font-size: .9rem;
+    color: var(--muted);
+    display: block;
+  }
+</style>
