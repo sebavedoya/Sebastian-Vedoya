@@ -1,3 +1,53 @@
+---
+/** Carrusel de Experiencia (solo logos, centrados y linkeados) */
+const BASE = (import.meta.env.BASE_URL || "/").replace(/\/+$/, "");
+
+const items = [
+  { id:"latercera",   alt:"La Tercera",                         href:"https://www.latercera.com",                      src:`${BASE}/assets/experiencia/latercera.png` },
+  { id:"mineduc",     alt:"Ministerio de Educación",            href:"https://www.mineduc.cl",                         src:`${BASE}/assets/experiencia/mineduc.png` },
+  { id:"indap",       alt:"INDAP",                              href:"https://www.indap.gob.cl",                      src:`${BASE}/assets/experiencia/indap.png` },
+  { id:"cerro-navia", alt:"Municipalidad de Cerro Navia",       href:"https://www.cerronavia.cl",                     src:`${BASE}/assets/experiencia/cerro-navia.png` },
+  { id:"publimetro",  alt:"Publimetro",                         href:"https://www.publimetro.cl",                     src:`${BASE}/assets/experiencia/publimetro.png` },
+  { id:"subtel",      alt:"Subsecretaría de Telecomunicaciones",href:"https://www.subtel.gob.cl",                     src:`${BASE}/assets/experiencia/subtel.png` },
+  { id:"tvn",         alt:"Televisión Nacional de Chile",       href:"https://www.tvn.cl",                             src:`${BASE}/assets/experiencia/tvn.png` },
+];
+---
+
+<section id="experiencia" class="section section--tight-top">
+  <div class="container">
+    <h2 class="h2">Experiencia</h2>
+
+    <div class="xp-carousel">
+      <button class="xp-btn prev" aria-label="Anterior" type="button">‹</button>
+
+      <ul class="xp-track" id="xpTrack" role="list">
+        {items.map((it) => (
+          <li class="xp-item" role="listitem">
+            <a class="logo-card" href={it.href} target="_blank" rel="noopener">
+              <span class="logo-wrap">
+                <img class="logo" src={it.src} alt={it.alt} loading="lazy" />
+              </span>
+            </a>
+          </li>
+        ))}
+      </ul>
+
+      <button class="xp-btn next" aria-label="Siguiente" type="button">›</button>
+    </div>
+  </div>
+</section>
+
+<script is:inline>
+  // navegación simple por desplazamiento
+  const track = document.getElementById('xpTrack');
+  const btnPrev = document.currentScript.parentElement.querySelector('.xp-btn.prev');
+  const btnNext = document.currentScript.parentElement.querySelector('.xp-btn.next');
+  const STEP = Math.round(track.clientWidth * 0.75);
+
+  btnPrev.addEventListener('click', () => track.scrollBy({ left: -STEP, behavior: 'smooth' }));
+  btnNext.addEventListener('click', () => track.scrollBy({ left:  STEP, behavior: 'smooth' }));
+</script>
+
 <style>
   .xp-carousel {
     position: relative;
@@ -16,9 +66,10 @@
   }
   .xp-track::-webkit-scrollbar { display: none; }
 
+  /* Cada tarjeta: mismo ancho, misma relación de aspecto */
   .xp-item {
     scroll-snap-align: center;
-    flex: 0 0 clamp(220px, 28vw, 300px);
+    flex: 0 0 clamp(240px, 28vw, 320px);
   }
 
   .logo-card {
@@ -43,34 +94,21 @@
     height: 100%;
     display: grid;
     place-items: center;
-    padding: 10px;
+    padding: 12px; /* margen interno para que ningún logo se “salga” */
   }
 
+  /* ⬇️ Tamaño visual idéntico entre logos */
   .logo {
     width: auto;
     height: auto;
-    max-inline-size: 75%;
-    max-block-size: 75%;
+    max-inline-size: 78%;
+    max-block-size: 78%;
     object-fit: contain;
     display: block;
     transform: scale(1);
     transition: transform .25s ease;
   }
-
-  .logo-card:hover .logo {
-    transform: scale(1.08);
-  }
-
-  /* 🔧 Ajustes uniformes */
-  .logo--indap,
-  .logo--cerronavia,
-  .logo--publimetro {
-    max-inline-size: 75%;
-    max-block-size: 75%;
-    margin: 0 auto;
-    align-self: center;
-    justify-self: center;
-  }
+  .logo-card:hover .logo { transform: scale(1.08); }
 
   .xp-btn {
     position: absolute;
@@ -90,9 +128,7 @@
     backdrop-filter: blur(6px);
     transition: filter .15s ease, opacity .15s ease;
   }
-
   .xp-btn:hover { filter: brightness(1.1); }
-  .xp-btn:disabled { opacity: .35; cursor: default; }
   .xp-btn.prev { left: .25rem; }
   .xp-btn.next { right: .25rem; }
 
