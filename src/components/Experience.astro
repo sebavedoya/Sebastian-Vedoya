@@ -1,43 +1,51 @@
 ---
 /**
- * Carrusel de Experiencia
- * Coloca los logos en /src/assets/experiencia/ (png o svg)
- * Archivos sugeridos:
- *  - latercera.png
- *  - tvn.png
- *  - mineduc.png
- *  - indap.png
- *  - subtel.png
- *  - cerro-navia.png
+ * Carrusel de Experiencia (logos a color)
+ * - Fade-in muy temprano (TRIGGER_OFFSET=10px)
+ * - Rutas robustas con BASE_URL para GitHub Pages
  */
+
 const BASE = (import.meta.env.BASE_URL || "/").replace(/\/+$/, "");
+const srcFor = (p?: string) => (p ? `${BASE}${p.startsWith("/") ? p : `/${p}`}` : "");
 
 const items = [
-  { name: "La Tercera",                      logo: `${BASE}/assets/experiencia/latercera.png` },
-  { name: "Televisión Nacional de Chile",    logo: `${BASE}/assets/experiencia/tvn.png` },
-  { name: "Ministerio de Educación",         logo: `${BASE}/assets/experiencia/mineduc.png` },
-  { name: "Instituto de Desarrollo Agropecuario (INDAP)", logo: `${BASE}/assets/experiencia/indap.png` },
-  { name: "Subsecretaría de Telecomunicaciones",           logo: `${BASE}/assets/experiencia/subtel.png` },
-  { name: "Municipalidad de Cerro Navia",    logo: `${BASE}/assets/experiencia/cerro-navia.png` },
+  { name: "La Tercera",                       logo: "/src/assets/experiencia/latercera.png",      url: "https://www.latercera.com/" },
+  { name: "Televisión Nacional de Chile",     logo: "/src/assets/experiencia/tvn.png",            url: "https://www.tvn.cl/" },
+  { name: "Ministerio de Educación",          logo: "/src/assets/experiencia/mineduc.png",        url: "https://www.mineduc.cl/" },
+  { name: "Instituto de Desarrollo Agropecuario", logo: "/src/assets/experiencia/indap.png",      url: "https://www.indap.gob.cl/" },
+  { name: "Subsecretaría de Telecomunicaciones",  logo: "/src/assets/experiencia/subtel.png",     url: "https://www.subtel.gob.cl/" },
+  { name: "Municipalidad de Cerro Navia",     logo: "/src/assets/experiencia/cerro-navia.png",    url: "https://www.cerronavia.cl/" },
+  { name: "Publimetro",                       logo: "/src/assets/experiencia/publimetro.png",     url: "https://www.publimetro.cl/" }, // ✅ nuevo
 ];
 ---
 
-<section id="experiencia" class="experience-section section" aria-labelledby="exp-title">
+<section id="experiencia" class="section section--tight-top" aria-labelledby="exp-title">
   <div class="container">
     <h2 id="exp-title" class="h2">Experiencia</h2>
 
-    <div class="exp-track">
-      {items.map((it) => (
-        <div class="exp-card stage-item" data-stage="1">
-          <img src={it.logo} alt={it.name} loading="lazy" />
-          <span class="exp-name">{it.name}</span>
+    <div class="exp-carousel">
+      <button class="exp-btn prev" type="button" aria-label="Anterior">‹</button>
+      <div class="exp-track-wrap">
+        <div class="exp-track">
+          {items.map((it) => {
+            const src = srcFor(it.logo);
+            return (
+              <a class="exp-item stage-item" href={it.url} target="_blank" rel="noopener" aria-label={it.name}>
+                <figure class="exp-logo">
+                  <img src={src} alt={it.name} loading="lazy" />
+                </figure>
+                <figcaption class="exp-caption">{it.name}</figcaption>
+              </a>
+            );
+          })}
         </div>
-      ))}
+      </div>
+      <button class="exp-btn next" type="button" aria-label="Siguiente">›</button>
     </div>
   </div>
 
   <script is:inline>
-    // Fade-in MUY temprano (igual que en System/Projects/Reflections)
+    // Fade-in casi inmediato
     (function(){
       const section = document.currentScript.closest('section');
       const items = section.querySelectorAll('.stage-item');
@@ -53,36 +61,72 @@ const items = [
       onScroll();
       window.addEventListener('scroll', onScroll, { passive:true });
     })();
+
+    // Carrusel básico con scroll suave
+    (function(){
+      const root = document.currentScript.closest('.exp-carousel');
+      const track = root.querySelector('.exp-track');
+      const prev = root.querySelector('.prev');
+      const next = root.querySelector('.next');
+
+      function stepWidth(){ // avance por "tarjeta"
+        const item = track.querySelector('.exp-item');
+        return item ? (item.getBoundingClientRect().width + 16) : 300;
+      }
+      prev.addEventListener('click', ()=> track.scrollBy({ left: -stepWidth(), behavior: 'smooth' }));
+      next.addEventListener('click', ()=> track.scrollBy({ left: +stepWidth(), behavior: 'smooth' }));
+    })();
   </script>
 </section>
 
 <style>
-  .experience-section{
-    background: linear-gradient(180deg, #0f0f0f 0%, #111 100%);
-    padding-top: 2.25rem; /* compacto, pega con System */
-    padding-bottom: 2.75rem;
-    border-top: 1px solid #1e293b;
-    border-bottom: 1px solid #1e293b;
+  .exp-carousel{
+    position:relative;
+    background:linear-gradient(180deg,#0f1216 0%,#13161a 100%);
+    border:1px solid #222; border-radius:16px; padding:1rem 2.5rem;
+    box-shadow:0 8px 28px rgba(0,0,0,.5);
   }
+  .exp-track-wrap{ overflow:hidden }
   .exp-track{
-    display:flex; gap:1.25rem; flex-wrap:wrap;
-    justify-content:center; align-items:center;
-    margin-top: .75rem;
+    display:flex; gap:1rem; overflow-x:auto; scroll-snap-type:x proximity; padding:.25rem 0 .5rem;
+    scrollbar-width:none;
   }
-  .exp-card{
-    width: 168px; text-align:center;
-    opacity:0; transform: translateY(10px);
-    transition: opacity .28s ease, transform .28s ease;
+  .exp-track::-webkit-scrollbar{ display:none }
+
+  .exp-item{
+    flex:0 0 min(200px, 26vw);
+    background:#181818; border:1px solid #222; border-radius:12px;
+    scroll-snap-align:center; text-decoration:none;
+    display:flex; flex-direction:column; align-items:center; gap:.35rem;
+    padding:.9rem .9rem .7rem;
+    transition: transform .25s ease, box-shadow .25s ease, border-color .25s ease, opacity .35s ease;
+    opacity:.0; transform: translateY(10px);
   }
-  .exp-card.is-on{ opacity:1; transform:none }
-  .exp-card img{
-    width:100%; height:72px; object-fit:contain;
-    filter: brightness(0) invert(1) drop-shadow(0 3px 10px rgba(0,0,0,.6));
-    margin-bottom:.45rem;
+  .exp-item.is-on{ opacity:1; transform:none }
+
+  .exp-logo{
+    width: 160px; height: 64px; display:grid; place-items:center;
   }
-  .exp-name{ font-size:.9rem; color:var(--muted); line-height:1.2; }
-  @media (max-width:640px){
-    .exp-card{ width:140px }
-    .exp-card img{ height:60px }
+  .exp-logo img{
+    max-width:100%; max-height:100%; display:block;
+    /* ✅ A color: aseguramos que no exista desaturación */
+    filter: none !important;
+  }
+  .exp-caption{
+    font-size:.9rem; color:#cfd8e2; text-align:center;
+  }
+
+  .exp-btn{
+    position:absolute; top:50%; transform:translateY(-50%);
+    border:1px solid #222; background:rgba(17,24,39,.75); color:#e5e7eb;
+    width:36px; height:36px; border-radius:999px; display:grid; place-items:center;
+    cursor:pointer; backdrop-filter:blur(6px);
+  }
+  .exp-btn:hover{ filter:brightness(1.1) }
+  .exp-btn.prev{ left:.5rem }
+  .exp-btn.next{ right:.5rem }
+
+  @media (max-width:680px){
+    .exp-logo{ width:140px; height:56px }
   }
 </style>
