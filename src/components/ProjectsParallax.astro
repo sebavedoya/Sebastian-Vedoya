@@ -2,16 +2,15 @@
 /**
  * ProjectsParallax.astro
  * Tarjetas con efecto parallax al hacer scroll + reveal temprano.
- * Coloca imágenes (opcionales) en /src/assets/proyectos/.
  */
 
 type Proj = {
   id: string;
   title: string;
   summary: string;
-  img?: string;    // opcional
-  href?: string;   // opcional (link a caso / nota)
-  speed?: number;  // velocidad de parallax (px por cada 100vh aprox)
+  img?: string;
+  href?: string;
+  speed?: number;
 };
 
 const projects: Proj[] = [
@@ -39,7 +38,6 @@ const projects: Proj[] = [
     href: "#",
     speed: 0.24,
   },
-  // agrega más si quieres…
 ];
 ---
 
@@ -73,7 +71,6 @@ const projects: Proj[] = [
             )}
           </div>
 
-          <!-- brillo suave -->
           <span class="parallax-glow" aria-hidden="true"></span>
         </article>
       ))}
@@ -95,7 +92,7 @@ const projects: Proj[] = [
       cards.forEach(c=>io.observe(c));
     })();
 
-    // Parallax al hacer scroll: ajusta variable CSS --py
+    // Parallax al scroll (usa var CSS --py)
     (function(){
       const els = Array.from(document.querySelectorAll('.parallax-card'));
       if (!els.length) return;
@@ -108,9 +105,9 @@ const projects: Proj[] = [
         for (const el of els) {
           const rect = el.getBoundingClientRect();
           const elMid = window.scrollY + rect.top + rect.height/2;
-          const delta = (elMid - mid); // distancia al centro de viewport
+          const delta = (elMid - mid);
           const speed = parseFloat(el.getAttribute('data-speed') || '0.16');
-          const py = -(delta * speed * 0.25); // ajuste fino
+          const py = -(delta * speed * 0.25);
           el.style.setProperty('--py', `${py}px`);
         }
         ticking = false;

@@ -3,8 +3,8 @@ import Base from "../layouts/Base.astro";
 import Header from "../components/Header.astro";
 import Hero from "../components/Hero.astro";
 import System from "../components/System.astro";
-import Experience from "../components/Experience.astro"; // 👈 nuevo
-import Projects from "../components/Projects.astro";
+import Experience from "../components/Experience.astro"; 
+import ProjectsParallax from "../components/ProjectsParallax.astro";
 import Reflections from "../components/Reflections.astro";
 import Press from "../components/Press.astro";
 import Contact from "../components/Contact.astro";
@@ -28,7 +28,7 @@ const foto = new URL('/assets/foto-hero.jpeg', Astro.site).pathname;
     <Experience />
 
     <!-- Resto -->
-    <Projects />
+    <ProjectsParallax />
     <Reflections />
     <Press />
     <Contact />
