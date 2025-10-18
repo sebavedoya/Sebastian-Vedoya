@@ -9,13 +9,13 @@ const BASE = (import.meta.env.BASE_URL || "/").replace(/\/+$/, "");
 const srcFor = (p?: string) => (p ? `${BASE}${p.startsWith("/") ? p : `/${p}`}` : "");
 
 const items = [
-  { name: "La Tercera",                       logo: "/src/assets/experiencia/latercera.png",      url: "https://www.latercera.com/" },
-  { name: "Televisión Nacional de Chile",     logo: "/src/assets/experiencia/tvn.png",            url: "https://www.tvn.cl/" },
-  { name: "Ministerio de Educación",          logo: "/src/assets/experiencia/mineduc.png",        url: "https://www.mineduc.cl/" },
-  { name: "Instituto de Desarrollo Agropecuario", logo: "/src/assets/experiencia/indap.png",      url: "https://www.indap.gob.cl/" },
-  { name: "Subsecretaría de Telecomunicaciones",  logo: "/src/assets/experiencia/subtel.png",     url: "https://www.subtel.gob.cl/" },
-  { name: "Municipalidad de Cerro Navia",     logo: "/src/assets/experiencia/cerro-navia.png",    url: "https://www.cerronavia.cl/" },
-  { name: "Publimetro",                       logo: "/src/assets/experiencia/publimetro.png",     url: "https://www.publimetro.cl/" }, // ✅ nuevo
+  { name: "La Tercera", logo: "/assets/experiencia/latercera.png", url: "https://www.latercera.com/" },
+  { name: "Televisión Nacional de Chile", logo: "/assets/experiencia/tvn.png", url: "https://www.tvn.cl/" },
+  { name: "Ministerio de Educación", logo: "/assets/experiencia/mineduc.png", url: "https://www.mineduc.cl/" },
+  { name: "Instituto de Desarrollo Agropecuario", logo: "/assets/experiencia/indap.png", url: "https://www.indap.gob.cl/" },
+  { name: "Subsecretaría de Telecomunicaciones", logo: "/assets/experiencia/subtel.png", url: "https://www.subtel.gob.cl/" },
+  { name: "Municipalidad de Cerro Navia", logo: "/assets/experiencia/cerro-navia.png", url: "https://www.cerronavia.cl/" },
+  { name: "Publimetro", logo: "/assets/experiencia/publimetro.png", url: "https://www.publimetro.cl/" }
 ];
 ---
 
