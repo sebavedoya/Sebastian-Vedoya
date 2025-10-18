@@ -1,115 +1,83 @@
 ---
-// Experience.astro — Logos centrados, grandes, visibles todos a la vez (ajustes Mineduc y Publimetro)
-
+// Carrusel/Grilla de logos de instituciones (solo logos centrados)
 const BASE = (import.meta.env.BASE_URL || "/").replace(/\/+$/, "");
 
-const logos = [
-  { alt: "La Tercera",              src: `${BASE}/assets/experiencia/latercera.png?v=7` },
-  { alt: "Ministerio de Educación", src: `${BASE}/assets/experiencia/mineduc.png?v=7`, small: true },
-  { alt: "INDAP",                   src: `${BASE}/assets/experiencia/indap.png?v=7` },
-  { alt: "Municipalidad de Cerro Navia", src: `${BASE}/assets/experiencia/cerro-navia.png?v=7` },
-  { alt: "Publimetro",              src: `${BASE}/assets/experiencia/publimetro.png?v=7`, center: true },
-  { alt: "Subsecretaría de Telecomunicaciones", src: `${BASE}/assets/experiencia/subtel.png?v=7` },
-  { alt: "Televisión Nacional de Chile", src: `${BASE}/assets/experiencia/tvn.png?v=7` },
+const items = [
+  { key: "latercera",    alt: "La Tercera",                             src: `${BASE}/assets/experiencia/latercera.png` },
+  { key: "mineduc",      alt: "Ministerio de Educación",                src: `${BASE}/assets/experiencia/mineduc.png` },
+  { key: "indap",        alt: "INDAP",                                  src: `${BASE}/assets/experiencia/indap.png` },
+  { key: "cerronavia",   alt: "Municipalidad de Cerro Navia",           src: `${BASE}/assets/experiencia/cerro-navia.png` },
+  { key: "publimetro",   alt: "Publimetro",                             src: `${BASE}/assets/experiencia/publimetro.png` },
+  { key: "subtel",       alt: "SUBTEL",                                 src: `${BASE}/assets/experiencia/subtel.png` },
+  { key: "tvn",          alt: "Televisión Nacional de Chile",           src: `${BASE}/assets/experiencia/tvn.png` },
 ];
 ---
 
-<section id="experiencia" class="section section--tight-top" data-fade>
+<section id="experiencia" class="section section--tight-top" aria-label="Experiencia">
   <div class="container">
-    <h2 class="h2" style="margin-bottom:1rem;">Experiencia</h2>
+    <h2 class="h2">Experiencia</h2>
 
-    <div class="exp-grid">
-      {logos.map((logo) => (
-        <div class="logo-card" title={logo.alt}>
-          <img
-            class:list={[
-              'exp-logo',
-              logo.small && 'exp-logo--small',
-              logo.center && 'exp-logo--center'
-            ]}
-            src={logo.src}
-            alt={logo.alt}
-            loading="lazy"
-            decoding="async"
-          />
-        </div>
+    <ul class="xp-grid" data-fade>
+      {items.map((it) => (
+        <li class="logo-card reveal">
+          <div class="logo-wrap">
+            <img class={`logo logo--${it.key}`} src={it.src} alt={it.alt} loading="lazy" />
+          </div>
+        </li>
       ))}
-    </div>
+    </ul>
   </div>
-
-  <script is:inline>
-    (function(){
-      const section = document.currentScript.closest('section');
-      const TRIGGER_OFFSET = 10;
-      function onScroll(){
-        const y = window.scrollY || document.documentElement.scrollTop || 0;
-        const top = section.offsetTop;
-        if (y + window.innerHeight > top + TRIGGER_OFFSET) {
-          section.classList.add('fade-in--visible','revealed','reveal--in');
-          window.removeEventListener('scroll', onScroll);
-        }
-      }
-      onScroll();
-      window.addEventListener('scroll', onScroll, { passive:true });
-    })();
-  </script>
 </section>
 
 <style>
-  .exp-grid {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    align-items: center;
-    gap: 2rem;
-    margin-top: 1.5rem;
+  /* Contenedor */
+  .xp-grid{
+    list-style:none; margin:0; padding:0;
+    display:grid; gap:1rem;
+    grid-template-columns:repeat(auto-fit,minmax(180px,1fr));
   }
 
-  .logo-card {
-    width: 180px;
-    height: 120px;
-    display: grid;
-    place-items: center;
-    background: #161a20;
-    border: 1px solid #222a35;
-    border-radius: 14px;
-    box-shadow: 0 8px 24px rgba(0,0,0,.35);
-    transition: transform .2s ease, box-shadow .2s ease;
+  /* Tarjeta */
+  .logo-card{
+    background:#181c22;
+    border:1px solid #263243;
+    border-radius:18px;
+    box-shadow:0 10px 26px rgba(0,0,0,.35);
+    aspect-ratio: 16 / 10;              /* espacio estable para centrar */
+    display:grid; place-items:center;    /* centra el wrapper */
   }
 
-  .logo-card:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 12px 32px rgba(0,0,0,.55);
+  /* Wrapper: ocupa todo y centra el PNG */
+  .logo-wrap{
+    inline-size:100%;
+    block-size:100%;
+    display:grid; place-items:center;
+    padding:8px;                         /* pequeño respiro en bordes */
   }
 
-  /* Logos grandes y centrados */
-  .exp-logo {
-    max-width: 92%;
-    max-height: 92%;
-    object-fit: contain;
-    display: block;
+  /* Regla general de logos: grandes, pero contenidos */
+  .logo{
+    max-inline-size:78%;
+    max-block-size:78%;
+    width:auto; height:auto;
+    object-fit:contain;
+    display:block;
+    image-rendering:auto;
   }
 
-  /* Mineduc más pequeño */
-  .exp-logo--small {
-    transform: scale(0.85);
+  /* Ajustes finos por logo (para igualar visualmente) */
+  .logo--mineduc{   /* estaba sobredimensionado */
+    max-inline-size:62%;
+    max-block-size:62%;
   }
+  .logo--latercera{  max-inline-size:72%; max-block-size:72%; }
+  .logo--indap{      max-inline-size:74%; max-block-size:74%; }
+  .logo--cerronavia{ max-inline-size:74%; max-block-size:74%; }
+  .logo--publimetro{ max-inline-size:80%; max-block-size:80%; } /* centrado perfecto en la caja */
+  .logo--subtel{     max-inline-size:74%; max-block-size:74%; }
+  .logo--tvn{        max-inline-size:72%; max-block-size:72%; }
 
-  /* Publimetro centrado perfectamente */
-  .exp-logo--center {
-    object-position: center center !important;
-    transform: scale(0.95);
-  }
-
-  @media (max-width: 1040px) {
-    .logo-card { width: 160px; height: 110px; }
-  }
-
-  @media (max-width: 768px) {
-    .logo-card { width: 140px; height: 100px; }
-  }
-
-  @media (max-width: 640px) {
-    .logo-card { width: 120px; height: 90px; }
+  @media (max-width:720px){
+    .xp-grid{ grid-template-columns:repeat(2,1fr); }
   }
 </style>
