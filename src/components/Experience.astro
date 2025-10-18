@@ -1,96 +1,88 @@
 ---
-/** Carrusel de experiencia profesional */
-const instituciones = [
-  {
-    nombre: "La Tercera",
-    logo: "/assets/experiencia/latercera.png",
-    url: "https://www.latercera.com/",
-  },
-  {
-    nombre: "Televisión Nacional de Chile",
-    logo: "/assets/experiencia/tvn.png",
-    url: "https://www.tvn.cl/",
-  },
-  {
-    nombre: "Ministerio de Educación",
-    logo: "/assets/experiencia/mineduc.png",
-    url: "https://www.mineduc.cl/",
-  },
-  {
-    nombre: "Instituto de Desarrollo Agropecuario (INDAP)",
-    logo: "/assets/experiencia/indap.png",
-    url: "https://www.indap.gob.cl/",
-  },
-  {
-    nombre: "Subsecretaría de Telecomunicaciones",
-    logo: "/assets/experiencia/subtel.png",
-    url: "https://www.subtel.gob.cl/",
-  },
-  {
-    nombre: "Municipalidad de Cerro Navia",
-    logo: "/assets/experiencia/cerro-navia.png",
-    url: "https://www.cerronavia.cl/",
-  },
-];
-
+/**
+ * Carrusel de Experiencia
+ * Coloca los logos en /src/assets/experiencia/ (png o svg)
+ * Archivos sugeridos:
+ *  - latercera.png
+ *  - tvn.png
+ *  - mineduc.png
+ *  - indap.png
+ *  - subtel.png
+ *  - cerro-navia.png
+ */
 const BASE = (import.meta.env.BASE_URL || "/").replace(/\/+$/, "");
-const srcFor = (p) => (/^https?:\/\//i.test(p) ? p : `${BASE}${p.startsWith("/") ? p : `/${p}`}`);
+
+const items = [
+  { name: "La Tercera",                      logo: `${BASE}/assets/experiencia/latercera.png` },
+  { name: "Televisión Nacional de Chile",    logo: `${BASE}/assets/experiencia/tvn.png` },
+  { name: "Ministerio de Educación",         logo: `${BASE}/assets/experiencia/mineduc.png` },
+  { name: "Instituto de Desarrollo Agropecuario (INDAP)", logo: `${BASE}/assets/experiencia/indap.png` },
+  { name: "Subsecretaría de Telecomunicaciones",           logo: `${BASE}/assets/experiencia/subtel.png` },
+  { name: "Municipalidad de Cerro Navia",    logo: `${BASE}/assets/experiencia/cerro-navia.png` },
+];
 ---
 
-<section id="experiencia" class="section section--tight-top">
+<section id="experiencia" class="experience-section section" aria-labelledby="exp-title">
   <div class="container">
-    <h2 class="h2">Experiencia</h2>
+    <h2 id="exp-title" class="h2">Experiencia</h2>
 
-    <div class="carousel-track experiencia-track stage-item">
-      {instituciones.map((inst) => (
-        <a href={inst.url} target="_blank" rel="noopener" class="exp-card">
-          <img src={srcFor(inst.logo)} alt={inst.nombre} loading="lazy" />
-          <span class="exp-name">{inst.nombre}</span>
-        </a>
+    <div class="exp-track">
+      {items.map((it) => (
+        <div class="exp-card stage-item" data-stage="1">
+          <img src={it.logo} alt={it.name} loading="lazy" />
+          <span class="exp-name">{it.name}</span>
+        </div>
       ))}
     </div>
   </div>
+
+  <script is:inline>
+    // Fade-in MUY temprano (igual que en System/Projects/Reflections)
+    (function(){
+      const section = document.currentScript.closest('section');
+      const items = section.querySelectorAll('.stage-item');
+      const TRIGGER_OFFSET = 10;
+      function onScroll(){
+        const y = window.scrollY || document.documentElement.scrollTop || 0;
+        const top = section.offsetTop;
+        if (y + window.innerHeight > top + TRIGGER_OFFSET) {
+          items.forEach(el => el.classList.add('is-on'));
+          window.removeEventListener('scroll', onScroll);
+        }
+      }
+      onScroll();
+      window.addEventListener('scroll', onScroll, { passive:true });
+    })();
+  </script>
 </section>
 
 <style>
-  /* ===== Carrusel de experiencia ===== */
-  .experiencia-track {
-    display: flex;
-    gap: 2rem;
-    overflow-x: auto;
-    scroll-snap-type: x mandatory;
-    padding: 1rem 0 1.5rem;
-    scrollbar-width: none;
-    -ms-overflow-style: none;
+  .experience-section{
+    background: linear-gradient(180deg, #0f0f0f 0%, #111 100%);
+    padding-top: 2.25rem; /* compacto, pega con System */
+    padding-bottom: 2.75rem;
+    border-top: 1px solid #1e293b;
+    border-bottom: 1px solid #1e293b;
   }
-  .experiencia-track::-webkit-scrollbar { display: none; }
-
-  .exp-card {
-    flex: 0 0 auto;
-    width: 180px;
-    text-align: center;
-    scroll-snap-align: start;
-    text-decoration: none;
-    color: var(--ink);
-    opacity: 0.9;
-    transition: transform .25s ease, opacity .25s ease;
+  .exp-track{
+    display:flex; gap:1.25rem; flex-wrap:wrap;
+    justify-content:center; align-items:center;
+    margin-top: .75rem;
   }
-  .exp-card:hover {
-    transform: translateY(-4px);
-    opacity: 1;
+  .exp-card{
+    width: 168px; text-align:center;
+    opacity:0; transform: translateY(10px);
+    transition: opacity .28s ease, transform .28s ease;
   }
-
-  .exp-card img {
-    width: 100%;
-    height: 100px;
-    object-fit: contain;
-    filter: drop-shadow(0 4px 12px rgba(0,0,0,.5));
-    margin-bottom: .5rem;
+  .exp-card.is-on{ opacity:1; transform:none }
+  .exp-card img{
+    width:100%; height:72px; object-fit:contain;
+    filter: brightness(0) invert(1) drop-shadow(0 3px 10px rgba(0,0,0,.6));
+    margin-bottom:.45rem;
   }
-
-  .exp-name {
-    font-size: .9rem;
-    color: var(--muted);
-    display: block;
+  .exp-name{ font-size:.9rem; color:var(--muted); line-height:1.2; }
+  @media (max-width:640px){
+    .exp-card{ width:140px }
+    .exp-card img{ height:60px }
   }
 </style>
