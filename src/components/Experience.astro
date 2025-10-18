@@ -1,5 +1,5 @@
 ---
-/** Carrusel de Experiencia (solo logos, sin nombres) */
+/** Carrusel de Experiencia (solo logos grandes, sin nombres) */
 const BASE = (import.meta.env.BASE_URL || "/").replace(/\/+$/, "");
 const srcFor = (p?: string) => (p ? `${BASE}${p.startsWith("/") ? p : `/${p}`}` : "");
 
@@ -60,7 +60,7 @@ const items = [
       const next = root.querySelector('.next');
       function stepWidth(){
         const item = track.querySelector('.exp-item');
-        return item ? (item.getBoundingClientRect().width + 16) : 300;
+        return item ? (item.getBoundingClientRect().width + 24) : 320;
       }
       prev.addEventListener('click', ()=> track.scrollBy({ left: -stepWidth(), behavior: 'smooth' }));
       next.addEventListener('click', ()=> track.scrollBy({ left: +stepWidth(), behavior: 'smooth' }));
@@ -74,21 +74,21 @@ const items = [
     background:linear-gradient(180deg,#0f1216 0%,#13161a 100%);
     border:1px solid #222;
     border-radius:16px;
-    padding:1rem 2.5rem;
+    padding:2rem 3rem;
     box-shadow:0 8px 28px rgba(0,0,0,.5);
   }
 
   .exp-track-wrap{ overflow:hidden }
   .exp-track{
-    display:flex; gap:1rem;
+    display:flex; gap:1.5rem;
     overflow-x:auto; scroll-snap-type:x proximity;
-    padding:.5rem 0 1rem;
+    padding:1rem 0 1.5rem;
     scrollbar-width:none;
   }
   .exp-track::-webkit-scrollbar{ display:none }
 
   .exp-item{
-    flex:0 0 min(200px, 26vw);
+    flex:0 0 min(240px, 28vw);
     scroll-snap-align:center;
     display:grid; place-items:center;
     opacity:0; transform:translateY(10px);
@@ -97,23 +97,28 @@ const items = [
   .exp-item.is-on{ opacity:1; transform:none }
 
   .exp-logo{
-    max-width: 160px;
-    max-height: 64px;
+    max-width: 220px;
+    max-height: 100px;
     object-fit: contain;
-    filter: none !important; /* ✅ Logos a color */
+    filter: none !important;
+    transition: transform .25s ease;
+  }
+  .exp-logo:hover{
+    transform: scale(1.06);
   }
 
   .exp-btn{
     position:absolute; top:50%; transform:translateY(-50%);
     border:1px solid #222; background:rgba(17,24,39,.75); color:#e5e7eb;
-    width:36px; height:36px; border-radius:999px; display:grid; place-items:center;
+    width:40px; height:40px; border-radius:999px; display:grid; place-items:center;
     cursor:pointer; backdrop-filter:blur(6px);
   }
   .exp-btn:hover{ filter:brightness(1.1) }
-  .exp-btn.prev{ left:.5rem }
-  .exp-btn.next{ right:.5rem }
+  .exp-btn.prev{ left:.75rem }
+  .exp-btn.next{ right:.75rem }
 
   @media (max-width:680px){
-    .exp-logo{ max-width:140px; max-height:56px }
+    .exp-logo{ max-width:180px; max-height:80px }
+    .exp-item{ flex:0 0 200px; }
   }
 </style>
