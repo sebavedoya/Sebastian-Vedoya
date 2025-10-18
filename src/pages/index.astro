@@ -1,49 +1,59 @@
 ---
-// src/pages/index.astro
-import Base from "../layouts/Base.astro";
-import Header from "../components/Header.astro";
-import Hero from "../components/Hero.astro";
-import System from "../components/System.astro";
-import Projects from "../components/Projects.astro";
-import Reflections from "../components/Reflections.astro";
-import Press from "../components/Press.astro";
-import Contact from "../components/Contact.astro";
-import Footer from "../components/Footer.astro";
-
-// Foto y CV
-const foto = new URL('/assets/foto-hero.jpeg', Astro.site).pathname;
+const instituciones = [
+  { nombre: "La Tercera", logo: "/assets/experiencia/latercera.png", url: "https://www.latercera.com/" },
+  { nombre: "Televisión Nacional de Chile", logo: "/assets/experiencia/tvn.png", url: "https://www.tvn.cl/" },
+  { nombre: "Ministerio de Educación", logo: "/assets/experiencia/mineduc.png", url: "https://www.mineduc.cl/" },
+  { nombre: "Instituto de Desarrollo Agropecuario (INDAP)", logo: "/assets/experiencia/indap.png", url: "https://www.indap.gob.cl/" },
+  { nombre: "Subsecretaría de Telecomunicaciones", logo: "/assets/experiencia/subtel.png", url: "https://www.subtel.gob.cl/" },
+  { nombre: "Municipalidad de Cerro Navia", logo: "/assets/experiencia/cerro-navia.png", url: "https://www.cerronavia.cl/" },
+];
+const BASE = (import.meta.env.BASE_URL || "/").replace(/\/+$/, "");
+const srcFor = (p) => (/^https?:\/\//i.test(p) ? p : `${BASE}${p.startsWith("/") ? p : `/${p}`}`);
 ---
 
-<Base
-  title="Sebastián Vedoya M. — Comunicación Estratégica"
-  description="Estratega en comunicación con más de 10 años de experiencia en medios y gobierno. Trabajo en buscar respuestas complejas para entornos complejos."
->
-  <Header />
-  <main>
-    <section data-fade>
-      <Hero foto={foto} />
-    </section>
+<section id="experiencia" class="section section--tight-top">
+  <div class="container">
+    <h2 class="h2">Experiencia</h2>
+    <div class="carousel-track experiencia-track stage-item">
+      {instituciones.map((inst) => (
+        <a href={inst.url} target="_blank" rel="noopener" class="exp-card">
+          <img src={srcFor(inst.logo)} alt={inst.nombre} loading="lazy" />
+          <span class="exp-name">{inst.nombre}</span>
+        </a>
+      ))}
+    </div>
+  </div>
+</section>
 
-    <!-- System ahora es solo la frase destacada (ya con reveal/fade interno) -->
-    <section data-fade>
-      <System />
-    </section>
+<style>
+  .experiencia-track {
+    display: flex;
+    gap: 2rem;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    padding: 1rem 0 1.5rem;
+    scrollbar-width: none;
+  }
+  .experiencia-track::-webkit-scrollbar { display: none; }
 
-    <section data-fade>
-      <Projects />
-    </section>
+  .exp-card {
+    flex: 0 0 auto;
+    width: 180px;
+    text-align: center;
+    scroll-snap-align: start;
+    text-decoration: none;
+    color: var(--ink);
+    opacity: 0.9;
+    transition: transform .25s ease, opacity .25s ease;
+  }
+  .exp-card:hover { transform: translateY(-4px); opacity: 1; }
 
-    <section data-fade>
-      <Reflections />
-    </section>
-
-    <section data-fade>
-      <Press />
-    </section>
-
-    <section data-fade>
-      <Contact />
-    </section>
-  </main>
-  <Footer />
-</Base>
+  .exp-card img {
+    width: 100%;
+    height: 100px;
+    object-fit: contain;
+    filter: drop-shadow(0 4px 12px rgba(0,0,0,.5));
+    margin-bottom: .5rem;
+  }
+  .exp-name { font-size: .9rem; color: var(--muted); display: block; }
+</style>
