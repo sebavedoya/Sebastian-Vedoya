@@ -1,73 +1,3 @@
----
-const BASE = (import.meta.env.BASE_URL || "/").replace(/\/+$/, "");
-
-const items = [
-  { key:"latercera",  alt:"La Tercera",                            src:`${BASE}/assets/experiencia/latercera.png`,   href:"https://www.latercera.com/" },
-  { key:"mineduc",    alt:"Ministerio de Educación",               src:`${BASE}/assets/experiencia/mineduc.png`,     href:"https://www.mineduc.cl/" },
-  { key:"indap",      alt:"INDAP",                                 src:`${BASE}/assets/experiencia/indap.png`,       href:"https://www.indap.gob.cl/" },
-  { key:"cerronavia", alt:"Municipalidad de Cerro Navia",          src:`${BASE}/assets/experiencia/cerro-navia.png`, href:"https://www.cerronavia.cl/" },
-  { key:"publimetro", alt:"Publimetro",                            src:`${BASE}/assets/experiencia/publimetro.png`,  href:"https://www.publimetro.cl/" },
-  { key:"subtel",     alt:"Subsecretaría de Telecomunicaciones",   src:`${BASE}/assets/experiencia/subtel.png`,      href:"https://www.subtel.gob.cl/" },
-  { key:"tvn",        alt:"Televisión Nacional de Chile",          src:`${BASE}/assets/experiencia/tvn.png`,         href:"https://www.tvn.cl/" },
-];
----
-
-<section id="experiencia" class="section section--tight-top" aria-label="Experiencia">
-  <div class="container">
-    <h2 class="h2">Experiencia</h2>
-
-    <div class="xp-carousel" data-fade>
-      <button class="xp-btn prev" aria-label="Anterior" title="Anterior">‹</button>
-
-      <ul class="xp-track" role="list">
-        {items.map((it) => (
-          <li class="xp-item" role="listitem">
-            <a class="logo-card" href={it.href} target="_blank" rel="noopener noreferrer" aria-label={it.alt}>
-              <div class="logo-wrap">
-                <img class={`logo logo--${it.key}`} src={it.src} alt={it.alt} loading="lazy" />
-              </div>
-            </a>
-          </li>
-        ))}
-      </ul>
-
-      <button class="xp-btn next" aria-label="Siguiente" title="Siguiente">›</button>
-    </div>
-  </div>
-
-  <script is:inline>
-    const root  = document.currentScript.closest('.xp-carousel');
-    const track = root.querySelector('.xp-track');
-    const btnPrev = root.querySelector('.xp-btn.prev');
-    const btnNext = root.querySelector('.xp-btn.next');
-
-    function step() {
-      const first = track.querySelector('.xp-item');
-      if (!first) return 320;
-      const style = getComputedStyle(track);
-      const gap = parseFloat(style.columnGap || style.gap || '16');
-      return first.getBoundingClientRect().width + gap;
-    }
-
-    function updateButtons() {
-      const maxScroll = track.scrollWidth - track.clientWidth - 1;
-      btnPrev.disabled = track.scrollLeft <= 0;
-      btnNext.disabled = track.scrollLeft >= maxScroll;
-    }
-
-    btnPrev.addEventListener('click', () => {
-      track.scrollBy({ left: -step(), behavior: 'smooth' });
-    });
-    btnNext.addEventListener('click', () => {
-      track.scrollBy({ left:  step(), behavior: 'smooth' });
-    });
-
-    track.addEventListener('scroll', updateButtons, { passive:true });
-    window.addEventListener('resize', updateButtons);
-    updateButtons();
-  </script>
-</section>
-
 <style>
   .xp-carousel {
     position: relative;
@@ -92,14 +22,13 @@ const items = [
   }
 
   .logo-card {
-    display: block;
+    display: grid;
+    place-items: center;
     background: #181c22;
     border: 1px solid #263243;
     border-radius: 18px;
     box-shadow: 0 10px 26px rgba(0,0,0,.35);
     aspect-ratio: 16 / 10;
-    display: grid;
-    place-items: center;
     text-decoration: none;
     transition: transform .18s ease, box-shadow .18s ease, border-color .18s ease;
   }
@@ -110,31 +39,34 @@ const items = [
   }
 
   .logo-wrap {
-    inline-size: 100%;
-    block-size: 100%;
+    width: 100%;
+    height: 100%;
     display: grid;
     place-items: center;
-    padding: 12px;
+    padding: 10px;
   }
 
   .logo {
     width: auto;
     height: auto;
-    max-inline-size: 80%;
-    max-block-size: 80%;
+    max-inline-size: 75%;
+    max-block-size: 75%;
     object-fit: contain;
     display: block;
     transform: scale(1);
     transition: transform .25s ease;
   }
-  .logo-card:hover .logo { transform: scale(1.08); }
 
-  /* Ajustes finos */
-  .logo--mineduc { max-inline-size: 65%; max-block-size: 65%; }
+  .logo-card:hover .logo {
+    transform: scale(1.08);
+  }
+
+  /* 🔧 Ajustes uniformes */
+  .logo--indap,
+  .logo--cerronavia,
   .logo--publimetro {
-    max-inline-size: 78%;
-    max-block-size: 78%;
-    object-fit: contain;
+    max-inline-size: 75%;
+    max-block-size: 75%;
     margin: 0 auto;
     align-self: center;
     justify-self: center;
@@ -158,13 +90,14 @@ const items = [
     backdrop-filter: blur(6px);
     transition: filter .15s ease, opacity .15s ease;
   }
+
   .xp-btn:hover { filter: brightness(1.1); }
   .xp-btn:disabled { opacity: .35; cursor: default; }
   .xp-btn.prev { left: .25rem; }
   .xp-btn.next { right: .25rem; }
 
-  @media (max-width:720px){
-    .xp-carousel{ padding: .25rem 1.5rem; }
-    .xp-btn{ width:36px; height:36px; }
+  @media (max-width: 720px) {
+    .xp-carousel { padding: .25rem 1.5rem; }
+    .xp-btn { width: 36px; height: 36px; }
   }
 </style>
