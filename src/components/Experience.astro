@@ -1,10 +1,7 @@
 ---
-/* Carrusel de instituciones con hover-zoom + enlaces */
 const BASE = (import.meta.env.BASE_URL || "/").replace(/\/+$/, "");
 
-type Item = { key:string; alt:string; src:string; href:string };
-
-const items: Item[] = [
+const items = [
   { key:"latercera",  alt:"La Tercera",                            src:`${BASE}/assets/experiencia/latercera.png`,   href:"https://www.latercera.com/" },
   { key:"mineduc",    alt:"Ministerio de Educación",               src:`${BASE}/assets/experiencia/mineduc.png`,     href:"https://www.mineduc.cl/" },
   { key:"indap",      alt:"INDAP",                                 src:`${BASE}/assets/experiencia/indap.png`,       href:"https://www.indap.gob.cl/" },
@@ -39,13 +36,11 @@ const items: Item[] = [
   </div>
 
   <script is:inline>
-    // Carrusel simple: botones = scrollBy ancho de tarjeta
     const root  = document.currentScript.closest('.xp-carousel');
     const track = root.querySelector('.xp-track');
     const btnPrev = root.querySelector('.xp-btn.prev');
     const btnNext = root.querySelector('.xp-btn.next');
 
-    // Calcula el paso como el ancho del primer item + gap
     function step() {
       const first = track.querySelector('.xp-item');
       if (!first) return 320;
@@ -67,104 +62,85 @@ const items: Item[] = [
       track.scrollBy({ left:  step(), behavior: 'smooth' });
     });
 
-    track.addEventListener('scroll', () => {
-      updateButtons();
-    }, { passive:true });
-
-    // Arrastre con mouse/touch (opcional pero útil)
-    let isDown = false, startX = 0, startLeft = 0;
-    track.addEventListener('pointerdown', (e) => {
-      isDown = true; startX = e.clientX; startLeft = track.scrollLeft;
-      track.setPointerCapture(e.pointerId);
-    });
-    track.addEventListener('pointermove', (e) => {
-      if (!isDown) return;
-      track.scrollLeft = startLeft - (e.clientX - startX);
-    });
-    track.addEventListener('pointerup', () => { isDown = false; });
-    track.addEventListener('pointercancel', () => { isDown = false; });
-
-    // init
-    updateButtons();
+    track.addEventListener('scroll', updateButtons, { passive:true });
     window.addEventListener('resize', updateButtons);
+    updateButtons();
   </script>
 </section>
 
 <style>
-  .xp-carousel{
+  .xp-carousel {
     position:relative;
-    padding: .25rem 2.5rem;   /* espacio para botones laterales */
+    padding: .25rem 2.5rem;
   }
 
-  .xp-track{
+  .xp-track {
     list-style:none; margin:0; padding:0;
     display:flex; gap:1rem;
     overflow-x:auto;
     scroll-snap-type: x mandatory;
-    scrollbar-width: none;
+    scrollbar-width:none;
   }
-  .xp-track::-webkit-scrollbar{ display:none; }
+  .xp-track::-webkit-scrollbar{display:none}
 
-  .xp-item{
-    scroll-snap-align: center;
-    flex: 0 0 clamp(220px, 28vw, 300px);   /* ancho de tarjeta responsive */
+  .xp-item {
+    scroll-snap-align:center;
+    flex:0 0 clamp(220px,28vw,300px);
   }
 
-  .logo-card{
+  .logo-card {
     display:block;
     background:#181c22;
     border:1px solid #263243;
     border-radius:18px;
     box-shadow:0 10px 26px rgba(0,0,0,.35);
-    aspect-ratio: 16 / 10;
+    aspect-ratio:16/10;
     display:grid; place-items:center;
     text-decoration:none;
-    transition: transform .18s ease, box-shadow .18s ease, border-color .18s ease;
+    transition:transform .18s ease, box-shadow .18s ease, border-color .18s ease;
   }
-  .logo-card:hover{
-    transform: translateY(-2px);
+  .logo-card:hover {
+    transform:scale(1.03);
     border-color:#2f3e53;
     box-shadow:0 16px 32px rgba(0,0,0,.45);
   }
 
-  .logo-wrap{
-    inline-size:100%; block-size:100%;
+  .logo-wrap {
+    inline-size:100%;
+    block-size:100%;
     display:grid; place-items:center;
-    padding:10px;
+    padding:12px;
   }
 
-  /* Hover-zoom del logo */
-  .logo{
-    max-inline-size:82%;
-    max-block-size:82%;
-    width:auto; height:auto; object-fit:contain; display:block;
-    transform: scale(1);
-    transition: transform .18s ease;
+  .logo {
+    max-inline-size:80%;
+    max-block-size:80%;
+    width:auto; height:auto;
+    object-fit:contain;
+    display:block;
+    transition:transform .25s ease;
   }
-  .logo-card:hover .logo{ transform: scale(1.08); }
+  .logo-card:hover .logo { transform:scale(1.08); }
 
-  /* Ajustes finos por marca (para igualar visualmente) */
-  .logo--mineduc{   max-inline-size:64%; max-block-size:64%; }
-  .logo--latercera{ max-inline-size:76%; max-block-size:76%; }
-  .logo--indap{     max-inline-size:78%; max-block-size:78%; }
-  .logo--cerronavia{max-inline-size:78%; max-block-size:78%; }
-  .logo--publimetro{max-inline-size:84%; max-block-size:84%; }
-  .logo--subtel{    max-inline-size:78%; max-block-size:78%; }
-  .logo--tvn{       max-inline-size:76%; max-block-size:76%; }
+  /* Ajustes individuales */
+  .logo--mineduc { max-inline-size:65%; max-block-size:65%; }
+  .logo--publimetro { max-inline-size:80%; max-block-size:80%; } /* igual tamaño al resto */
 
-  /* Botones */
-  .xp-btn{
+  .xp-btn {
     position:absolute; top:50%; transform:translateY(-50%);
     width:40px; height:40px; border-radius:999px;
-    border:1px solid #263243; background:rgba(15,23,42,.78); color:#e2e8f0;
-    display:grid; place-items:center; font-size:22px; line-height:1;
-    cursor:pointer; backdrop-filter: blur(6px);
-    transition: filter .15s ease, opacity .15s ease;
+    border:1px solid #263243;
+    background:rgba(15,23,42,.78); color:#e2e8f0;
+    display:grid; place-items:center;
+    font-size:22px; line-height:1;
+    cursor:pointer;
+    backdrop-filter:blur(6px);
+    transition:filter .15s ease, opacity .15s ease;
   }
-  .xp-btn:hover{ filter:brightness(1.1); }
-  .xp-btn:disabled{ opacity:.35; cursor:default; }
-  .xp-btn.prev{ left:.25rem; }
-  .xp-btn.next{ right:.25rem; }
+  .xp-btn:hover { filter:brightness(1.1); }
+  .xp-btn:disabled { opacity:.35; cursor:default; }
+  .xp-btn.prev { left:.25rem; }
+  .xp-btn.next { right:.25rem; }
 
   @media (max-width:720px){
     .xp-carousel{ padding: .25rem 1.5rem; }
