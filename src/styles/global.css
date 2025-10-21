@@ -57,12 +57,20 @@ img{max-width:100%;display:block}
   box-shadow:0 6px 18px rgba(0,0,0,.35)
 }
 .btn:hover{background:#163d56}
-.btn-outline{background:transparent;color:var(--accent);border:2px solid var(--accent)}
-.btn-outline:hover{background:var(--accent);color:#fff}
+/* Botón outline consistente (ya lo usas, asegúrate que exista) */
+.btn-outline{
+  background:transparent;
+  color:var(--accent);
+  border:2px solid var(--accent);
+  padding:.65rem 1rem;
+  border-radius:999px;
+  font-weight:700;
+.btn-outline:hover{ background:var(--accent); color:#fff; }
 .btn-copper{background:var(--copper);color:#fff}
 .btn-ghost{background:transparent;color:#e5e7eb;border:2px solid #334155}
 .chip{border:1px solid #2a3542;background:transparent;color:#e5e7eb;
   padding:.7rem 1rem;border-radius:999px;text-decoration:none}
+}
 
 /* ===== Hero base ===== */
 .hero{
@@ -246,3 +254,4 @@ img{max-width:100%;display:block}
   .nav-toggle{display:block}
   .photo-float img{width:280px;height:360px}
 }
+

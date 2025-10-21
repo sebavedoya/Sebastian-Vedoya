@@ -1,124 +1,140 @@
 ---
-/**
- * ProjectsParallax.astro
- * Tarjetas con efecto parallax al hacer scroll + reveal temprano.
- */
-
-type Proj = {
-  id: string;
-  title: string;
-  summary: string;
-  img?: string;
-  href?: string;
-  speed?: number;
-};
-
-const projects: Proj[] = [
+const projects = [
   {
     id: "topografo",
     title: "Operación Topógrafo",
-    summary: "Investigación que reveló espionaje militar a periodistas y denunciantes.",
-    img: "/assets/proyectos/topografo.jpg",
-    href: "#",
-    speed: 0.18,
+    dek: "Investigación que reveló espionaje militar a periodistas y denunciantes.",
+    body: `Reportaje de investigación que reveló el espionaje de la Dirección de Inteligencia del Ejército a periodistas y funcionarios denunciantes. La publicación marcó un antes y un después en la discusión sobre transparencia y control civil de las Fuerzas Armadas, con repercusiones judiciales y mediáticas que se mantienen hasta hoy.`,
+    img: "/assets/projects/topografo.webp"
   },
   {
     id: "vocerias",
     title: "Vocerías y despliegue",
-    summary: "Fortalecimiento de vocerías y coherencia comunicacional en terreno.",
-    img: "/assets/proyectos/vocerias.jpg",
-    href: "#",
-    speed: -0.12,
+    dek: "Fortalecimiento de vocerías y coherencia comunicacional en terreno.",
+    body: `Diseño de lineamientos, preparación de portavoces, acompañamiento en terreno y estandarización de mensajes clave para un despliegue coherente en medios, regiones y redes.`,
+    img: "/assets/projects/vocerias.webp"
   },
   {
-    id: "redes",
+    id: "digital",
     title: "Comunicación digital",
-    summary: "Estrategia y formatos nativos para alto rendimiento en redes sociales.",
-    img: "/assets/proyectos/redes.jpg",
-    href: "#",
-    speed: 0.24,
-  },
+    dek: "Estrategia y formatos nativos para alto rendimiento.",
+    body: `Reorientación de equipos y parrillas a formatos nativos, workflows editoriales y medición de impacto para mejorar alcance, retención y reputación en plataformas sociales.`,
+    img: "/assets/projects/digital.webp"
+  }
 ];
 ---
 
-<section id="proyectos" class="section section--tight-top">
+<section id="proyectos" class="section">
   <div class="container">
     <h2 class="h2">Proyectos</h2>
-    <p class="section-intro" style="margin-bottom:1rem">
-      Una selección de casos con impacto, contados en tarjetas con profundidad.
-    </p>
+    <p class="section-intro">Una selección de casos con impacto, contados en tarjetas con profundidad.</p>
 
-    <div class="parallax-grid">
+    <div class="p-grid">
       {projects.map((p) => (
-        <article
-          class="parallax-card stage-item"
-          data-speed={p.speed ?? 0.16}
-          id={p.id}
-        >
-          <div class="parallax-media">
-            {p.img ? (
-              <img src={p.img} alt={p.title} loading="lazy" />
-            ) : (
-              <div class="parallax-fallback" aria-hidden="true" />
-            )}
+        <article class="p-card reveal" id={`card-${p.id}`}>
+          <div class="p-media">
+            <img src={p.img} alt={p.title} loading="lazy" />
+            <div class="p-gradient"></div>
           </div>
 
-          <div class="parallax-body">
-            <h3 class="h3">{p.title}</h3>
-            <p class="card-text" style="margin:.35rem 0 0">{p.summary}</p>
-            {p.href && (
-              <a class="btn btn-outline" href={p.href} style="margin-top:.85rem">Ver caso</a>
-            )}
+          <div class="p-body">
+            <h3 class="p-title">{p.title}</h3>
+            <p class="p-dek">{p.dek}</p>
+            <button class="btn-outline p-cta" data-open={p.id} aria-haspopup="dialog" aria-controls={`proj-${p.id}`}>
+              Ver caso
+            </button>
           </div>
 
-          <span class="parallax-glow" aria-hidden="true"></span>
+          {/* Modal de detalle */}
+          <dialog class="proj-modal" id={`proj-${p.id}`} aria-labelledby={`dlg-title-${p.id}`}>
+            <form method="dialog" class="proj-close-wrap">
+              <button class="proj-close" aria-label="Cerrar">✕</button>
+            </form>
+
+            <div class="proj-hero">
+              <img src={p.img} alt="" aria-hidden="true" />
+            </div>
+
+            <div class="proj-content">
+              <h3 id={`dlg-title-${p.id}`}>{p.title}</h3>
+              <p class="proj-text">{p.body}</p>
+            </div>
+          </dialog>
         </article>
       ))}
     </div>
   </div>
 
   <script is:inline>
-    // Reveal temprano
-    (function(){
-      const cards = document.querySelectorAll('.parallax-card');
-      const io = new IntersectionObserver((es)=>{
-        for (const e of es) {
-          if (e.isIntersecting) {
-            e.target.classList.add('is-on');
-            io.unobserve(e.target);
-          }
-        }
-      }, { rootMargin: '0% 0% -85% 0%', threshold: 0 });
-      cards.forEach(c=>io.observe(c));
-    })();
+    // Abrir modales
+    document.querySelectorAll('.p-cta').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const id = btn.getAttribute('data-open');
+        const dlg = document.getElementById('proj-' + id);
+        if (!dlg) return;
+        if (typeof dlg.showModal === 'function') dlg.showModal();
+        else dlg.setAttribute('open', 'open'); // fallback
+      });
+    });
 
-    // Parallax al scroll (usa var CSS --py)
-    (function(){
-      const els = Array.from(document.querySelectorAll('.parallax-card'));
-      if (!els.length) return;
-
-      let ticking = false;
-      const vh = () => window.innerHeight || document.documentElement.clientHeight;
-
-      function update() {
-        const mid = window.scrollY + vh()/2;
-        for (const el of els) {
-          const rect = el.getBoundingClientRect();
-          const elMid = window.scrollY + rect.top + rect.height/2;
-          const delta = (elMid - mid);
-          const speed = parseFloat(el.getAttribute('data-speed') || '0.16');
-          const py = -(delta * speed * 0.25);
-          el.style.setProperty('--py', `${py}px`);
-        }
-        ticking = false;
-      }
-
-      function onScroll(){
-        if (!ticking){ ticking = true; requestAnimationFrame(update); }
-      }
-      update();
-      window.addEventListener('scroll', onScroll, { passive:true });
-      window.addEventListener('resize', onScroll);
-    })();
+    // Cerrar modales (botón, ESC, clic en backdrop)
+    document.querySelectorAll('.proj-modal').forEach(dlg => {
+      dlg.addEventListener('click', (e) => {
+        const rect = dlg.getBoundingClientRect();
+        const clickedBackdrop = e.clientX < rect.left || e.clientX > rect.right || e.clientY < rect.top || e.clientY > rect.bottom;
+        if (clickedBackdrop) dlg.close();
+      });
+      dlg.addEventListener('cancel', (e) => { e.preventDefault(); dlg.close(); }); // ESC
+    });
   </script>
 </section>
+
+<style>
+  .p-grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(300px,1fr));
+    gap:1.2rem;
+  }
+  .p-card{
+    position:relative;
+    overflow:hidden;
+    border-radius:20px;
+    background:#10161d;
+    border:1px solid #1f2a37;
+    box-shadow:0 10px 26px rgba(0,0,0,.5);
+  }
+  .p-media{ position:relative; height: 220px; background:#0b0f14; }
+  .p-media img{
+    width:100%; height:100%; object-fit:cover; display:block;
+    filter:brightness(.82) contrast(1.05);
+  }
+  .p-gradient{
+    position:absolute; inset:auto 0 0 0; height:46%;
+    background:linear-gradient(180deg, transparent, rgba(10,14,18,.85));
+  }
+  .p-body{ padding:1.1rem; }
+  .p-title{ margin:0 0 .35rem; font-size:1.15rem; color:#eaf2f8; }
+  .p-dek{ margin:.25rem 0 1rem; color:#c9d3df; }
+  .p-cta{ font-weight:700; }
+
+  /* ===== Modal ===== */
+  .proj-modal{
+    width:min(920px, 94vw);
+    max-height:90dvh;
+    border:none; padding:0;
+    border-radius:18px; overflow:hidden;
+    background:#0e141a; color:#e6eef4;
+    box-shadow:0 30px 120px rgba(0,0,0,.65);
+  }
+  .proj-modal::backdrop{ background:rgba(3,6,10,.65); backdrop-filter:blur(2px); }
+  .proj-close-wrap{ position:absolute; top:10px; right:10px; z-index:2; }
+  .proj-close{
+    border:1px solid #263242; background:#111a23; color:#e6eef4;
+    width:36px; height:36px; border-radius:999px; cursor:pointer;
+  }
+  .proj-hero{ width:100%; height:min(40vh,320px); background:#0b1015; }
+  .proj-hero img{ width:100%; height:100%; object-fit:cover; display:block; }
+  .proj-content{ padding:1.25rem 1.25rem 1.4rem; }
+  .proj-content h3{ margin:.1rem 0 .5rem; }
+  .proj-text{ color:#c9d3df; line-height:1.7; }
+</style>
