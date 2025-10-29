@@ -1,25 +1,28 @@
 ---
+---
+const BASE = (import.meta.env.BASE_URL || "/").replace(/\/+$/, "");
+
 const projects = [
   {
     id: "topografo",
     title: "Operación Topógrafo",
     dek: "Investigación que reveló espionaje militar a periodistas y denunciantes.",
     body: `Reportaje de investigación que reveló el espionaje de la Dirección de Inteligencia del Ejército a periodistas y funcionarios denunciantes. La publicación marcó un antes y un después en la discusión sobre transparencia y control civil de las Fuerzas Armadas, con repercusiones judiciales y mediáticas que se mantienen hasta hoy.`,
-    img: "/assets/projects/topografo.webp"
+    img: `${BASE}/assets/projects/topografo.jpg`
   },
   {
     id: "vocerias",
     title: "Vocerías y despliegue",
     dek: "Fortalecimiento de vocerías y coherencia comunicacional en terreno.",
     body: `Diseño de lineamientos, preparación de portavoces, acompañamiento en terreno y estandarización de mensajes clave para un despliegue coherente en medios, regiones y redes.`,
-    img: "/assets/projects/vocerias.webp"
+    img: `${BASE}/assets/projects/vocerias.jpg`
   },
   {
     id: "digital",
     title: "Comunicación digital",
     dek: "Estrategia y formatos nativos para alto rendimiento.",
     body: `Reorientación de equipos y parrillas a formatos nativos, workflows editoriales y medición de impacto para mejorar alcance, retención y reputación en plataformas sociales.`,
-    img: "/assets/projects/digital.webp"
+    img: `${BASE}/assets/projects/digital.jpg`
   }
 ];
 ---
