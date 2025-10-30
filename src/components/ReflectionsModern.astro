@@ -1,32 +1,46 @@
 ---
-/** ReflectionsModern: muestra las reflexiones en tarjetas limpias con modal completo */
-
-const reflections = [
+const items = [
   {
-    id: "ref-ashby",
+    id: "ashby",
     title: "La ley de la variedad requerida y el desafío comunicacional contemporáneo",
-    dek: "Cómo el pensamiento de Ross Ashby anticipó los retos comunicacionales actuales.",
-    body: `La ley de la variedad requerida, postulada por Ross Ashby en 1958, además de ser una de las piedras angulares de la cibernética, nos deja pertinentes lecciones para afrontar el entorno comunicativo actual.
+    dek:
+      "Ningún actor puede controlar el entorno sin igualarlo en complejidad; y si no puede, debe domesticarlo.",
+    body: `
+La ley de la variedad requerida, postulada por Ross Ashby en 1958, es una de las piedras angulares de la cibernética y una lección vigente para afrontar el entorno comunicativo actual. Según el psiquiatra inglés, un sistema solo puede sobrevivir y mantenerse estable si su capacidad de respuestas al menos iguala la complejidad de las perturbaciones que provienen del entorno.
 
-Según el psiquiatra inglés, un sistema solo puede sobrevivir y mantenerse estable si su capacidad de respuestas al menos iguala a las perturbaciones que provienen de su entorno. En términos comunicacionales, es imposible controlar el entorno sin al menos igualarlo en complejidad, y si no puede igualar, debe aprender a domesticarlo.
+En términos comunicacionales, ningún actor puede controlar el entorno sin igualarlo en complejidad; y si no puede igualarlo, debe aprender a domesticarlo. Esto último es cada vez más difícil entendiendo la dificultad que existe por controlar la agenda pública. 
 
-Nos encontramos en una era en donde la variedad inunda el entorno a través de innumerables canales, audiencias y especializaciones. Aplicando la lección de Ashby, la ausencia no resuelve conflictos: más bien exige que las estrategias planifiquen y conduzcan a través de variados canales y mensajes que los contrarresten.`
+Hoy la variedad inunda el entorno a través de innumerables canales, audiencias y especializaciones. Aplicando la enseñanza de Ashby, la ausencia o la pasividad no resuelve conflictos: exige que las estrategias planifiquen y conduzcan a través de múltiples canales y mensajes que contrarresten esa variedad.
+    `.trim()
   },
   {
-    id: "ref-autoridades",
+    id: "autoridades",
     title: "Autoridades y redes sociales: una confusión frecuente",
-    dek: "Por qué las redes institucionales no son extensiones personales del liderazgo.",
-    body: `Pese a lo que muchas autoridades creen, las redes sociales institucionales no son su canal de noticias 24/7, ni un espacio para posicionar su figura personal. Son plataformas de comunicación pública y de servicio ciudadano, donde la transparencia y la utilidad del mensaje priman sobre la autopromoción.
+    dek:
+      "Las redes institucionales no son un canal 24/7 para cronicar agendas personales.",
+    body: `
+Pese a lo que muchas autoridades creen, las redes sociales institucional no son su canal de noticias 24/7 a su disposición. Registrar y publicar cada una de sus actividades públicas no solo distrae a los equipos de comunicaciones de lo realmente importante —gestión de prensa, comunicación interna o creación de contenido de valor—, sino que termina generando más bloqueos que los soñados “likes”.
 
-Confundir la cuenta institucional con la personal genera desbalance comunicacional, erosiona la credibilidad y debilita el relato colectivo. La comunicación pública debe sostener un tono coherente, profesional y empático, que fortalezca la confianza hacia la institución, no hacia un individuo.`
+Autoridades de distintos niveles replican este modelo: subsecretarías, seremis, delegaciones, servicios. Parecen clones de lo que no se debe hacer en redes sociales. Si ya existen fuertes resistencias hacia las instituciones estatales, malgastar la oportunidad que ofrece el entorno digital solo amplía esa distancia.
+
+Liberen a sus equipos. Permítanles crear. Si una reunión no se publica, nadie la extrañará. Si logran comunicar los logros de gestión con simpatía y cercanía, construirán comunidad y obtendrán la visibilidad que buscan. No todo gira sobre ustedes. ¿O acaso vemos al gerente de una gran empresa de telefonía o retail subiendo cada minuto de su itinerario?
+    `.trim()
   },
   {
-    id: "ref-miedo",
+    id: "sinmiedo",
     title: "Comunicar sin miedo",
-    dek: "El valor de la autenticidad y la claridad en tiempos de desconfianza.",
-    body: `Durante una visita a Rapa Nui tuve la oportunidad de entrevistar a la alcaldesa Elizabeth Arévalo Pakarati. Culminada la conversación, mi reacción fue inmediata: ya quisiera cualquier político o directivo su capacidad de comunicar. Todo era preciso: su tono, su postura, su vestimenta y su locuacidad.
+    dek:
+      "Preparación, confianza y escucha activa superan el temor a exponerse.",
+    body: `
+Durante una visita a Rapa Nui tuve la oportunidad de entrevistar a la alcaldesa Elizabeth Arévalo Pakarati. Terminada la conversación, mi reacción fue inmediata: ya quisiera cualquier político o directivo de empresa su capacidad de comunicar, le dije. Todo funcionó perfecto. Su vestimenta, postura, tono y locuacidad —del latín loquax, “el que tiene facilidad de palabra”— demostraban un trabajo constante y dedicado. Lejos de parecer una imagen artificial, solo irradiaba seguridad en sí misma.
 
-Su puesta en escena demostraba trabajo, pero también naturalidad. Irradiaba seguridad, no impostación. Su ejemplo no solo sirve como reconocimiento, sino también como contraste con el temor y la desconfianza con que muchas autoridades enfrentan la responsabilidad de comunicar. Comunicar sin miedo es, en esencia, comunicar con verdad.`
+Su ejemplo no solo merece reconocimiento, sino que sirve para contrastar con el temor y la desconfianza con que muchas autoridades enfrentan la responsabilidad de comunicar. Cada vez son más quienes anteponen la precaución por sobre la oportunidad. El miedo al cuestionamiento, la contrapregunta, el tuit o la columna del día siguiente inmoviliza e impide aprovechar la posibilidad de conectar con todo tipo de públicos. 
+
+La falta de preparación o costumbre puede ser una explicación, pero el problema parece más profundo: el temor a exponerse y la distancia que puede generar asumir un cargo de alta responsabilidad.
+Tomemos un ejemplo simple: visitar una localidad aislada, nunca antes recorrida por una autoridad, debería ser visto como una oportunidad para conectar, no como un riesgo de crítica. En la práctica, los temores no se cumplen en un 99 % de los casos. Y si se cumplen, un vocero preparado y en escucha activa puede revertirlos en su gran mayoría. 
+
+La comunicación es el principal vehículo entre la comunidad y sus autoridades. Ignorarla, evadirla o subestimarla genera costos. Mejor seguir el ejemplo de la alcaldesa de Rapa Nui y asumirla con la seriedad —y la confianza— que merece. 
+    `.trim()
   }
 ];
 ---
@@ -34,25 +48,31 @@ Su puesta en escena demostraba trabajo, pero también naturalidad. Irradiaba seg
 <section id="reflexiones" class="section">
   <div class="container">
     <h2 class="h2">Reflexiones</h2>
-    <p class="section-intro">Análisis y experiencias sobre comunicación, estrategia y complejidad.</p>
+    <p class="section-intro">Ensayos breves sobre estrategia, vocerías y comunicación pública.</p>
 
     <div class="r-grid">
-      {reflections.map((r) => (
-        <article class="r-card reveal" id={r.id}>
-          <div class="r-body">
+      {items.map((r) => (
+        <article class="r-card reveal" id={`ref-${r.id}`}>
+          <header class="r-head">
             <h3 class="r-title">{r.title}</h3>
             <p class="r-dek">{r.dek}</p>
-            <button class="btn-outline r-btn" data-open={r.id}>Leer completa</button>
-          </div>
+          </header>
+          <footer class="r-actions">
+            <button class="btn-outline r-cta" data-open={r.id} aria-haspopup="dialog" aria-controls={`dlg-${r.id}`}>
+              Leer completa
+            </button>
+          </footer>
 
           {/* Modal */}
-          <dialog class="r-modal" id={`dlg-${r.id}`} aria-labelledby={`title-${r.id}`}>
+          <dialog class="r-modal" id={`dlg-${r.id}`} aria-labelledby={`dlg-title-${r.id}`}>
             <form method="dialog" class="r-close-wrap">
               <button class="r-close" aria-label="Cerrar">✕</button>
             </form>
-            <div class="r-modal-content">
-              <h3 id={`title-${r.id}`}>{r.title}</h3>
-              <p class="r-text" style="white-space:pre-wrap">{r.body}</p>
+            <div class="r-modal-inner">
+              <h3 id={`dlg-title-${r.id}`} class="r-modal-title">{r.title}</h3>
+              <article class="r-modal-body">
+                {r.body.split("\n\n").map((p) => <p class="prose">{p}</p>)}
+              </article>
             </div>
           </dialog>
         </article>
@@ -61,84 +81,58 @@ Su puesta en escena demostraba trabajo, pero también naturalidad. Irradiaba seg
   </div>
 
   <script is:inline>
-    document.querySelectorAll('.r-btn').forEach(btn => {
+    // Abrir modales
+    document.querySelectorAll('.r-cta').forEach(btn => {
       btn.addEventListener('click', () => {
         const id = btn.getAttribute('data-open');
         const dlg = document.getElementById('dlg-' + id);
         if (!dlg) return;
-        dlg.showModal();
+        if (typeof dlg.showModal === 'function') dlg.showModal();
+        else dlg.setAttribute('open','open');
       });
     });
 
+    // Cerrar por backdrop o ESC
     document.querySelectorAll('.r-modal').forEach(dlg => {
-      dlg.addEventListener('click', e => {
+      dlg.addEventListener('click', (e) => {
         const rect = dlg.getBoundingClientRect();
-        const clickedBackdrop = e.clientX < rect.left || e.clientX > rect.right || e.clientY < rect.top || e.clientY > rect.bottom;
-        if (clickedBackdrop) dlg.close();
+        const isBackdrop = e.clientX < rect.left || e.clientX > rect.right || e.clientY < rect.top || e.clientY > rect.bottom;
+        if (isBackdrop) dlg.close();
       });
-      dlg.addEventListener('cancel', e => { e.preventDefault(); dlg.close(); });
+      dlg.addEventListener('cancel', (e) => { e.preventDefault(); dlg.close(); });
     });
   </script>
 </section>
 
 <style>
-  .r-grid {
+  .r-grid{
     display:grid;
-    grid-template-columns:repeat(auto-fit,minmax(320px,1fr));
-    gap:1.5rem;
+    grid-template-columns:repeat(auto-fit,minmax(280px,1fr));
+    gap:1rem;
   }
-  .r-card {
-    background:#161b22;
-    border:1px solid #222a33;
-    border-radius:18px;
-    box-shadow:0 8px 28px rgba(0,0,0,.4);
-    padding:1.4rem;
-    transition:transform .25s ease, box-shadow .25s ease;
+  .r-card{
+    background:#11161d; border:1px solid #1f2a37;
+    border-radius:16px; padding:1rem 1rem 0.9rem;
+    box-shadow:0 8px 24px rgba(0,0,0,.45);
   }
-  .r-card:hover { transform:translateY(-3px); box-shadow:0 12px 32px rgba(0,0,0,.5); }
-
-  .r-title { margin:0 0 .4rem; font-size:1.15rem; color:#eaf2f8; }
-  .r-dek { color:#cbd5e1; margin:0 0 1rem; }
-  .r-btn { font-weight:700; }
+  .r-head{ margin-bottom:.6rem }
+  .r-title{ margin:0 0 .35rem; font-size:1.05rem; color:#eaf2f8 }
+  .r-dek{ margin:0; color:#b9c6d6 }
+  .r-actions{ margin-top:.8rem }
+  .r-cta{ font-weight:700 }
 
   /* Modal */
-  .r-modal {
-    width:min(880px,94vw);
-    border:none;
-    border-radius:20px;
-    background:rgba(14,20,26,0.92);
-    backdrop-filter:blur(8px);
-    color:#e6eef4;
-    box-shadow:0 25px 120px rgba(0,0,0,.7);
-    padding:2rem;
+  .r-modal{
+    width:min(900px,94vw); max-height:92dvh;
+    border:none; padding:0; border-radius:18px; overflow:hidden;
+    background:#0e141a; color:#e6eef4;
+    box-shadow:0 30px 120px rgba(0,0,0,.65);
   }
-  .r-modal::backdrop {
-    background:rgba(0,0,0,0.7);
-    backdrop-filter:blur(4px);
-    transition:opacity .3s ease;
-  }
-  .r-close-wrap { position:absolute; top:12px; right:12px; }
-  .r-close {
-    border:1px solid #263242;
-    background:#111a23;
-    color:#e6eef4;
-    width:36px;
-    height:36px;
-    border-radius:50%;
-    cursor:pointer;
-  }
-  .r-modal-content {
-    max-height:80vh;
-    overflow-y:auto;
-  }
-  .r-modal-content h3 {
-    margin-top:0;
-    margin-bottom:.75rem;
-    font-size:1.3rem;
-  }
-  .r-text {
-    color:#c9d3df;
-    line-height:1.7;
-    font-size:1.05rem;
-  }
+  .r-modal::backdrop{ background:rgba(6,10,14,.55); backdrop-filter:blur(3px) saturate(1.1); }
+  .r-close-wrap{ position:absolute; top:10px; right:10px; z-index:2 }
+  .r-close{ width:36px; height:36px; border-radius:999px; cursor:pointer;
+    background:#121a22; border:1px solid #263242; color:#e6eef4; }
+  .r-modal-inner{ padding:1.25rem 1.25rem 1.4rem; }
+  .r-modal-title{ margin:.2rem 0 .8rem; font-size:1.35rem }
+  .r-modal-body p{ margin:.6rem 0; }
 </style>
