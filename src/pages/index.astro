@@ -3,13 +3,14 @@ import Base from "../layouts/Base.astro";
 import Header from "../components/Header.astro";
 import Hero from "../components/Hero.astro";
 import System from "../components/System.astro";
-import Experience from "../components/Experience.astro"; 
+import Experience from "../components/Experience.astro";
 import ProjectsParallax from "../components/ProjectsParallax.astro";
 import ReflectionsModern from "../components/ReflectionsModern.astro";
 import Press from "../components/Press.astro";
 import Contact from "../components/Contact.astro";
 import Footer from "../components/Footer.astro";
 
+// Ruta robusta para la foto del hero (respeta BASE_URL en GitHub Pages)
 const foto = new URL('/assets/foto-hero.jpeg', Astro.site).pathname;
 ---
 
@@ -18,20 +19,28 @@ const foto = new URL('/assets/foto-hero.jpeg', Astro.site).pathname;
   description="Estratega en comunicación con más de 10 años de experiencia en medios y gobierno. Me dedico a buscar respuestas complejas para entornos complejos."
 >
   <Header />
+
   <main>
     <Hero foto={foto} />
 
-    <!-- Sección Sistema -->
+    {/* Sistema */}
     <System />
 
-    <!-- ✅ Nueva sección: Experiencia -->
+    {/* Experiencia (logos + carrusel) */}
     <Experience />
 
-    <!-- Resto -->
+    {/* Proyectos — Scroll Parallax Cards */}
     <ProjectsParallax />
-    <Reflections />
+
+    {/* Reflexiones — formato moderno con apertura completa al clic */}
+    <ReflectionsModern />
+
+    {/* Prensa */}
     <Press />
+
+    {/* Contacto */}
     <Contact />
   </main>
+
   <Footer />
 </Base>
